@@ -18,8 +18,10 @@ jobs:
         with:
           bun-version: 1.4.2
       - run: bun install --frozen-lockfile
-      - name: Tests (builds the browser file first)
+      - name: Tests
         run: bun run test
+      - name: Browser file
+        run: bun run build
       - name: Docs build (runs every code box)
         run: bun run docs:build
       - name: Package contents
