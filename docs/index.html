@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RatMath Shelf</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="The RatMath Shelf: subject libraries for JavaScript built on RatMath Core. Calculus, algebra, linear algebra, graphics, symbolic algebra, complex numbers, counting, logic and statistics today, with exact or certified answers; what each can do and what is planned.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23173a4a'/%3E%3Ctext x='16' y='14' font-family='Georgia,serif' font-size='12' fill='%23f1b24a' text-anchor='middle'%3Ep%3C/text%3E%3Crect x='8' y='16.5' width='16' height='1.6' fill='%23f1b24a'/%3E%3Ctext x='16' y='28' font-family='Georgia,serif' font-size='12' fill='%23f1b24a' text-anchor='middle'%3Eq%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a single column of bands. The hero pairs the pitch with a live
+   mediant search closing in on √2; below it, a directory grouped by the
+   ways people engage (play, learn, write, build, read the theory). */
+:root {
+  --paper: #f2f5f6;      /* page ground, a cool slate-tinted white */
+  --sheet: #ffffff;      /* raised surfaces */
+  --ink: #15262e;        /* primary text */
+  --ink-soft: #4a5e66;   /* secondary text */
+  --rule: #d5dee1;       /* hairlines and borders */
+  --deep: #173a4a;       /* brand band, the "chalkboard" */
+  --deep-ink: #e9f1f3;   /* text on the deep band */
+  --deep-soft: #a9c0c7;
+  --ochre: #b8730f;      /* accent: intervals, links */
+  --ochre-bright: #f1b24a;
+  --teal: #1f7a78;       /* lower bound marks */
+  --rose: #b4472f;       /* upper bound marks */
+  --focus: #b8730f;
+
+  --f-display: "Young Serif", "Iowan Old Style", Georgia, serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(2rem, 1.4rem + 2.6vw, 3.1rem);
+  --radius: 10px;
+  --measure: 64ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1a1f; --sheet: #15232a; --ink: #e4ecee; --ink-soft: #9fb1b7;
+    --rule: #26383f; --deep: #0b2430; --deep-ink: #e9f1f3; --deep-soft: #93aeb7;
+    --ochre: #f1b24a; --ochre-bright: #f6c46d; --teal: #4fc0b8; --rose: #ef8a72;
+    --focus: #f1b24a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1a1f; --sheet: #15232a; --ink: #e4ecee; --ink-soft: #9fb1b7;
+  --rule: #26383f; --deep: #0b2430; --deep-ink: #e9f1f3; --deep-soft: #93aeb7;
+  --ochre: #f1b24a; --ochre-bright: #f6c46d; --teal: #4fc0b8; --rose: #ef8a72;
+  --focus: #f1b24a; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 var(--step-0)/1.6 var(--f-body);
+}
+img { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+code, .mono { font-family: var(--f-mono); }
+
+.wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- top bar + hero (deep band) ---------- */
+.band-deep { background: var(--deep); color: var(--deep-ink); }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-block: 1.1rem; }
+.mark { display: inline-flex; align-items: center; gap: .65rem; text-decoration: none; }
+.mark-frac { display: inline-grid; justify-items: center; font-family: var(--f-display); font-size: .95rem; line-height: 1; color: var(--ochre-bright); }
+.mark-frac span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 .2rem .12rem; }
+.mark-frac span:last-child { padding-top: .12rem; }
+.mark-name { font-family: var(--f-display); font-size: 1.35rem; letter-spacing: .01em; }
+.mark-llc { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--deep-soft); align-self: flex-end; padding-bottom: .25rem; }
+.topnav { display: flex; gap: .3rem 1.2rem; flex-wrap: wrap; font-size: var(--step--1); }
+.topnav a { text-decoration: none; color: var(--deep-soft); }
+.topnav a:hover { color: var(--deep-ink); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; padding-block: clamp(2rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4.5rem); }
+.eyebrow { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ochre-bright); margin-bottom: 1rem; }
+.hero h1 { font-size: var(--step-3); }
+.hero h1 em { font-style: normal; color: var(--ochre-bright); }
+.hero-lede { margin-top: 1.2rem; max-width: 34rem; color: var(--deep-soft); font-size: 1.08rem; }
+.cta-row { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.8rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1.15rem; border-radius: 999px; font-weight: 600; font-size: .95rem; text-decoration: none; border: 1.5px solid transparent; transition: transform .15s ease, background-color .15s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: var(--ochre-bright); color: #1b1408; }
+.btn-ghost { border-color: rgba(233, 241, 243, .35); color: var(--deep-ink); }
+.btn-ghost:hover { border-color: var(--deep-ink); }
+
+/* the oracle demo */
+.oracle { background: rgba(255, 255, 255, .04); border: 1px solid rgba(233, 241, 243, .14); border-radius: 14px; padding: 1.1rem 1.1rem 1rem; min-width: 0; }
+.oracle-head { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.oracle-head h2 { font-size: 1.05rem; color: var(--deep-ink); font-family: var(--f-body); font-weight: 600; }
+.oracle-head .mono { font-size: .78rem; color: var(--deep-soft); }
+.targets { display: flex; gap: .35rem; margin-top: .7rem; flex-wrap: wrap; }
+.targets button { font: 600 .8rem var(--f-mono); background: transparent; color: var(--deep-soft); border: 1px solid rgba(233, 241, 243, .2); border-radius: 999px; padding: .25rem .7rem; cursor: pointer; }
+.targets button[aria-pressed="true"] { background: var(--ochre-bright); color: #1b1408; border-color: var(--ochre-bright); }
+#oracle-canvas { display: block; width: 100%; height: 150px; margin-top: .6rem; }
+.oracle-steps { list-style: none; margin: .4rem 0 0; padding: 0; font: .82rem/1.5 var(--f-mono); color: var(--deep-soft); height: 7.4em; overflow: hidden; font-variant-numeric: tabular-nums; }
+.oracle-steps li { display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; gap: .5rem; }
+.oracle-steps li:last-child { color: var(--deep-ink); }
+.oracle-steps .ans-yes { color: var(--ochre-bright); }
+.oracle-note { margin-top: .6rem; font-size: .82rem; color: var(--deep-soft); }
+.oracle-controls { display: flex; gap: .5rem; margin-top: .7rem; }
+.oracle-controls button { font: 600 .8rem var(--f-body); background: transparent; color: var(--deep-ink); border: 1px solid rgba(233, 241, 243, .3); border-radius: 6px; padding: .35rem .75rem; cursor: pointer; }
+.oracle-controls button:hover { border-color: var(--deep-ink); }
+
+/* ---------- idea strip ---------- */
+.idea { padding-block: clamp(2.5rem, 6vw, 4rem); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+.idea h2 { font-size: var(--step-2); }
+.idea-body { display: grid; gap: 1rem; color: var(--ink-soft); max-width: var(--measure); }
+.idea-body strong { color: var(--ink); font-weight: 600; }
+.code { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); overflow-x: auto; }
+.code pre { margin: 0; padding: 1rem 1.1rem; font: .86rem/1.65 var(--f-mono); color: var(--ink); }
+.code .c { color: var(--ink-soft); }
+.code .n { color: var(--ochre); }
+.code-cap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: .55rem 1.1rem; border-bottom: 1px solid var(--rule); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+.code-cap a { color: var(--ochre); text-decoration: none; letter-spacing: normal; text-transform: none; font-size: .82rem; font-weight: 600; }
+
+/* ---------- directory ---------- */
+.directory { padding-block: 0 clamp(2.5rem, 6vw, 4.5rem); }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 2rem; margin-bottom: 1.6rem; }
+.section-head h2 { font-size: var(--step-2); }
+.section-head p { color: var(--ink-soft); max-width: 40ch; }
+.groups { display: grid; gap: 2.2rem; }
+.group { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem; }
+.group-label h3 { font-size: var(--step-1); }
+.group-label p { margin-top: .35rem; color: var(--ink-soft); font-size: var(--step--1); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: .9rem; }
+.card { display: flex; flex-direction: column; gap: .45rem; padding: 1rem 1.1rem 1.05rem; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); text-decoration: none; min-width: 0; transition: border-color .15s ease, transform .15s ease; }
+.card:hover { border-color: var(--ochre); transform: translateY(-2px); }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+.card h4 { margin: 0; font: 600 1.02rem/1.3 var(--f-body); color: var(--ink); }
+.card .go { color: var(--ochre); font-weight: 700; flex: none; }
+.card p { color: var(--ink-soft); font-size: .92rem; line-height: 1.5; }
+.card .where { margin-top: auto; padding-top: .3rem; font: .76rem var(--f-mono); color: var(--ochre); overflow-wrap: anywhere; }
+
+/* ---------- engage + footer ---------- */
+.sites { padding-block: 0 clamp(2.5rem, 6vw, 4.5rem); }
+.site-list { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 0 2rem; }
+.site-list > div { display: grid; align-content: start; gap: .2rem; padding: .85rem 0; border-bottom: 1px solid var(--rule); min-width: 0; }
+.site-list dt { font-family: var(--f-mono); font-size: .92rem; overflow-wrap: anywhere; }
+.site-list dt a { color: var(--ink); font-weight: 600; text-decoration-color: var(--ochre); text-underline-offset: 3px; }
+.site-list dd { margin: 0; color: var(--ink-soft); }
+.engage { background: var(--sheet); border-block: 1px solid var(--rule); }
+.engage-inner { padding-block: clamp(2.5rem, 6vw, 4rem); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(1.5rem, 4vw, 3rem); }
+.engage h2 { font-size: var(--step-2); }
+.engage-lede { margin-top: .8rem; color: var(--ink-soft); max-width: 38ch; }
+.engage-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+.engage-list li { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule); }
+.engage-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.engage-list .who { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ochre); padding-top: .2rem; font-weight: 600; }
+.engage-list p { color: var(--ink-soft); }
+.engage-list a { color: var(--ink); font-weight: 600; text-decoration-color: var(--ochre); text-underline-offset: 3px; }
+
+footer { padding-block: 2rem 2.5rem; color: var(--ink-soft); font-size: var(--step--1); }
+.foot { display: flex; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; }
+.foot nav { display: flex; gap: .4rem 1.2rem; flex-wrap: wrap; }
+.foot a { color: var(--ink-soft); text-decoration: none; }
+.foot a:hover { color: var(--ink); }
+
+@media (max-width: 820px) {
+  .hero, .idea, .engage-inner { grid-template-columns: minmax(0, 1fr); }
+  .group { grid-template-columns: minmax(0, 1fr); gap: .8rem; }
+}
+@media (max-width: 480px) {
+  .engage-list li { grid-template-columns: minmax(0, 1fr); gap: .3rem; }
+  .topnav { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .card { transition: none; }
+  .btn:hover, .card:hover { transform: none; }
+}
+
+/* ---------- shelf page ---------- */
+.hero-shelf { padding-block: clamp(2rem, 5vw, 3.5rem) clamp(2.5rem, 6vw, 4rem); max-width: 46rem; }
+.hero-shelf h1 { font-size: var(--step-3); }
+.hero-shelf h1 em { font-style: normal; color: var(--ochre-bright); }
+.block { padding-block: clamp(2rem, 5vw, 3rem) 0; }
+.block:last-of-type { padding-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+.core-card { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(1rem, 3vw, 2.5rem); align-items: center; padding: clamp(1.2rem, 3vw, 1.8rem); background: var(--sheet); border: 1px solid var(--rule); border-left: 5px solid var(--ochre); border-radius: var(--radius); }
+.core-card h3 { font-size: var(--step-2); }
+.core-card p { margin-top: .6rem; color: var(--ink-soft); max-width: var(--measure); }
+.links { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; margin-top: .9rem; font-size: .92rem; font-weight: 600; }
+.links a { color: var(--ink); text-decoration-color: var(--ochre); text-underline-offset: 3px; }
+.core-card .code pre { font-size: .82rem; }
+.pkg { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: clamp(1rem, 3vw, 2.2rem); padding-block: 1.6rem; border-top: 1px solid var(--rule); }
+.pkg:first-of-type { border-top: 0; padding-top: 0; }
+.pkg h3 { font-size: var(--step-1); }
+.pkg .id { display: block; margin-top: .3rem; font: .8rem var(--f-mono); color: var(--ochre); overflow-wrap: anywhere; }
+.pkg .about { margin-top: .6rem; color: var(--ink-soft); font-size: .95rem; }
+.pkg .links { font-size: .88rem; }
+.topics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: .15rem 1.6rem; align-content: start; }
+.topics li { padding: .5rem 0; border-bottom: 1px solid var(--rule); min-width: 0; }
+.topics a { color: var(--ink); font-weight: 600; text-decoration-color: var(--ochre); text-underline-offset: 3px; }
+.topics span { display: block; color: var(--ink-soft); font-size: .88rem; line-height: 1.45; }
+.status { display: inline-block; margin-left: .5rem; padding: .08rem .55rem; border-radius: 999px; font: 600 .68rem/1.6 var(--f-body); letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }
+.status-done { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
+.status-plan { background: color-mix(in srgb, var(--ink-soft) 14%, transparent); color: var(--ink-soft); }
+.planned .topics li { border-bottom-style: dashed; }
+.planned .topics li span { font-size: .92rem; color: var(--ink-soft); }
+.how { color: var(--ink-soft); max-width: var(--measure); display: grid; gap: .8rem; }
+.how a { color: var(--ink); font-weight: 600; text-decoration-color: var(--ochre); text-underline-offset: 3px; }
+@media (max-width: 820px) {
+  .pkg, .core-card { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="band-deep">
+  <div class="wrap">
+    <header class="topbar">
+      <a class="mark" href="/" aria-label="RatMath home">
+        <span class="mark-frac" aria-hidden="true"><span>p</span><span>q</span></span>
+        <span class="mark-name">RatMath</span>
+        <span class="mark-llc">Shelf</span>
+      </a>
+      <nav class="topnav" aria-label="Sections">
+        <a href="#core">Core</a>
+        <a href="#available">On the shelf</a>
+        <a href="#planned">Planned</a>
+        <a href="using.html">Using it all</a>
+        <a href="/">RatMath home</a>
+        <a href="https://github.com/ratmath">GitHub</a>
+      </nav>
+    </header>
+
+    <section class="hero-shelf" id="top">
+      <p class="eyebrow">RatMath Shelf</p>
+      <h1>A shelf of subject libraries, each built on <em>exact numbers</em>.</h1>
+      <p class="hero-lede">One library for each part of mathematics, for JavaScript. Each one gives a fast preview first and then an answer that is exact, or an interval proven to contain the truth. This page lists what is on the shelf today and what is planned. To have all of it in one import, use the <a href="using.html" style="color:inherit;text-decoration-color:var(--ochre);text-underline-offset:3px"><code>ratmath</code> package</a>.</p>
+    </section>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <section class="block" id="core">
+      <div class="section-head" style="border-top:0;padding-top:0">
+        <h2>The foundation</h2>
+        <p>Everything on the shelf stands on Core.</p>
+      </div>
+      <div class="core-card">
+        <div>
+          <h3>RatMath Core</h3>
+          <span class="id" style="font:.8rem var(--f-mono);color:var(--ochre)">@ratmath/core</span>
+          <p>Exact integers, fractions and rational intervals for JavaScript, with certified approximations, regions, number literals in any base and the <code>R</code> template for writing exact expressions. BigInt-based, with no dependencies.</p>
+          <p class="links"><a href="https://ratmath.com/core/">Documentation</a> <a href="https://ratmath.com/core/explore.html">Explore</a> <a href="https://ratmath.com/core/reference.html">Reference</a> <a href="https://www.npmjs.com/package/@ratmath/core">npm</a> <a href="https://github.com/ratmath/core">Source</a></p>
+        </div>
+        <div class="code">
+          <div class="code-cap"><span>Core</span><a href="https://ratmath.com/core/r-template.html">The R template →</a></div>
+<pre>R`<span class="n">1/3</span> + <span class="n">1/6</span>`        <span class="c">// 1/2, exactly</span>
+R`<span class="n">0.#3</span>`             <span class="c">// 1/3</span>
+R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="available">
+      <div class="section-head">
+        <h2>On the shelf</h2>
+        <p>Built, tested and documented. Each topic links to its page, which ends with code you can run.</p>
+      </div>
+<!-- One <article class="pkg"> per library. When a planned topic is built, add its <li> here with a link
+     to its documentation page and remove it from the Planned section below and from the roadmap. -->
+        <article class="pkg" id="analytic">
+          <div>
+            <h3>Analytic<span class="status status-done">Available</span></h3>
+            <span class="id">@ratmath/analytic</span>
+            <p class="about">Calculus with proven error bounds: every value is an interval guaranteed to contain the true answer.</p>
+            <p class="links"><a href="https://ratmath.com/analytic/">Overview</a> <a href="https://ratmath.com/analytic/explore.html">Explore</a> <a href="https://ratmath.com/analytic/reference.html">Reference</a> <a href="https://github.com/ratmath/analytic">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/analytic/models.html">Taylor models</a><span>Exact polynomials with certified remainders.</span></li>
+            <li><a href="https://ratmath.com/analytic/expressions.html">Formulas and derivatives</a><span>Write a formula, differentiate it symbolically.</span></li>
+            <li><a href="https://ratmath.com/analytic/values.html">Values to many digits</a><span>exp, sin, log and friends to any precision.</span></li>
+            <li><a href="https://ratmath.com/analytic/ranges.html">Ranges and integrals</a><span>Certified ranges and definite integrals.</span></li>
+            <li><a href="https://ratmath.com/analytic/zeros.html">Zeros, poles and extrema</a><span>Found, counted and proven.</span></li>
+            <li><a href="https://ratmath.com/analytic/improper.html">Limits and improper integrals</a><span>Limits at infinity, proven convergence and divergence.</span></li>
+            <li><a href="https://ratmath.com/analytic/several.html">Several variables</a><span>Gradients, critical points, multiple, line and surface integrals.</span></li>
+            <li><a href="https://ratmath.com/analytic/special.html">Special functions</a><span>Gamma, Bessel, Fresnel and the error function.</span></li>
+            <li><a href="https://ratmath.com/analytic/fourier.html">Fourier series</a><span>Coefficients and partial sums with certified error.</span></li>
+            <li><a href="https://ratmath.com/analytic/piecewise.html">Piecewise functions</a><span>Rules on regions written as chains.</span></li>
+            <li><a href="https://ratmath.com/analytic/odes.html">Differential equations</a><span>Validated solutions of initial value problems.</span></li>
+            <li><a href="https://ratmath.com/analytic/bvp.html">Boundary value problems</a><span>Solved by certified shooting.</span></li>
+            <li><a href="https://ratmath.com/analytic/series.html">Your own series</a><span>Bring a series and its remainder rule.</span></li>
+            <li><a href="https://ratmath.com/analytic/sequences.html">Sequences</a><span>Limits, monotonicity and bounds proven for every term; recursions by contraction.</span></li>
+            <li><a href="https://ratmath.com/analytic/sums.html">Series and convergence tests</a><span>Each test with the quantity that decided it; sums with a proven tail.</span></li>
+            <li><a href="https://ratmath.com/analytic/power.html">Power series and uniform convergence</a><span>Radius, end points examined, Taylor's remainder against the true error.</span></li>
+            <li><a href="https://ratmath.com/analytic/theorems.html">Green, Stokes and the divergence theorem</a><span>Both sides enclosed, and the enclosures must meet.</span></li>
+            <li><a href="https://ratmath.com/analytic/multipliers.html">Change of variables, potentials, multipliers</a><span>The Jacobian shown, gradients recognised, candidates certified.</span></li>
+            <li><a href="https://ratmath.com/analytic/methods.html">First-order equations: the methods</a><span>Linear, separable, exact, Bernoulli and homogeneous, each step shown and the answer checked.</span></li>
+            <li><a href="https://ratmath.com/analytic/linearodes.html">Linear equations and Laplace transforms</a><span>Characteristic roots, undetermined coefficients, variation of parameters, transforms.</span></li>
+            <li><a href="https://ratmath.com/analytic/switches.html">Steps and impulses</a><span>Switched and impulsive forcing by Laplace transforms, checked piece by piece.</span></li>
+            <li><a href="https://ratmath.com/analytic/systems.html">Linear and planar systems</a><span>Exact matrix exponentials of any size; every equilibrium in the plane proven and classified.</span></li>
+            <li><a href="https://ratmath.com/analytic/seriessolutions.html">Series solutions</a><span>Ordinary and regular singular points; Sturm–Liouville eigenvalues bracketed.</span></li>
+            <li><a href="https://ratmath.com/analytic/pdes.html">Heat, waves and potentials</a><span>Separation of variables with a proven bound on the tail.</span></li>
+            <li><a href="https://ratmath.com/analytic/curves.html">Curves</a><span>Length, curvature, torsion and the Frenet frame.</span></li>
+            <li><a href="https://ratmath.com/analytic/surfaces.html">Surfaces and curvature</a><span>Fundamental forms; Gaussian, mean and principal curvatures.</span></li>
+            <li><a href="https://ratmath.com/analytic/geodesics.html">Geodesics and Gauss–Bonnet</a><span>Validated geodesics, parallel transport, and the theorem as a checked statement.</span></li>
+            <li><a href="https://ratmath.com/analytic/floats.html">Floating point, exactly</a><span>Every double is a fraction, so rounding error can be computed.</span></li>
+            <li><a href="https://ratmath.com/analytic/rootmethods.html">Root-finding methods</a><span>Bisection, Newton, secant and fixed points with the observed order.</span></li>
+            <li><a href="https://ratmath.com/analytic/interpolation.html">Interpolation and approximation</a><span>Divided differences, splines, Chebyshev nodes, the true error beside the bound.</span></li>
+            <li><a href="https://ratmath.com/analytic/quadraturerules.html">Differences and quadrature rules</a><span>Richardson, Romberg and Gauss rules with exact nodes.</span></li>
+            <li><a href="https://ratmath.com/analytic/odemethods.html">Euler to Runge–Kutta</a><span>Step tables against the validated solution; stability regions.</span></li>
+            <li><a href="https://ratmath.com/analytic/transforms.html">The Fourier transform</a><span>Certified values, checked formulas, Parseval and convolution.</span></li>
+            <li><a href="https://ratmath.com/analytic/dft.html">The discrete Fourier transform</a><span>Exact over roots of unity; the fast algorithm; aliasing.</span></li>
+            <li><a href="https://ratmath.com/analytic/fast.html">Fast, then certified</a><span>A quick preview first, the proof after.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="algebraic">
+          <div>
+            <h3>Algebraic<span class="status status-done">Available</span></h3>
+            <span class="id">@ratmath/algebraic</span>
+            <p class="about">Exact algebraic numbers such as √2 + ∛5, and the polynomials, fields and groups around them.</p>
+            <p class="links"><a href="https://ratmath.com/algebraic/">Overview</a> <a href="https://ratmath.com/algebraic/explore.html">Explore</a> <a href="https://ratmath.com/algebraic/reference.html">Reference</a> <a href="https://github.com/ratmath/algebraic">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/algebraic/numbers.html">Algebraic numbers</a><span>Exact arithmetic and comparison of roots of polynomials.</span></li>
+            <li><a href="https://ratmath.com/algebraic/complex.html">Complex algebraic numbers</a><span>Every root of a polynomial, certified.</span></li>
+            <li><a href="https://ratmath.com/algebraic/factoring.html">Factoring polynomials</a><span>Over the rationals, number fields and finite fields.</span></li>
+            <li><a href="https://ratmath.com/algebraic/number-fields.html">Number fields</a><span>Extensions, splitting fields, roots in a field.</span></li>
+            <li><a href="https://ratmath.com/algebraic/finite-fields.html">Finite fields</a><span>Prime fields and their extensions.</span></li>
+            <li><a href="https://ratmath.com/algebraic/galois.html">Galois groups</a><span>Groups to degree 7 and the Galois correspondence.</span></li>
+            <li><a href="https://ratmath.com/algebraic/angles.html">Angles and roots of unity</a><span>Exact sines and cosines of rational angles.</span></li>
+            <li><a href="https://ratmath.com/algebraic/polynomials.html">Polynomial toolkit</a><span>Resultants, discriminants, partial fractions.</span></li>
+            <li><a href="https://ratmath.com/algebraic/recognize.html">Recognising numbers</a><span>From digits back to an exact form.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="linalg">
+          <div>
+            <h3>Linear algebra<span class="status status-done">Available</span></h3>
+            <span class="id">@ratmath/linalg</span>
+            <p class="about">Exact linear algebra over the rationals and beyond, with float previews that sharpen to exact results.</p>
+            <p class="links"><a href="https://ratmath.com/linalg/">Overview</a> <a href="https://ratmath.com/linalg/reference.html">Reference</a> <a href="https://github.com/ratmath/linalg">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/linalg/elimination.html">Elimination and solving</a><span>Row reduction with every step exact.</span></li>
+            <li><a href="https://ratmath.com/linalg/inverses.html">Inverses and fast exact solving</a><span>Exact answers at scale.</span></li>
+            <li><a href="https://ratmath.com/linalg/determinants.html">Determinants</a><span>Exact, by fraction-free elimination.</span></li>
+            <li><a href="https://ratmath.com/linalg/subspaces.html">The four subspaces</a><span>Bases for each, exactly.</span></li>
+            <li><a href="https://ratmath.com/linalg/orthogonality.html">Orthogonality and least squares</a><span>Gram–Schmidt and QR without square roots.</span></li>
+            <li><a href="https://ratmath.com/linalg/eigen.html">Eigenvalues and eigenvectors</a><span>Eigenvalues as exact algebraic numbers.</span></li>
+            <li><a href="https://ratmath.com/linalg/jordan.html">Jordan and canonical forms</a><span>Jordan, rational and Smith forms.</span></li>
+            <li><a href="https://ratmath.com/linalg/factorizations.html">Factorizations and powers</a><span>LU, LDL, QR, pseudoinverse, powers.</span></li>
+            <li><a href="https://ratmath.com/linalg/exponential.html">The matrix exponential</a><span>Certified enclosures of e^A.</span></li>
+            <li><a href="https://ratmath.com/linalg/matrix-functions.html">Matrix functions</a><span>Logarithm, square root, sine and cosine of a matrix.</span></li>
+            <li><a href="https://ratmath.com/linalg/integer.html">Integer matrices</a><span>Hermite and Smith normal forms.</span></li>
+            <li><a href="https://ratmath.com/linalg/fields.html">Other number systems</a><span>Integers mod p, ranges, algebraic numbers.</span></li>
+            <li><a href="https://ratmath.com/linalg/nonlinear.html">Nonlinear solving</a><span>Certified solutions of nonlinear systems.</span></li>
+            <li><a href="https://ratmath.com/linalg/iterative.html">Iterative and eigenvalue methods</a><span>Jacobi to QR in floats and exactly, each with its exact error.</span></li>
+            <li><a href="https://ratmath.com/linalg/fast-exact.html">Fast, then exact</a><span>A float preview first, the exact answer after.</span></li>
+            <li><a href="https://ratmath.com/linalg/workbench.html">Exact workbench</a><span>Try matrices in the browser.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="graphics">
+          <div>
+            <h3>Graphics<span class="status status-done">Available</span></h3>
+            <span class="id">@ratmath/graphics</span>
+            <p class="about">Pictures that do not lie: graphs, regions and geometry whose features are proven before they are drawn.</p>
+            <p class="links"><a href="https://ratmath.com/graphics/">Overview</a> <a href="https://ratmath.com/graphics/explore.html">Explore</a> <a href="https://ratmath.com/graphics/reference.html">Reference</a> <a href="https://github.com/ratmath/graphics">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/graphics/graphs.html">Graphs and features</a><span>Zeros, poles, holes and extrema, certified.</span></li>
+            <li><a href="https://ratmath.com/graphics/curves.html">Curves, data and slope fields</a><span>Parametric and polar curves, data, ODE solutions.</span></li>
+            <li><a href="https://ratmath.com/graphics/implicit.html">Implicit curves</a><span>Curves from equations, pixel by certified pixel.</span></li>
+            <li><a href="https://ratmath.com/graphics/regions.html">Regions and inequalities</a><span>Exact regions bounded by lines and conics.</span></li>
+            <li><a href="https://ratmath.com/graphics/geometry.html">Exact geometry</a><span>Points, lines and circles with exact coordinates.</span></li>
+            <li><a href="https://ratmath.com/graphics/calculus.html">Calculus pictures</a><span>Tangents, areas, Riemann sums, Taylor polynomials, gradients.</span></li>
+            <li><a href="https://ratmath.com/graphics/space.html">Surfaces and space curves</a><span>Three-dimensional views.</span></li>
+            <li><a href="https://ratmath.com/graphics/animation.html">Animation</a><span>Any picture, moving in a parameter.</span></li>
+            <li><a href="https://ratmath.com/graphics/drawing.html">Drawing and labels</a><span>Marks, labels and styles.</span></li>
+            <li><a href="https://ratmath.com/graphics/export.html">Exporting</a><span>SVG, PNG, PDF, TikZ and text.</span></li>
+            <li><a href="https://ratmath.com/graphics/fast-certified.html">Fast, then certified</a><span>Draw at once, prove after.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="structures">
+          <div>
+            <h3>Structures<span class="status status-done">First part available</span></h3>
+            <span class="id">@ratmath/structures</span>
+            <p class="about">Abstract algebra. Built so far: polynomials in several variables with exact coefficients, and the fractions made from them. Groups, rings and Gröbner bases are <a href="#structures-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/structures/">Overview</a> <a href="https://ratmath.com/structures/explore.html">Explore</a> <a href="https://ratmath.com/structures/reference.html">Reference</a> <a href="https://github.com/ratmath/structures">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/structures/polynomials.html">Polynomials in several variables</a><span>Rings over the rationals, finite fields and number fields.</span></li>
+            <li><a href="https://ratmath.com/structures/orders.html">Monomial orders and division</a><span>lex, grlex, grevlex and dividing by several polynomials.</span></li>
+            <li><a href="https://ratmath.com/structures/gcd.html">Greatest common divisors</a><span>Contents, primitive parts, square-free parts.</span></li>
+            <li><a href="https://ratmath.com/structures/factoring.html">Factoring</a><span>Irreducible factors over the rationals.</span></li>
+            <li><a href="https://ratmath.com/structures/resultants.html">Resultants and discriminants</a><span>Eliminating a variable; where curves meet.</span></li>
+            <li><a href="https://ratmath.com/structures/rational-functions.html">Rational functions</a><span>The field Q(x, y) and matrices with parameters.</span></li>
+            <li><a href="https://ratmath.com/structures/symmetric.html">Symmetric polynomials</a><span>Elementary symmetric polynomials and Newton's identities.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="symbolic">
+          <div>
+            <h3>Symbolic algebra<span class="status status-done">First three parts available</span></h3>
+            <span class="id">@ratmath/symbolic</span>
+            <p class="about">Algebra on expressions, with every step checked by the certified libraries. Built so far: expressions, assumptions, rewriting and equality; solving equations and inequalities; antiderivatives, limits and expansions. Systems, sums and step records are <a href="#symbolic-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/symbolic/">Overview</a> <a href="https://ratmath.com/symbolic/explore.html">Explore</a> <a href="https://ratmath.com/symbolic/reference.html">Reference</a> <a href="https://github.com/ratmath/symbolic">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/symbolic/expressions.html">Expressions</a><span>The shared tree: writing, substituting, differentiating, evaluating.</span></li>
+            <li><a href="https://ratmath.com/symbolic/assumptions.html">Assumptions</a><span>Say what the letters stand for, and prove signs from it.</span></li>
+            <li><a href="https://ratmath.com/symbolic/normal-forms.html">Normal forms</a><span>Expand, factor, collect; roots, logs and sines reduced exactly.</span></li>
+            <li><a href="https://ratmath.com/symbolic/rules.html">Rules</a><span>Rewriting rules that carry their conditions and are checked when used.</span></li>
+            <li><a href="https://ratmath.com/symbolic/equality.html">Equality</a><span>Proven equal, proven different, or undecided.</span></li>
+            <li><a href="https://ratmath.com/symbolic/solving.html">Solving equations</a><span>Every candidate checked in the original equation; failures reported.</span></li>
+            <li><a href="https://ratmath.com/symbolic/inequalities.html">Inequalities</a><span>Critical points, the sign on each piece, the set where it holds.</span></li>
+            <li><a href="https://ratmath.com/symbolic/antiderivatives.html">Antiderivatives</a><span>The methods of the course, each result differentiated before it is returned.</span></li>
+            <li><a href="https://ratmath.com/symbolic/limits.html">Limits</a><span>Closed forms, confirmed by certified enclosures.</span></li>
+            <li><a href="https://ratmath.com/symbolic/expansions.html">Expansions</a><span>Taylor and Laurent expansions with exact coefficients.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="complex">
+          <div>
+            <h3>Complex<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/complex</span>
+            <p class="about">Complex numbers that say which branch they took, with quaternions and octonions. Built so far: exact complex numbers, certified functions with branch reporting, and the Cayley–Dickson numbers. Complex analysis is <a href="#complex-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/complex/">Overview</a> <a href="https://ratmath.com/complex/explore.html">Explore</a> <a href="https://ratmath.com/complex/reference.html">Reference</a> <a href="https://github.com/ratmath/complex">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/complex/numbers.html">Complex rationals</a><span>Exact a + bi with fractions; exact square roots.</span></li>
+            <li><a href="https://ratmath.com/complex/enclosures.html">Rectangles and discs</a><span>Certified enclosures of numbers that are not rational.</span></li>
+            <li><a href="https://ratmath.com/complex/polar.html">Polar form</a><span>Modulus and angle, and what is exact about them.</span></li>
+            <li><a href="https://ratmath.com/complex/functions.html">Functions</a><span>exp, sine, cosine and the hyperbolic functions at any precision.</span></li>
+            <li><a href="https://ratmath.com/complex/branches.html">Branches</a><span>Logarithms, roots and inverses that report their cuts.</span></li>
+            <li><a href="https://ratmath.com/complex/cayley-dickson.html">Cayley–Dickson numbers</a><span>Quaternions, octonions, sedenions, and what each loses.</span></li>
+            <li><a href="https://ratmath.com/complex/rotations.html">Rotations</a><span>Quaternions as exact rotations of space.</span></li>
+            <li><a href="https://ratmath.com/complex/integer-quaternions.html">Integer quaternions</a><span>Division with remainder and sums of four squares.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="discrete">
+          <div>
+            <h3>Discrete mathematics<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/discrete</span>
+            <p class="about">Combinatorics, graphs and games. Built so far: exact counting, families of objects you can list, rank and unrank, a seeded random generator, graphs with exact weights (connectivity, shortest paths, tours and trees), exact linear programming with matrix and bimatrix games, generating functions and recurrences with exact closed forms, matchings and flows, colouring, planarity, isomorphism and spectra, combinatorial and cooperative games and voting, relations, orders and Pólya counting, and error-correcting codes and designs, each answer with its certificate. Graph drawing is <a href="#discrete-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/discrete/">Overview</a> <a href="https://ratmath.com/discrete/explore.html">Explore</a> <a href="https://ratmath.com/discrete/reference.html">Reference</a> <a href="https://github.com/ratmath/discrete">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/discrete/counting.html">Counting</a><span>Binomials, Stirling and Bell numbers, partitions, Catalan numbers, all exact.</span></li>
+            <li><a href="https://ratmath.com/discrete/inclusion-exclusion.html">Inclusion and exclusion</a><span>The sieve formula with its terms shown, and the pigeonhole principle.</span></li>
+            <li><a href="https://ratmath.com/discrete/enumeration.html">Enumeration and ranking</a><span>Permutations, subsets, partitions and more: the object at any position, and the position of any object.</span></li>
+            <li><a href="https://ratmath.com/discrete/random.html">Seeded random</a><span>A generator that repeats exactly from its seed, with unbiased draws from any family.</span></li>
+            <li><a href="https://ratmath.com/discrete/graphs.html">Graphs</a><span>Graphs written as text, exact weights, the standard families, products and line graphs.</span></li>
+            <li><a href="https://ratmath.com/discrete/connectivity.html">Connectivity</a><span>Components, bridges, strong components, topological order, two-colouring with an odd cycle as the reason.</span></li>
+            <li><a href="https://ratmath.com/discrete/shortest-paths.html">Shortest paths</a><span>Dijkstra, Bellman–Ford and Floyd–Warshall with exact distances; a negative cycle when there is one.</span></li>
+            <li><a href="https://ratmath.com/discrete/tours.html">Euler and Hamilton</a><span>Every edge once by Hierholzer; every vertex once by exhaustive search.</span></li>
+            <li><a href="https://ratmath.com/discrete/trees.html">Trees</a><span>Minimum spanning trees, the matrix-tree theorem, Prüfer codes.</span></li>
+            <li><a href="https://ratmath.com/discrete/linear-programming.html">Linear programming</a><span>An exact simplex method; every answer with its proof: dual prices, a Farkas vector or a ray.</span></li>
+            <li><a href="https://ratmath.com/discrete/integer-programs.html">Integer programs</a><span>Branch and bound on exact relaxations.</span></li>
+            <li><a href="https://ratmath.com/discrete/matrix-games.html">Matrix games</a><span>Zero-sum games: optimal mixed strategies and the value as fractions.</span></li>
+            <li><a href="https://ratmath.com/discrete/bimatrix-games.html">Bimatrix games</a><span>Dominance, every Nash equilibrium, Lemke–Howson.</span></li>
+            <li><a href="https://ratmath.com/discrete/generating-functions.html">Generating functions</a><span>Exact power series: products, reciprocals, composition, exp and log, EGFs.</span></li>
+            <li><a href="https://ratmath.com/discrete/recurrences.html">Recurrences</a><span>Closed forms with exact algebraic roots, guessing a recurrence, closed sums, the master theorem.</span></li>
+            <li><a href="https://ratmath.com/discrete/matchings-flows.html">Matchings and flows</a><span>Blossoms with a Tutte–Berge proof, König and Hall, assignment, stable matching, max flow and min cut.</span></li>
+            <li><a href="https://ratmath.com/discrete/colouring.html">Colouring and cliques</a><span>The chromatic number with the reason no fewer colours work; the chromatic polynomial.</span></li>
+            <li><a href="https://ratmath.com/discrete/planarity.html">Planarity</a><span>Faces for a planar graph, a Kuratowski subdivision for one that is not.</span></li>
+            <li><a href="https://ratmath.com/discrete/isomorphism-spectra.html">Isomorphism and spectra</a><span>Colour refinement, automorphism groups, exact eigenvalues, walks and spanning trees.</span></li>
+            <li><a href="https://ratmath.com/discrete/combinatorial-games.html">Combinatorial games</a><span>Sprague–Grundy, nim, Conway's numbers, nimbers and up, backward induction.</span></li>
+            <li><a href="https://ratmath.com/discrete/cooperative-voting.html">Cooperative games and voting</a><span>Shapley values, the core or a proof it is empty, voting power, voting methods, apportionment.</span></li>
+            <li><a href="https://ratmath.com/discrete/relations-orders.html">Relations and orders</a><span>Properties with counterexamples, Dilworth, linear extensions, Möbius functions, lattices.</span></li>
+            <li><a href="https://ratmath.com/discrete/polya.html">Pólya counting</a><span>Colourings up to symmetry: Burnside's lemma and the cycle index.</span></li>
+            <li><a href="https://ratmath.com/discrete/codes.html">Error-correcting codes</a><span>Linear codes with syndrome decoding in steps, Hamming codes, bounds, Reed–Solomon.</span></li>
+            <li><a href="https://ratmath.com/discrete/designs.html">Latin squares and designs</a><span>Orthogonal Latin squares, block designs, finite planes, Steiner triple systems.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="numtheory">
+          <div>
+            <h3>Number theory<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/numtheory</span>
+            <p class="about">Number theory with proofs attached. Built so far: primes with certificates checked by an independent verifier, factoring, congruences, reciprocity, sums of squares, Diophantine and Pell equations, continued fractions, quadratic forms and p-adic numbers. Elliptic curves and algebraic number theory are <a href="#numtheory-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/numtheory/">Overview</a> <a href="https://ratmath.com/numtheory/explore.html">Explore</a> <a href="https://ratmath.com/numtheory/reference.html">Reference</a> <a href="https://github.com/ratmath/numtheory">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/numtheory/primes.html">Primes and certificates</a><span>Proven below 2⁶⁴, certified above, refused when no proof is found.</span></li>
+            <li><a href="https://ratmath.com/numtheory/factoring.html">Factoring</a><span>Trial division, Pollard rho and p − 1, with proven prime factors.</span></li>
+            <li><a href="https://ratmath.com/numtheory/arithmetic-functions.html">Arithmetic functions</a><span>σ, φ, μ and friends; perfect and amicable numbers; Möbius inversion.</span></li>
+            <li><a href="https://ratmath.com/numtheory/congruences.html">Congruences</a><span>The Chinese remainder theorem for any moduli, Hensel lifting, primitive roots.</span></li>
+            <li><a href="https://ratmath.com/numtheory/reciprocity.html">Quadratic reciprocity</a><span>Legendre, Jacobi and Kronecker symbols, with the steps written out.</span></li>
+            <li><a href="https://ratmath.com/numtheory/squares.html">Sums of squares</a><span>Two, three and four squares, Jacobi's counts, Pythagorean triples.</span></li>
+            <li><a href="https://ratmath.com/numtheory/diophantine.html">Linear equations</a><span>Every integer solution as a lattice, Frobenius numbers, Egyptian fractions.</span></li>
+            <li><a href="https://ratmath.com/numtheory/continued-fractions.html">Continued fractions</a><span>Exact expansions, periodic quadratic irrationals, fundamental units.</span></li>
+            <li><a href="https://ratmath.com/numtheory/pell.html">Pell equations</a><span>x² − Dy² = N: every class of solutions.</span></li>
+            <li><a href="https://ratmath.com/numtheory/quadratic-forms.html">Quadratic forms</a><span>Reduction with proof, composition, class groups and their structure.</span></li>
+            <li><a href="https://ratmath.com/numtheory/padic.html">p-adic numbers</a><span>Lazy exact digits, square and Hensel roots, exp and log.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="logic">
+          <div>
+            <h3>Logic<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/logic</span>
+            <p class="about">Formal logic you can compute with: valid with a proof, invalid with a countermodel, or unresolved. Built so far: propositional logic and four proof systems with checkers, proof search and hints; predicate logic with finite models and quantifier proofs; circuits, syllogisms and modal logic; automata, grammars and machines. Ordinals, cardinals and Peano arithmetic are <a href="#logic-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/logic/">Overview</a> <a href="https://ratmath.com/logic/explore.html">Explore</a> <a href="https://ratmath.com/logic/reference.html">Reference</a> <a href="https://github.com/ratmath/logic">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/logic/formulas.html">Formulas</a><span>A parser for what people type; printing in Unicode, ASCII and TeX.</span></li>
+            <li><a href="https://ratmath.com/logic/truth-tables.html">Truth tables</a><span>Full tables with a column for each part, and model counts.</span></li>
+            <li><a href="https://ratmath.com/logic/normal-forms.html">Normal forms</a><span>Negation, conjunctive and disjunctive forms, and the Tseitin form.</span></li>
+            <li><a href="https://ratmath.com/logic/satisfiability.html">Satisfiability and validity</a><span>Each answer comes with a model or a refutation that is checked.</span></li>
+            <li><a href="https://ratmath.com/logic/simplification.html">Simplification</a><span>Shortest two-level forms by the Quine–McCluskey method.</span></li>
+            <li><a href="https://ratmath.com/logic/natural-deduction.html">Natural deduction</a><span>A proof checker that names the line, the rule and what was missing.</span></li>
+            <li><a href="https://ratmath.com/logic/sequents.html">Sequent calculus</a><span>Classical and intuitionistic derivations, with Kripke countermodels.</span></li>
+            <li><a href="https://ratmath.com/logic/truth-trees.html">Truth trees</a><span>Trees that close to prove validity or stay open with a countermodel.</span></li>
+            <li><a href="https://ratmath.com/logic/resolution.html">Resolution</a><span>The evidence the solver gives, and a checker for refutations by hand.</span></li>
+            <li><a href="https://ratmath.com/logic/proof-search.html">Proof search and hints</a><span>Proofs written for you, and hints that give the next line only.</span></li>
+            <li><a href="https://ratmath.com/logic/predicate-logic.html">Predicate logic</a><span>Quantifiers, function symbols and identity; substitution without capture; prenex and Skolem forms.</span></li>
+            <li><a href="https://ratmath.com/logic/models.html">Finite models</a><span>Truth in a structure with witnesses, and model search that checks what it finds.</span></li>
+            <li><a href="https://ratmath.com/logic/first-order-proofs.html">First-order proofs and trees</a><span>Quantifier rules with their conditions on names, and trees that close or give a countermodel.</span></li>
+            <li><a href="https://ratmath.com/logic/circuits.html">Circuits and Karnaugh maps</a><span>Adders, NAND-only circuits, equivalence with a witness, maps grouped into shortest forms.</span></li>
+            <li><a href="https://ratmath.com/logic/syllogisms.html">Syllogisms</a><span>All 256 moods and figures decided on the Venn diagram, with names and counterexamples.</span></li>
+            <li><a href="https://ratmath.com/logic/modal-logic.html">Modal logic</a><span>Kripke models, and validity in K, D, T, B, S4 and S5 with checked countermodels.</span></li>
+            <li><a href="https://ratmath.com/logic/automata.html">Automata and regular expressions</a><span>Minimal DFAs, equivalence with a shortest distinguishing word, regexes both ways.</span></li>
+            <li><a href="https://ratmath.com/logic/machines.html">Grammars and machines</a><span>CYK parse trees, pushdown automata, Turing machines, recursive functions.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="stats">
+          <div>
+            <h3>Statistics<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/stats</span>
+            <p class="about">Probability and statistics with every answer labelled exact, certified or simulated. Built so far: finite probability, distributions, descriptive statistics, exact tests, data generated from a known model with noise to test what a procedure recovers, the standard tests and intervals, and regression and analysis of variance with exact coefficients. Rank tests, the bootstrap, Markov chains and Bayesian updating are <a href="#stats-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/stats/">Overview</a> <a href="https://ratmath.com/stats/explore.html">Explore</a> <a href="https://ratmath.com/stats/reference.html">Reference</a> <a href="https://github.com/ratmath/stats">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/stats/finite-probability.html">Finite probability</a><span>Sample spaces, conditioning, expectation and Bayes' rule, in fractions.</span></li>
+            <li><a href="https://ratmath.com/stats/discrete-distributions.html">Discrete distributions</a><span>Binomial, hypergeometric and geometric exactly; Poisson certified.</span></li>
+            <li><a href="https://ratmath.com/stats/descriptive.html">Descriptive statistics</a><span>Exact means and variances, quantiles by named rules, least squares.</span></li>
+            <li><a href="https://ratmath.com/stats/exact-tests.html">Exact tests</a><span>Binomial, Fisher and permutation tests with p-values as fractions.</span></li>
+            <li><a href="https://ratmath.com/stats/continuous-distributions.html">Continuous distributions</a><span>Normal, t, chi-square, F, gamma and beta to any precision.</span></li>
+            <li><a href="https://ratmath.com/stats/certified-answers.html">Certified answers</a><span>Enclosures, and comparisons that can be too close to call.</span></li>
+            <li><a href="https://ratmath.com/stats/sampling.html">Seeded sampling</a><span>A seeded generator with named streams, and exact rational draws.</span></li>
+            <li><a href="https://ratmath.com/stats/models.html">Models with noise</a><span>A known truth disturbed by noise, contamination, censoring and more.</span></li>
+            <li><a href="https://ratmath.com/stats/experiments.html">Experiments</a><span>Coverage, size, power and bias, each with its own sampling error.</span></li>
+            <li><a href="https://ratmath.com/stats/means.html">Tests for means</a><span>z and t tests, paired, Welch and pooled, with exact t² and certified p-values.</span></li>
+            <li><a href="https://ratmath.com/stats/variances-proportions.html">Variances and proportions</a><span>Chi-square and F tests for spread; z tests and Wilson intervals for proportions.</span></li>
+            <li><a href="https://ratmath.com/stats/chi-square.html">Chi-square tests</a><span>Goodness of fit and independence, with Yates' correction and Fisher's test.</span></li>
+            <li><a href="https://ratmath.com/stats/estimation.html">Fitting distributions</a><span>Maximum likelihood and the method of moments for ten families.</span></li>
+            <li><a href="https://ratmath.com/stats/testing-the-tests.html">Testing the tests</a><span>Seeded experiments check that intervals cover and tests keep their size.</span></li>
+            <li><a href="https://ratmath.com/stats/regression.html">Linear regression</a><span>Exact least squares, prediction intervals, leverage and nested models.</span></li>
+            <li><a href="https://ratmath.com/stats/anova.html">Analysis of variance</a><span>Exact sums of squares, as a regression on indicators, and two factors.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="chaos">
+          <div>
+            <h3>Chaos<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/chaos</span>
+            <p class="about">Dynamical systems, where exact arithmetic shows the true orbit. Built so far: maps of the line, with orbits, periodic points, Lyapunov exponents, proven bifurcations and symbolic dynamics. Maps of the plane, flows and fractals are <a href="#chaos-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/chaos/">Overview</a> <a href="https://ratmath.com/chaos/explore.html">Explore</a> <a href="https://ratmath.com/chaos/reference.html">Reference</a> <a href="https://github.com/ratmath/chaos">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/chaos/orbits.html">Orbits</a><span>The true orbit beside the floating-point one, and the step where they part.</span></li>
+            <li><a href="https://ratmath.com/chaos/periodic-points.html">Periodic points</a><span>Exact algebraic numbers with multipliers and stability.</span></li>
+            <li><a href="https://ratmath.com/chaos/lyapunov.html">Lyapunov exponents</a><span>Certified averages along true orbits; sensitive dependence measured.</span></li>
+            <li><a href="https://ratmath.com/chaos/bifurcations.html">Bifurcations</a><span>Period doublings and windows, each parameter proven; Feigenbaum ratios.</span></li>
+            <li><a href="https://ratmath.com/chaos/symbolic-dynamics.html">Symbolic dynamics</a><span>Itineraries, kneading sequences and Sharkovskii's order.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="geo">
+          <div>
+            <h3>Geometry<span class="status status-done">First parts available</span></h3>
+            <span class="id">@ratmath/geo</span>
+            <p class="about">Geometry with exact coordinates, so that collinear, concyclic and tangent are decided. Built so far: the Euclidean plane with constructions and checked theorems, exact computational and lattice geometry, and taxicab geometry. Other geometries and symmetry are <a href="#geo-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/geo/">Overview</a> <a href="https://ratmath.com/geo/explore.html">Explore</a> <a href="https://ratmath.com/geo/reference.html">Reference</a> <a href="https://github.com/ratmath/geo">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/geo/constructions.html">Constructions</a><span>Points, lines and circles; ruler-and-compass constructions recorded step by step.</span></li>
+            <li><a href="https://ratmath.com/geo/triangles.html">Triangle centres</a><span>Centres, circles and lines of a triangle, exactly.</span></li>
+            <li><a href="https://ratmath.com/geo/transformations.html">Transformations</a><span>Isometries, similarities and inversion, classified.</span></li>
+            <li><a href="https://ratmath.com/geo/theorems.html">Checked theorems</a><span>Fifteen classical theorems tested exactly on your figure.</span></li>
+            <li><a href="https://ratmath.com/geo/computational.html">Computational geometry</a><span>Hulls, polygons, Delaunay and Voronoi with exact predicates.</span></li>
+            <li><a href="https://ratmath.com/geo/lattice.html">Lattice geometry</a><span>Pick's theorem and points visible from the origin.</span></li>
+            <li><a href="https://ratmath.com/geo/metrics.html">Taxicab geometry</a><span>Square circles, bent bisectors, and where congruence fails.</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="finance">
+          <div>
+            <h3>Finance<span class="status status-done">Available</span></h3>
+            <span class="id">@ratmath/finance</span>
+            <p class="about">The mathematics of finance with exact money: rounding only by a named rule, rates proven, scenarios projected exactly. Time value, loans, cash flows, bonds, scenarios and seeded repeated runs with uncertain inputs, portfolios, options and life contingencies. Pictures are <a href="#finance-planned">planned</a>.</p>
+            <p class="links"><a href="https://ratmath.com/finance/">Overview</a> <a href="https://ratmath.com/finance/explore.html">Explore</a> <a href="https://ratmath.com/finance/reference.html">Reference</a> <a href="https://github.com/ratmath/finance">Source</a></p>
+          </div>
+          <ul class="topics">
+            <li><a href="https://ratmath.com/finance/money.html">Money and rounding</a><span>Exact amounts, named rounding rules, splits that add up.</span></li>
+            <li><a href="https://ratmath.com/finance/dates.html">Dates and day counts</a><span>Calendar dates and the conventions for a fraction of a year.</span></li>
+            <li><a href="https://ratmath.com/finance/time-value.html">Time value of money</a><span>Interest, equivalent rates, annuities, solving for what is missing.</span></li>
+            <li><a href="https://ratmath.com/finance/loans.html">Loans</a><span>Schedules to the cent, extra payments, refinancing, revolving credit.</span></li>
+            <li><a href="https://ratmath.com/finance/cash-flows.html">Cash flows</a><span>Net present value and every internal rate of return, with proof of how many.</span></li>
+            <li><a href="https://ratmath.com/finance/bonds.html">Bonds</a><span>Price, yield, accrued interest, duration and convexity.</span></li>
+            <li><a href="https://ratmath.com/finance/yield-curves.html">Yield curves</a><span>Spot and forward rates from bond prices; immunisation.</span></li>
+            <li><a href="https://ratmath.com/finance/scenarios.html">Scenarios</a><span>Exact projection, what-if comparison and exact sensitivities.</span></li>
+            <li><a href="https://ratmath.com/finance/uncertain.html">Uncertain inputs and repeated runs</a><span>Random returns, inflation and events; the chance of running out with an exact interval.</span></li>
+            <li><a href="https://ratmath.com/finance/portfolios.html">Portfolios</a><span>The efficient frontier exactly; long-only portfolios proven optimal; CAPM.</span></li>
+            <li><a href="https://ratmath.com/finance/options.html">Options</a><span>Exact break-evens and binomial trees; certified Black–Scholes and implied volatility.</span></li>
+            <li><a href="https://ratmath.com/finance/life.html">Life contingencies</a><span>Life tables, annuities, insurances, premiums and reserves, all exact.</span></li>
+          </ul>
+        </article>
+    </section>
+
+    <section class="block planned" id="planned">
+      <div class="section-head">
+        <h2>Planned</h2>
+        <p>Not built yet. The full plan, with scope and order, is in the <a href="https://github.com/ratmath/ratmath/blob/main/docs/design/library-roadmap.md" style="color:var(--ink);font-weight:600;text-decoration-color:var(--ochre);text-underline-offset:3px">library roadmap</a>.</p>
+      </div>
+        <article class="pkg" id="symbolic-planned">
+          <div>
+            <h3>Symbolic algebra, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/symbolic</span>
+            <p class="about">More on top of the <a href="#symbolic">solving and calculus already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Systems, trigonometric families and sums</span></li>
+            <li><span>Steps for every operation</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="complex-planned">
+          <div>
+            <h3>Complex, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/complex</span>
+            <p class="about">Complex analysis with proofs, on top of the <a href="#complex">numbers and functions already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Contour integrals and the argument principle</span></li>
+            <li><span>Residues and Laurent series</span></li>
+            <li><span>Möbius and conformal maps</span></li>
+            <li><span>The complex gamma and zeta functions</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="stats-planned">
+          <div>
+            <h3>Statistics, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/stats</span>
+            <p class="about">Resampling, rank methods and Bayesian ideas, on top of the <a href="#stats">distributions, tests and regression already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Rank tests and the bootstrap</span></li>
+            <li><span>Markov chains and Bayesian updating</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="discrete-planned">
+          <div>
+            <h3>Discrete mathematics, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/discrete</span>
+            <p class="about">Graph drawing (in graphics), on top of the <a href="#discrete">counting, graphs, graph theory, generating functions, games, orders, codes and designs already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Graph drawing: force-directed, layered and planar layouts</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="numtheory-planned">
+          <div>
+            <h3>Number theory, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/numtheory</span>
+            <p class="about">Elliptic curves and algebraic number theory, on top of the <a href="#numtheory">primes, congruences, forms and p-adics already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Elliptic curves, ECM and curve-based primality certificates</span></li>
+            <li><span>Integral bases, class groups and units</span></li>
+            <li><span>π(x), characters, ζ and L values</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="structures-planned">
+          <div>
+            <h3>Structures, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/structures</span>
+            <p class="about">Abstract algebra: groups, rings, fields and modules, on top of the <a href="#structures">polynomials already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Groups: tables, subgroups, Sylow, homomorphisms, actions</span></li>
+            <li><span>Rings, ideals and quotients</span></li>
+            <li><span>Gröbner bases and polynomial systems</span></li>
+            <li><span>Presentations and abelian groups</span></li>
+            <li><span>Field towers, radicals and constructibility</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="logic-planned">
+          <div>
+            <h3>Logic, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/logic</span>
+            <p class="about">More on top of the <a href="#logic">logic already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Ordinals and cardinals</span></li>
+            <li><span>Peano arithmetic and Gödel numbering</span></li>
+            <li><span>Pictures: Venn diagrams, Kripke frames, automata, trees</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="chaos-planned">
+          <div>
+            <h3>Chaos, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/chaos</span>
+            <p class="about">More on top of the <a href="#chaos">maps of the line already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Maps of the plane; flows, sections and periodic orbits</span></li>
+            <li><span>Fractals and iterated function systems</span></li>
+            <li><span>Julia and Mandelbrot sets with honest pixels</span></li>
+            <li><span>Cellular automata</span></li>
+            <li><span>Pictures</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="geo-planned">
+          <div>
+            <h3>Geometry, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/geo</span>
+            <p class="about">More on top of the <a href="#geo">plane geometry already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Spherical and hyperbolic geometry</span></li>
+            <li><span>Projective and finite geometries</span></li>
+            <li><span>Polyhedra, symmetry groups and tilings</span></li>
+            <li><span>General proofs of theorems by elimination</span></li>
+            <li><span>Pictures</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="finance-planned">
+          <div>
+            <h3>Finance, continued<span class="status status-plan">Planned</span></h3>
+            <span class="id">@ratmath/finance</span>
+            <p class="about">More on top of the <a href="#finance">finance already built</a>.</p>
+          </div>
+          <ul class="topics">
+            <li><span>Pictures: balance and amortisation charts, percentile bands, yield curves, option payoffs</span></li>
+          </ul>
+        </article>
+        <article class="pkg" id="extensions">
+          <div>
+            <h3>More in the current libraries<span class="status status-plan">Planned</span></h3>
+            
+            <p class="about">Differential equations, differential geometry, numerical methods and Fourier transforms are now <a href="#analytic">in analytic</a>, and iterative methods <a href="#linalg">in linalg</a>. Still to come:</p>
+          </div>
+          <ul class="topics">
+            <li><span>Phase portraits, curvature pictures and animated solutions in graphics</span></li>
+          </ul>
+        </article>
+    </section>
+
+    <section class="block" id="how">
+      <div class="section-head">
+        <h2>How the shelf is kept</h2>
+      </div>
+      <div class="how">
+        <p>Every library has the same shape: an overview, a page to explore it without writing code, a detailed reference, and a page for each topic that explains the usage and the mathematics and ends with a runnable code box.</p>
+        <p>A topic appears under “On the shelf” only when it is built and its page exists. Until then it stays under “Planned” and in the <a href="https://github.com/ratmath/ratmath/blob/main/docs/design/library-roadmap.md">roadmap</a>.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p>© 2026 RatMath LLC</p>
+    <nav aria-label="Footer">
+      <a href="/">RatMath home</a>
+      <a href="https://ratmath.com/core/">Core</a>
+      <a href="https://rix.ratmath.com/">Playground</a>
+      <a href="https://github.com/ratmath">GitHub</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

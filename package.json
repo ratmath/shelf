@@ -1,0 +1,68 @@
+{
+  "name": "ratmath",
+  "version": "0.0.1",
+  "description": "All of RatMath in one import: exact arithmetic (Core) now, and the RatMath Shelf subject libraries as they are published",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./core": {
+      "types": "./core.d.ts",
+      "default": "./core.js"
+    },
+    "./browser": "./dist/ratmath.global.js",
+    "./package.json": "./package.json"
+  },
+  "unpkg": "dist/ratmath.global.js",
+  "jsdelivr": "dist/ratmath.global.js",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "core.js",
+    "core.d.ts",
+    "dist/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "bun scripts/build.js",
+    "test": "bun run build && bun test ./tests",
+    "docs:build": "bun scripts/build-docs.js",
+    "prepublishOnly": "bun run build && bun test ./tests"
+  },
+  "keywords": [
+    "ratmath",
+    "exact",
+    "rational",
+    "interval",
+    "mathematics"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ratmath/shelf.git"
+  },
+  "homepage": "https://ratmath.com/shelf/",
+  "bugs": {
+    "url": "https://github.com/ratmath/shelf/issues"
+  },
+  "dependencies": {
+    "@ratmath/core": ">=0.10.0 <0.12.0"
+  },
+  "devDependencies": {
+    "katex": "0.19.1"
+  },
+  "author": "James Taylor",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "ratmath",
+      "dependencies": {
+        "@ratmath/core": ">=0.10.0 <0.12.0",
+      },
+      "devDependencies": {
+        "katex": "0.19.1",
+      },
+    },
+  },
+  "packages": {
+    "@ratmath/core": ["@ratmath/core@0.11.0", "", {}, "sha512-MqYSFSe1M893+gsG4MJzwBRlriHl4Xa4USzX/KCfkyAufCVqeA9f7QUN0H/sefZ1t9jid6VdniBenVCz0/5fiA=="],
+
+    "commander": ["commander@15.1.0", "", {}, "sha512-cgnQ88TRrWcC7pVq46RzJVRMktu3W2RcbnoidnfBsl1bmDCBwJS/udcIZpKoCrbAYYaCqsz1yZCVIgbIaU3ddQ=="],
+
+    "katex": ["katex@0.19.1", "", { "dependencies": { "commander": "^15.0.0" }, "bin": { "katex": "cli.js" } }, "sha512-jG8uKntjSEcm2EpQOh0XturpPuuC9r3Sq5HLHdsFdWZT27E672SF19QEi+of0/YeOy15lDgRhKvr5614uRrEfA=="],
+  }
+}

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Using it all: the ratmath package</title>
+<meta name="description" content="One npm package, ratmath, for all of RatMath: install it, import it three ways, load it in a browser, and see how its versions follow Core.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script type="module" src="assets/site.js"></script>
+</head>
+<body>
+<div class="shell">
+<aside></aside>
+<main>
+<article>
+<div class="eyebrow">ratmath</div>
+<h1>All of RatMath in one import</h1>
+<p class="lede">Each library on the shelf is its own small package, <code>@ratmath/linalg</code>, <code>@ratmath/stats</code> and so on, so a program can take only what it needs. The package <code>ratmath</code> gathers them in one place: install one name and every library is there, under its own name, with Core's numbers at the top.</p>
+
+<h2>What is in this release</h2>
+<p>The first releases hold <a href="https://ratmath.com/core/">RatMath Core</a> only. Each Shelf library joins as soon as it is published on npm, as <code>Ratmath.linalg</code>, <code>Ratmath.stats</code> and so on. <code>Ratmath.shelf</code> lists all fourteen and says which ones this release includes.</p>
+
+<h2>Install</h2>
+<pre><code>npm install ratmath      # or: bun add ratmath, pnpm add ratmath</code></pre>
+<p>The package is ES modules only and needs Node 22 or later, Bun, Deno, or a current browser.</p>
+
+<h2>Three ways to import</h2>
+<p><strong>One object, still lean.</strong> This is the form to start with. <code>Ratmath</code> holds everything, and a bundler can still see which parts a program uses and leave the rest out.</p>
+<pre><code>import * as Ratmath from "ratmath";
+
+Ratmath.R`1/3 + 1/6`;                 // 1/2, exactly
+new Ratmath.Rational(22, 7).subtract(new Ratmath.Rational(355, 113));
+// Ratmath.linalg.Matrix, Ratmath.stats, ... as the libraries join</code></pre>
+
+<p><strong>Just the names you use.</strong></p>
+<pre><code>import { R, Rational, core } from "ratmath";
+
+R`1:2 + 3:4`;                          // the interval 4:6
+core.Integer;                          // Core is also there as one name</code></pre>
+
+<p><strong>A plain object.</strong> The default export is the same contents as an ordinary frozen object. It is the shortest to write in a script, a notebook or a lesson, but a bundler keeps all of it, so a web app is better served by one of the forms above.</p>
+<pre><code>import Ratmath from "ratmath";
+
+Ratmath.R`2^10`;                       // 1024</code></pre>
+
+<p><strong>One library only.</strong> A subpath gives one library and nothing else: <code>ratmath/core</code> now, and <code>ratmath/linalg</code> and the others as they join. This is the same as importing <code>@ratmath/core</code> directly; the objects are identical, never copies.</p>
+<pre><code>import { Rational } from "ratmath/core";</code></pre>
+
+<h2>In a web page, with no build step</h2>
+<p>The package carries one file for a plain script tag. It sets a global <code>Ratmath</code> with the same contents as the default export.</p>
+<pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/ratmath/dist/ratmath.global.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  console.log(String(Ratmath.R`1/3 + 1/6`));   // "1/2"
+&lt;/script&gt;</code></pre>
+<p>Pin a version in the address (<code>ratmath@0.11</code>) for a page that should not change under you.</p>
+
+<h2>How the versions fit together</h2>
+<p><strong>The libraries keep their own version numbers.</strong> A new release of Core does not force a release of every library, and a library's number says how far that library has come.</p>
+<p><strong>Core is shared, never copied.</strong> The libraries list Core as a <em>peer dependency</em>: they need it, but they use the one copy the program already has instead of bringing their own. Two copies of Core in one program would quietly break things, because a <code>Rational</code> made by one copy is not a <code>Rational</code> to the other. Each library states the range of Core versions it works with, for example <code>"@ratmath/core": "&gt;=0.10.0 &lt;0.12.0"</code>.</p>
+<p><strong><code>ratmath</code> follows Core.</strong> Version 0.11 of <code>ratmath</code> is Core 0.11 together with a set of library versions that have been tested with it. Installing <code>ratmath</code> is the easy way to get a set that works together.</p>
+
+<h2>Where to go next</h2>
+<p><a href="index.html">The Shelf</a> lists every library with its topics and what is planned. Each library's own site has an overview, an explorer, a reference and a page per topic, each ending in a box like the one below.</p>
+
+<template data-runbox>
+// Everything in `ratmath` is in scope here, and `Ratmath` is the whole object.
+PRINT("1/3 + 1/6 =", R`1/3 + 1/6`);
+PRINT("22/7 - 355/113 =", new Rational(22, 7).subtract(new Rational(355, 113)));
+PRINT("same Rational either way:", Ratmath.Rational === Rational, core.Rational === Rational);
+PRINT("libraries in this release:", Ratmath.shelf.filter((s) => s.included).map((s) => s.name).join(", ") || "none yet, Core only");
+Ratmath.shelf.length
+</template>
+</article>
+</main>
+</div>
+</body>
+</html>
