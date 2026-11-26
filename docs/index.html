@@ -410,9 +410,9 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
         </article>
         <article class="pkg" id="symbolic">
           <div>
-            <h3>Symbolic algebra<span class="status status-done">First three parts available</span></h3>
+            <h3>Symbolic algebra<span class="status status-done">Available</span></h3>
             <span class="id">@ratmath/symbolic</span>
-            <p class="about">Algebra on expressions, with every step checked by the certified libraries. Built so far: expressions, assumptions, rewriting and equality; solving equations and inequalities; antiderivatives, limits and expansions. Systems, sums and step records are <a href="#symbolic-planned">planned</a>.</p>
+            <p class="about">Algebra on expressions, with every step checked by the certified libraries. Expressions, assumptions, rewriting and equality; solving equations and inequalities, with every family of solutions of a trigonometric equation; systems of equations; antiderivatives, limits, expansions and sums in closed form; and the checked steps behind every answer.</p>
             <p class="links"><a href="https://ratmath.com/symbolic/">Overview</a> <a href="https://ratmath.com/symbolic/explore.html">Explore</a> <a href="https://ratmath.com/symbolic/reference.html">Reference</a> <a href="https://github.com/ratmath/symbolic">Source</a></p>
           </div>
           <ul class="topics">
@@ -422,10 +422,14 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><a href="https://ratmath.com/symbolic/rules.html">Rules</a><span>Rewriting rules that carry their conditions and are checked when used.</span></li>
             <li><a href="https://ratmath.com/symbolic/equality.html">Equality</a><span>Proven equal, proven different, or undecided.</span></li>
             <li><a href="https://ratmath.com/symbolic/solving.html">Solving equations</a><span>Every candidate checked in the original equation; failures reported.</span></li>
+            <li><a href="https://ratmath.com/symbolic/trig-equations.html">Trigonometric equations</a><span>Every family of solutions, letters with their conditions, families merged.</span></li>
+            <li><a href="https://ratmath.com/symbolic/systems.html">Systems of equations</a><span>Elimination with letters, families of solutions, substitution and resultants.</span></li>
             <li><a href="https://ratmath.com/symbolic/inequalities.html">Inequalities</a><span>Critical points, the sign on each piece, the set where it holds.</span></li>
             <li><a href="https://ratmath.com/symbolic/antiderivatives.html">Antiderivatives</a><span>The methods of the course, each result differentiated before it is returned.</span></li>
             <li><a href="https://ratmath.com/symbolic/limits.html">Limits</a><span>Closed forms, confirmed by certified enclosures.</span></li>
             <li><a href="https://ratmath.com/symbolic/expansions.html">Expansions</a><span>Taylor and Laurent expansions with exact coefficients.</span></li>
+            <li><a href="https://ratmath.com/symbolic/sums.html">Sums</a><span>Sums of powers, geometric and telescoping sums, famous series, each proven.</span></li>
+            <li><a href="https://ratmath.com/symbolic/steps.html">Step records</a><span>The checked steps behind every answer, for an app to show.</span></li>
           </ul>
         </article>
         <article class="pkg" id="complex">
@@ -534,7 +538,7 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
           <div>
             <h3>Statistics<span class="status status-done">First parts available</span></h3>
             <span class="id">@ratmath/stats</span>
-            <p class="about">Probability and statistics with every answer labelled exact, certified or simulated. Built so far: finite probability, distributions, descriptive statistics, exact tests, data generated from a known model with noise to test what a procedure recovers, the standard tests and intervals, and regression and analysis of variance with exact coefficients. Rank tests, the bootstrap, Markov chains and Bayesian updating are <a href="#stats-planned">planned</a>.</p>
+            <p class="about">Probability and statistics with every answer labelled exact, certified or simulated. Built so far: finite probability, distributions, descriptive statistics, exact tests, data generated from a known model with noise to test what a procedure recovers, the standard tests and intervals, and regression and analysis of variance with exact coefficients, rank tests with exact null laws, the Kolmogorov–Smirnov test, the bootstrap, Markov chains and conjugate Bayesian updating. Plots of these are <a href="#stats-planned">planned</a> in graphics.</p>
             <p class="links"><a href="https://ratmath.com/stats/">Overview</a> <a href="https://ratmath.com/stats/explore.html">Explore</a> <a href="https://ratmath.com/stats/reference.html">Reference</a> <a href="https://github.com/ratmath/stats">Source</a></p>
           </div>
           <ul class="topics">
@@ -554,6 +558,11 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><a href="https://ratmath.com/stats/testing-the-tests.html">Testing the tests</a><span>Seeded experiments check that intervals cover and tests keep their size.</span></li>
             <li><a href="https://ratmath.com/stats/regression.html">Linear regression</a><span>Exact least squares, prediction intervals, leverage and nested models.</span></li>
             <li><a href="https://ratmath.com/stats/anova.html">Analysis of variance</a><span>Exact sums of squares, as a regression on indicators, and two factors.</span></li>
+            <li><a href="https://ratmath.com/stats/rank-tests.html">Rank tests</a><span>Sign, Wilcoxon, Mann–Whitney, Kruskal–Wallis, Spearman and Kendall, with exact null laws.</span></li>
+            <li><a href="https://ratmath.com/stats/kolmogorov-smirnov.html">Kolmogorov–Smirnov</a><span>One and two samples, with certified p-values from the exact law.</span></li>
+            <li><a href="https://ratmath.com/stats/bootstrap.html">The bootstrap</a><span>Every resample enumerated exactly when small, seeded otherwise.</span></li>
+            <li><a href="https://ratmath.com/stats/markov-chains.html">Markov chains</a><span>Classes, stationary laws, absorption and hitting times, all as fractions.</span></li>
+            <li><a href="https://ratmath.com/stats/bayesian-updating.html">Bayesian updating</a><span>Beta, gamma, normal and Dirichlet priors updated exactly.</span></li>
           </ul>
         </article>
         <article class="pkg" id="chaos">
@@ -617,17 +626,6 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
         <h2>Planned</h2>
         <p>Not built yet. The full plan, with scope and order, is in the <a href="https://github.com/ratmath/ratmath/blob/main/docs/design/library-roadmap.md" style="color:var(--ink);font-weight:600;text-decoration-color:var(--ochre);text-underline-offset:3px">library roadmap</a>.</p>
       </div>
-        <article class="pkg" id="symbolic-planned">
-          <div>
-            <h3>Symbolic algebra, continued<span class="status status-plan">Planned</span></h3>
-            <span class="id">@ratmath/symbolic</span>
-            <p class="about">More on top of the <a href="#symbolic">solving and calculus already built</a>.</p>
-          </div>
-          <ul class="topics">
-            <li><span>Systems, trigonometric families and sums</span></li>
-            <li><span>Steps for every operation</span></li>
-          </ul>
-        </article>
         <article class="pkg" id="complex-planned">
           <div>
             <h3>Complex, continued<span class="status status-plan">Planned</span></h3>
@@ -645,11 +643,10 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
           <div>
             <h3>Statistics, continued<span class="status status-plan">Planned</span></h3>
             <span class="id">@ratmath/stats</span>
-            <p class="about">Resampling, rank methods and Bayesian ideas, on top of the <a href="#stats">distributions, tests and regression already built</a>.</p>
+            <p class="about">Pictures (in graphics), on top of the <a href="#stats">distributions, tests, regression, rank methods, chains and Bayesian updating already built</a>.</p>
           </div>
           <ul class="topics">
-            <li><span>Rank tests and the bootstrap</span></li>
-            <li><span>Markov chains and Bayesian updating</span></li>
+            <li><span>Histograms, densities and Q–Q plots, drawn by graphics</span></li>
           </ul>
         </article>
         <article class="pkg" id="discrete-planned">
