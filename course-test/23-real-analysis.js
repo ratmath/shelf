@@ -132,8 +132,7 @@ for (let i = 0; i < 4; i++) { L = L.add(f(xs[i]).multiply(h)); U = U.add(f(xs[i 
       a: t`\(\displaystyle\lim_{a\to0^+}\big[x\ln x - x\big]_a^1 = -1 - \lim_{a\to0^+}(a\ln a - a) = -1\).`,
       code: `symbolic.integrate("ln(x)", "x", { from: 0, to: 1 }).value`,
       expect: "-1",
-      status: "gap",
-      note: "Returns <code>null</code>: the antiderivative is found, but an endpoint where it needs a limit is not handled (the same limitation as \\(\\int_0^1 x^{-1/2}dx\\) in Calculus II).",
+      note: "Used to return <code>null</code>: an endpoint where the antiderivative needs a limit was not handled. Now the value is the one-sided limits of the antiderivative, checked against analytic's certified improper integral.",
     },
     {
       topic: "Pointwise limit",

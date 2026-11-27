@@ -50,7 +50,7 @@ export default {
       code: `chaos.lyapunov(chaos.logistic(4), "1/5").value`,
       check: near(Math.LN2, 5e-3),
       status: "partial",
-      note: "A certified average over 200 steps of one exact orbit (\\(\\approx 0.69296\\)), not the limit. With <code>steps: 2000</code> it throws “the orbit leaves every bounded range”, though the orbit stays in \\([0, 1]\\): a bug, see the chaos fix.",
+      note: "A certified average over 200 steps of one exact orbit (\\(\\approx 0.69296\\)), not the limit. Longer averages work (<code>steps: 2000</code> takes about a minute; it used to be refused as escaping), but no finite average proves the limit \\(\\ln 2\\), which comes from the conjugacy with the tent map.",
     },
     {
       topic: "Tent map orbits",

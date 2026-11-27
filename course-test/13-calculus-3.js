@@ -16,7 +16,7 @@ const minor = (i, j) => linalg.det([[u[i], u[j]], [v[i], v[j]]]).exact();
 [linalg.multiply([u], v.map((x) => [x])), [minor(1, 2), minor(2, 0), minor(0, 1)]]`,
       expect: "[[[-5]], [8, -10, -6]]",
       status: "partial",
-      note: "No library has a cross product in three dimensions (geo's <code>cross</code> is the planar one, and is not exported). The dot product is a 1×3 by 3×1 matrix product, and the cross product is built from 2×2 determinants by hand.",
+      note: "No library has a cross product in three dimensions (geo's <code>cross</code> is the planar one). The dot product is a 1×3 by 3×1 matrix product, and the cross product is built from 2×2 determinants by hand.",
     },
     {
       topic: "Plane through three points",

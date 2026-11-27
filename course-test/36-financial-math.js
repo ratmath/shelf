@@ -119,15 +119,10 @@ export default {
       fix: "finance#6",
       q: t`Use put–call parity to price the matching put.`,
       a: t`\(P = C - S + Ke^{-rT} = 10.450584 - 100 + 95.122942 \approx 5.5735\).`,
-      code: `const v = finance.blackScholes({ spot: 100, strike: 100, rate: "5%", volatility: "20%", time: 1 });
-let viaParity;
-try { viaParity = finance.parity({ call: v.call, spot: 100, strike: 100, rate: "5%", time: 1 }); }
-catch (e) { viaParity = e.message.slice(0, 40) + "…"; }
-PRINT("parity with the Black–Scholes call:", String(viaParity));
-v.put`,
+      code: `const C = finance.blackScholes({ spot: 100, strike: 100, rate: "5%", volatility: "20%", time: 1 }).call;
+finance.parity({ call: C, spot: 100, strike: 100, rate: "5%", time: 1 }).put`,
       check: near(5.573526022256971, 1e-9),
-      status: "partial",
-      note: "<code>parity</code> wants exact amounts, so it refuses the enclosed call that <code>blackScholes</code> itself returns (“cannot read … as an exact amount”). The put printed here comes from <code>blackScholes</code> directly. Fix: let <code>parity</code> accept intervals and return an enclosure.",
+      note: "<code>parity</code> used to refuse the enclosed call that <code>blackScholes</code> returns; it now takes enclosures and returns the put enclosed.",
     },
     {
       topic: "American put on a tree",
