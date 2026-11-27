@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Course Test · RatMath Shelf</title>
+<meta name="description" content="Twenty-question tests from school and university mathematics courses, answered by hand and with the RatMath libraries, side by side.">
+<meta property="og:title" content="Course Test · RatMath Shelf">
+<meta property="og:description" content="Twenty-question tests from school and university mathematics courses, answered by hand and with the RatMath libraries, side by side.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://ratmath.com/assets/katex/0.19.1/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.ct-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 1.4rem; }
+.ct-tabs a { padding: .3rem .7rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-size: .88rem; color: var(--fg); background: var(--surface); }
+.ct-tabs a.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+ol.ex { padding-left: 0; list-style: none; counter-reset: ex; display: flex; flex-direction: column; gap: 1rem; }
+ol.ex > li { max-width: none; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: .8rem 1rem; }
+ol.ex > li > .head { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: baseline; margin-bottom: .3rem; }
+ol.ex > li > .head .n { font: 600 1rem/1 var(--font-display); }
+ol.ex > li > .head .topic { color: var(--muted); font-size: .82rem; }
+ol.ex > li > .head .v { margin-left: auto; }
+.ex .q { margin: .2rem 0; }
+.ex .lbl { font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: .8rem 0 .3rem; }
+.ex pre { margin: .2rem 0; }
+.ex pre.out { background: var(--exact-soft); border-color: transparent; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ex pre.out.bad { background: var(--sunk); border-color: var(--bad); }
+.ex .note { border-left: 3px solid var(--float); background: var(--float-soft); padding: .45rem .7rem; border-radius: 6px; margin-top: .6rem; font-size: .9rem; }
+.ex .work { color: var(--fg); }
+.v { display: inline-block; font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .06em; padding: .28rem .5rem; border-radius: 999px; white-space: nowrap; }
+.v-ok { background: var(--exact-soft); color: var(--exact); }
+.v-part { background: var(--float-soft); color: var(--float); }
+.v-gap { background: var(--sunk); color: var(--muted); border: 1px dashed var(--line); }
+.v-bad { background: var(--bad); color: var(--surface); }
+table.ct { border-collapse: collapse; width: 100%; font-size: .9rem; }
+table.ct th, table.ct td { text-align: left; vertical-align: top; padding: .45rem .5rem; border-bottom: 1px solid var(--line); }
+table.ct th { font: 600 .72rem/1.3 var(--font-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+table.ct td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.ct tr.grp th { padding-top: 1.4rem; font: 600 .95rem/1.3 var(--font-display); text-transform: none; letter-spacing: 0; color: var(--fg); }
+table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85rem; }
+.bar { display: flex; height: .55rem; border-radius: 999px; overflow: hidden; background: var(--sunk); min-width: 6rem; margin-top: .35rem; }
+.bar span { display: block; }
+.bar .b-ok { background: var(--exact); } .bar .b-part { background: var(--float); } .bar .b-gap { background: var(--line); } .bar .b-bad { background: var(--bad); }
+.legend { display: flex; flex-wrap: wrap; gap: .5rem 1rem; font-size: .85rem; color: var(--muted); align-items: center; }
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+<header class="brand"><a href="../index.html"><div class="mark">RatMath <span>shelf</span></div></a><small>Course Test</small></header>
+<nav class="toc" aria-label="Courses"><a href="index.html" class="on">Course Test</a>
+<a href="findings.html">Findings</a>
+<div class="group">School: elementary and middle</div>
+<a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a></nav>
+</aside>
+<main>
+<article class="wide">
+<div class="eyebrow">RatMath Shelf</div>
+<h1>Course Test</h1>
+<p class="lede">How far do the RatMath libraries reach across school and university mathematics? For each course, a twenty-question test of the kind the course sets; answers worked out independently, by hand; and the same test answered with RatMath Core and the Shelf libraries alone. Every question where the two disagree, or the libraries fall short, is listed under <a href="findings.html">Findings</a>.</p>
+<h2>How the tests were made</h2>
+<ol>
+<li><strong>The tests.</strong> For each course, twenty exercises of the kind a teacher sets in that course, spread over its usual topics. They are ordinary exercises, not chosen to suit the libraries.</li>
+<li><strong>Independent answers.</strong> Each exercise was answered by hand first, with the working shown, without RatMath. Long arithmetic was checked a second way (by a different method or in another tool), never with RatMath.</li>
+<li><strong>RatMath answers.</strong> Then each exercise was answered with code that uses only RatMath Core and the Shelf libraries. The code is run whenever these pages are built, and what it prints is compared with the independent answer.</li>
+<li><strong>Verdicts.</strong> A question is <em>Agrees</em> when the outputs match, <em>Partly</em> when RatMath gets the answer but not all the question asks (a form, a step, a proof, or only a numeric check), and <em>Can't yet</em> when no library has the tool. A disagreement or an error is a finding: either a bug, now fixed or reported, or a convention worth knowing.</li>
+</ol>
+<p class="small muted">The code on these pages uses each library under its own name (<code>linalg</code>, <code>stats</code>, …) with Core's names (<code>R</code>, <code>Rational</code>, …) and Core's units (<code>units.Q</code>) in scope. The Shelf libraries are not yet on npm, so the code boxes here are not live; the outputs shown are those printed when the pages were built (<code>bun run course-tests</code>).</p>
+
+<h2>Overall</h2>
+<p>1 courses, 20 exercises.</p>
+<p class="legend"><span class="v v-ok">Agrees</span> 16 <span class="v v-part">Partly</span> 3 <span class="v v-bad">Disagrees</span> 1</p>
+<div class="bar" aria-hidden="true"><span class="b-ok" style="width:80%"></span><span class="b-part" style="width:15%"></span><span class="b-bad" style="width:5%"></span></div>
+<p class="legend"><span class="v v-ok">Agrees</span> RatMath's answer is the independent answer.<br><span class="v v-part">Partly</span> RatMath gets the answer, but not all of what the question asks (a form, a step, a proof, or only a numeric check).<br><span class="v v-gap">Can't yet</span> The libraries have no tool for this yet.<br><span class="v v-bad">Disagrees</span> RatMath's answer differs from the independent answer.<br><span class="v v-bad">Error</span> The RatMath code threw an error.</p>
+<h2>Courses</h2>
+<div class="tablewrap"><table class="ct">
+<thead><tr><th>Course</th><th class="num">Agrees</th><th class="num">Partly</th><th class="num">Can't yet</th><th class="num">Wrong</th><th></th></tr></thead>
+<tbody>
+<tr class="grp"><th colspan="6">School: elementary and middle</th></tr>
+<tr><td><strong><a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a></strong><div class="small muted">Counting, place value, adding and subtracting within 1000, measurement, money, time.</div><div class="links"><a href="grades-k-2.html">Test</a><a href="grades-k-2-answers.html">Answers</a><a href="grades-k-2-ratmath.html">RatMath</a></div></td>
+<td class="num">16</td><td class="num">3</td><td class="num">0</td><td class="num">1</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:80%"></span><span class="b-part" style="width:15%"></span><span class="b-bad" style="width:5%"></span></div></td></tr>
+</tbody></table></div>
+<h2>Versions tested</h2>
+<p class="small"><code>@ratmath/core</code> 0.11.1, <code>@ratmath/algebraic</code> 0.1.0, <code>@ratmath/analytic</code> 0.1.0, <code>@ratmath/linalg</code> 0.1.0, <code>@ratmath/graphics</code> 0.1.0, <code>@ratmath/structures</code> 0.5.0, <code>@ratmath/symbolic</code> 0.2.0, <code>@ratmath/complex</code> 0.3.0, <code>@ratmath/discrete</code> 0.3.0, <code>@ratmath/stats</code> 0.3.0, <code>@ratmath/numtheory</code> 0.3.0, <code>@ratmath/logic</code> 0.2.0, <code>@ratmath/chaos</code> 0.3.0, <code>@ratmath/geo</code> 0.4.0, <code>@ratmath/finance</code> 0.2.0.</p>
+<footer class="sitelinks"><a href="index.html">Course Test</a> · <a href="findings.html">Findings</a> · <a href="../index.html">The Shelf</a> · <a href="https://github.com/ratmath/shelf">GitHub</a> · <a href="https://ratmath.com/">ratmath.com</a></footer>
+</article>
+</main>
+</div>
+</body>
+</html>

@@ -74,6 +74,30 @@ The other pages are written in `docs/src/` and built into `docs/` by
 sites (`docs/assets/runbox.js`, `scripts/docs-kit.js`: keep them in step with
 the other repositories). Add each new page to `PAGES` in `docs/assets/site.js`.
 
+### The Course Test
+
+`docs/course-test/` checks the whole shelf against school and university
+mathematics: for each course a twenty-question test, answers worked out by
+hand, and the same test answered with RatMath code, compared question by
+question. The courses are written in `course-test/<nn>-<slug>.js` (each
+exercise has the question, the independent answer, the RatMath code and the
+expected output); `scripts/build-course-tests.js` runs every exercise's code
+and writes the pages, including `findings.html`, the list of disagreements,
+errors, partial answers and gaps.
+
+The Shelf libraries are not on npm yet, so the build runs against a checkout
+that has all of them installed with one Core: the umbrella repository, where
+this repository is `shelf/ratmath`.
+
+```sh
+bun run course-tests                       # from shelf/ratmath in the umbrella
+bun run course-tests --root ../umbrella    # or point at any such checkout
+bun run course-tests --only calculus-1 --report --no-write   # print one course's outputs
+```
+
+When a library changes, rebuild and commit the pages; a new disagreement or
+error shows up in the build's last line and on the findings page.
+
 ### Adding a library when it is published
 
 1. Add `"@ratmath/<name>": "^x.y.z"` to `dependencies`.
