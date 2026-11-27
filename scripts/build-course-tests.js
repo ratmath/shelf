@@ -99,7 +99,7 @@ export const FIX_PRS = {
   "numtheory#10": "<code>factorialValuation</code> (Legendre's formula)",
   "structures#6": "<code>sign</code>/<code>isEven</code> of a permutation; Gauss–Wantzel inside <code>constructible</code>",
   "complex#7": "<code>cauchyRiemann(u, v)</code>",
-  "stats#8": "summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>",
+  "stats#8": "summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>; <code>fromDensity</code>, <code>transform</code> and <code>orderStatistic</code>",
   "geo#11": "measurement helpers, 3D <code>vector</code> and <code>plane</code>, <code>conicProperties</code>",
   "analytic#19": "<code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>, <code>gradientDescent</code>",
   "algebraic#10": "<code>toFixed(k, mode)</code> on algebraic numbers",
