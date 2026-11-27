@@ -128,11 +128,11 @@ export default {
       topic: "Composition",
       q: t`For \(f(x) = x^2 + 1\) and \(g(x) = 2x - 3\), find \(f(g(2))\) and \(g(f(x))\).`,
       a: t`\(g(2) = 1\), \(f(1) = 2\). \(g(f(x)) = 2(x^2 + 1) - 3 = 2x^2 - 1\).`,
-      code: `const f = (u) => \`(\${u})^2 + 1\`, g = (u) => \`2*(\${u}) - 3\`;
-[symbolic.simplify(f(g(2))), symbolic.expand(g(f("x")))]`,
+      fix: "symbolic#9",
+      code: `const f = "x^2 + 1", g = "2x - 3";
+[symbolic.compose(f, g).value.subs({ x: 2 }).simplify(), symbolic.compose(g, f).value]`,
       expect: "[2, 2*x^2 - 1]",
-      status: "partial",
-      note: "Composition is done by pasting text into text; symbolic has substitution (<code>subs</code>) for numbers but no function composition as such.",
+      note: "<code>compose</code> substitutes one function into the other and also reports where the composite is defined.",
     },
     {
       topic: "Arithmetic series",

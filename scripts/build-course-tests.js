@@ -104,6 +104,7 @@ export const FIX_PRS = {
   "analytic#19": "<code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>, <code>gradientDescent</code>",
   "algebraic#10": "<code>toFixed(k, mode)</code> on algebraic numbers",
   "discrete#7": "<code>transportation</code>, <code>binary</code> option on <code>integerProgram</code>, <code>coreVertices</code>",
+  "symbolic#9": "<code>completeSquare</code>, <code>compose</code>, <code>sinusoid</code>, inverse trig values, <code>within</code>, <code>RealSet</code> operations and chained inequalities, <code>implicitDiff</code>, <code>leibniz</code>, constant factors in <code>sum</code>",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {
