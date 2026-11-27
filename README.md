@@ -72,6 +72,45 @@ The other pages are written in `docs/src/` and built into `docs/` by
 sites (`docs/assets/runbox.js`, `scripts/docs-kit.js`: keep them in step with
 the other repositories). Add each new page to `PAGES` in `docs/assets/site.js`.
 
+### PDFs of the docs
+
+`bun run pdf` prints every library's docs site to PDF, and joins them into one
+PDF of the whole Shelf. It runs locally only, typically before an npm publish,
+and writes to `pdf/`, which is gitignored: the PDFs are never committed.
+
+It expects each library as a sibling checkout of this repository, with its
+docs built, and Google Chrome installed (it drives Chrome through
+`playwright-core`; set `CHROME_PATH` to use another Chromium-based browser):
+
+```text
+ai-repos/
+  shelf/        this repository
+  algebraic/    git clone https://github.com/ratmath/algebraic
+  analytic/
+  ...           all fourteen libraries
+```
+
+```sh
+# in each library you want fresh: bun install && bun run docs:build
+bun install
+bun run pdf                  # all fourteen libraries, then the Shelf PDF (about 5 minutes)
+bun run pdf linalg stats     # just these, then the Shelf PDF again
+bun run pdf --combine        # only rebuild the Shelf PDF and the list
+bun run pdf --from ~/elsewhere   # libraries in another folder
+open pdf/index.html          # what was built, with version, commit and date
+```
+
+Each page is opened in Chrome so the demos appear and every code box runs, so
+the PDF shows their output. Each PDF gets a cover (version, commit, build
+time), a contents page with page numbers, bookmarks and page numbers. The
+output:
+
+- `pdf/<library>.pdf`, one per library.
+- `pdf/ratmath-shelf.pdf`, all of them, with a bookmark per library and page.
+- `pdf/index.html`, a list of the PDFs with the version, commit and date each
+  was built from (`pdf/manifest.json` holds the same data). A `*` after a
+  commit means the library had uncommitted changes to its docs or source.
+
 ### Adding a library when it is published
 
 1. Add `"@ratmath/<name>": "^x.y.z"` to `dependencies`.

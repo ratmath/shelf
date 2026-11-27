@@ -1,20 +1,16 @@
-// Print the RatMath Shelf docs to PDF: one PDF per package and one for the
-// whole Shelf, written to docs/pdf/, plus the page docs/pdf.html that lists
-// them with the version, commit and date each was built from.
+// Print the RatMath Shelf docs to PDF, locally: one PDF per library and one
+// for the whole Shelf, written to pdf/ (gitignored; the PDFs are never
+// committed), with pdf/index.html listing each PDF and the version, commit and
+// date it was built from.
 //
-// Run it locally, typically before an npm publish:
-//
-//   bun run pdf                       # every package, then the Shelf PDF
+//   bun run pdf                       # every library, then the Shelf PDF
 //   bun run pdf linalg stats          # just these, then the Shelf PDF again
-//   bun run pdf --combine             # only rebuild the Shelf PDF and the page
-//   bun run pdf --from ~/ai-repos/ratmath/shelf
-//   bun run pdf --live                # print https://ratmath.com/<name>/ instead
+//   bun run pdf --combine             # only rebuild the Shelf PDF and the list
 //
-// Each package is printed from its built docs folder (<from>/<name>/docs), so
-// run that package's docs:build first. Without --from, the script looks in
-// $RATMATH_SHELF_DIR, ../ratmath/shelf, and .. (sibling checkouts), and falls
-// back to the live site for a package it cannot find. It drives your installed
-// Chrome through playwright-core (set CHROME_PATH to use another browser).
+// The libraries are expected as sibling checkouts of this repository
+// (../linalg, ../stats, ...), each with its docs built (run its docs:build
+// first). --from <dir> looks in another folder instead. It drives your
+// installed Chrome through playwright-core (CHROME_PATH picks another browser).
 //
 // Every page is opened in the browser so demos mount and every "Try it" box
 // runs; the PDF shows their output. Pages are printed one by one with their
@@ -24,7 +20,8 @@ import { chromium } from "playwright-core";
 import { PDFDocument, PDFName, PDFHexString, PDFNumber, StandardFonts, rgb } from "pdf-lib";
 import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from "node:fs";
 import { createServer } from "node:http";
-import { join, extname, resolve } from "node:path";
+import { join, extname, resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
 import { execFileSync } from "node:child_process";
 
@@ -35,7 +32,8 @@ const ALL = [
 ];
 // Pages that are tools rather than text; they print as an empty form.
 const SKIP_PAGES = new Set(["workbench.html"]);
-const OUT = "docs/pdf";
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const OUT = join(REPO, "pdf");
 const MANIFEST = `${OUT}/manifest.json`;
 
 // ---- arguments ---------------------------------------------------------------
@@ -46,7 +44,7 @@ const tilde = (p) => (p?.startsWith("~") ? join(homedir(), p.slice(1)) : p);
 const only = argv.filter((a, i) => !a.startsWith("--") && argv[i - 1] !== "--from");
 for (const n of only) if (!ALL.includes(n)) { console.error(`unknown package ${n}; known: ${ALL.join(", ")}`); process.exit(1); }
 const names = flag("--combine") ? [] : only.length ? only : ALL;
-const roots = [opt("--from"), process.env.RATMATH_SHELF_DIR, "../ratmath/shelf", ".."].filter(Boolean).map((p) => resolve(tilde(p)));
+const root = resolve(tilde(opt("--from") ?? join(REPO, "..")));
 
 mkdirSync(OUT, { recursive: true });
 const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, "utf8")) : { packages: {} };
@@ -54,22 +52,17 @@ const today = () => new Date().toISOString().slice(0, 16).replace("T", " ") + " 
 
 // ---- where each package's docs come from ----------------------------------------
 function locate(name) {
-  if (!flag("--live")) {
-    for (const root of roots) {
-      const dir = join(root, name);
-      if (existsSync(join(dir, "docs/index.html")) && existsSync(join(dir, "package.json"))) {
-        const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
-        let commit = null, dirty = false;
-        try {
-          commit = execFileSync("git", ["-C", dir, "rev-parse", "--short", "HEAD"]).toString().trim();
-          dirty = execFileSync("git", ["-C", dir, "status", "--porcelain", "--", "docs", "src", "package.json"]).toString().trim() !== "";
-        } catch { /* not a git checkout */ }
-        return { name, pkg, commit, dirty, source: dir, docsDir: join(dir, "docs") };
-      }
-    }
-    console.warn(`  ${name}: no local checkout with built docs in ${roots.join(", ")}; using the live site`);
+  const dir = join(root, name);
+  if (!existsSync(join(dir, "docs/index.html")) || !existsSync(join(dir, "package.json"))) {
+    throw new Error(`${name}: no checkout with built docs at ${dir} (clone ratmath/${name} there and run its docs:build, or pass --from <dir>)`);
   }
-  return { name, live: `https://ratmath.com/${name}/`, source: `https://ratmath.com/${name}/` };
+  const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
+  let commit = null, dirty = false;
+  try {
+    commit = execFileSync("git", ["-C", dir, "rev-parse", "--short", "HEAD"]).toString().trim();
+    dirty = execFileSync("git", ["-C", dir, "status", "--porcelain", "--", "docs", "src", "package.json"]).toString().trim() !== "";
+  } catch { /* not a git checkout */ }
+  return { name, pkg, commit, dirty, docsDir: join(dir, "docs") };
 }
 
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".json": "application/json", ".woff2": "font/woff2" };
@@ -231,9 +224,8 @@ async function withFrontMatter(page, spec, chunks, label) {
 // ---- one package -----------------------------------------------------------------
 async function buildPackage(browser, name) {
   const loc = locate(name);
-  let pkg = loc.pkg, server, base = loc.live;
-  if (!pkg) pkg = await fetch(`https://raw.githubusercontent.com/ratmath/${name}/main/package.json`).then((r) => r.json());
-  if (loc.docsDir) ({ server, base } = serve(loc.docsDir));
+  const pkg = loc.pkg;
+  const { server, base } = serve(loc.docsDir);
   const page = await browser.newPage({ colorScheme: "light", viewport: { width: 1000, height: 1300 } });
   try {
     const label = `${pkg.name} ${pkg.version}`;
@@ -245,7 +237,7 @@ async function buildPackage(browser, name) {
       process.stdout.write(".");
     }
     const built = today();
-    const commit = loc.commit ? `${loc.commit}${loc.dirty ? " with uncommitted changes" : ""}` : "live site";
+    const commit = loc.commit ? `${loc.commit}${loc.dirty ? " with uncommitted changes" : ""}` : "not a git checkout";
     const { bytes: frontBytes, front } = await withFrontMatter(page, {
       eyebrow: "RatMath Shelf", title: pkg.name, lede: pkg.description,
       meta: `Version ${esc(pkg.version)} · ${esc(commit)} · built ${esc(built)}<br>https://ratmath.com/${name}/`,
@@ -270,13 +262,13 @@ async function buildPackage(browser, name) {
     writeFileSync(`${OUT}/.${name}.plain.pdf`, plain); // gitignored; kept for --combine
     manifest.packages[name] = {
       package: pkg.name, version: pkg.version, description: pkg.description ?? "", commit: loc.commit ?? null, dirty: !!loc.dirty,
-      source: loc.docsDir ? "local" : "live", built, pages: doc.getPageCount(), bytes: statSync(file).size,
+      built, pages: doc.getPageCount(), bytes: statSync(file).size,
       outline: outline.map((o) => ({ title: o.title, page: o.page })),
     };
-    console.log(`\n  ${file}: ${doc.getPageCount()} pages, ${(statSync(file).size / 1e6).toFixed(1)} MB (${pkg.version}, ${commit})`);
+    console.log(`\n  pdf/${name}.pdf: ${doc.getPageCount()} pages, ${(statSync(file).size / 1e6).toFixed(1)} MB (${pkg.version}, ${commit})`);
   } finally {
     await page.close();
-    server?.close();
+    server.close();
   }
 }
 
@@ -292,7 +284,7 @@ async function buildShelf(browser) {
   if (!have.length) return console.log("no package PDFs yet, so no Shelf PDF");
   const page = await browser.newPage({ colorScheme: "light" });
   try {
-    const shelfPkg = JSON.parse(readFileSync("package.json", "utf8"));
+    const shelfPkg = JSON.parse(readFileSync(join(REPO, "package.json"), "utf8"));
     const chunks = have.map((n) => ({ title: manifest.packages[n].package, note: `${manifest.packages[n].version} · ${manifest.packages[n].description}`, pages: manifest.packages[n].pages, n }));
     const built = today();
     const { bytes, front } = await withFrontMatter(page, {
@@ -316,70 +308,59 @@ async function buildShelf(browser) {
     await numberPages(doc);
     writeFileSync(`${OUT}/ratmath-shelf.pdf`, await doc.save());
     manifest.shelf = { version: shelfPkg.version, built, pages: doc.getPageCount(), bytes: statSync(`${OUT}/ratmath-shelf.pdf`).size, packages: have };
-    console.log(`  ${OUT}/ratmath-shelf.pdf: ${doc.getPageCount()} pages, ${(manifest.shelf.bytes / 1e6).toFixed(1)} MB`);
+    console.log(`  pdf/ratmath-shelf.pdf: ${doc.getPageCount()} pages, ${(manifest.shelf.bytes / 1e6).toFixed(1)} MB`);
   } finally {
     await page.close();
   }
 }
 
-// ---- docs/pdf.html ---------------------------------------------------------------------
+// ---- pdf/index.html: what was built, from which version ------------------------------
 function writePage() {
   const mb = (b) => `${(b / 1e6).toFixed(1)} MB`;
   const s = manifest.shelf;
   const rows = ALL.map((n) => {
     const m = manifest.packages[n];
-    if (!m) return `<tr><td><a href="https://ratmath.com/${n}/">@ratmath/${n}</a></td><td colspan="4" class="muted">not built yet</td></tr>`;
-    const commit = m.commit ? `<a href="https://github.com/ratmath/${n}/tree/${m.commit}"><code>${m.commit}</code></a>${m.dirty ? " *" : ""}` : "live site";
-    return `<tr><td><a href="pdf/${n}.pdf">${esc(m.package)}</a><br><small class="muted">${esc(m.description)}</small></td><td>${esc(m.version)}</td><td>${commit}</td><td title="${esc(m.built)}">${esc(m.built.slice(0, 10))}</td><td>${m.pages} pages<br><small class="muted">${mb(m.bytes)}</small></td></tr>`;
+    if (!m) return `<tr><td>@ratmath/${n}</td><td colspan="4" class="muted">not built yet</td></tr>`;
+    const commit = m.commit ? `<a href="https://github.com/ratmath/${n}/tree/${m.commit}"><code>${m.commit}</code></a>${m.dirty ? " *" : ""}` : "";
+    return `<tr><td><a href="${n}.pdf">${esc(m.package)}</a><br><small class="muted">${esc(m.description)}</small></td><td>${esc(m.version)}</td><td>${commit}</td><td>${esc(m.built)}</td><td>${m.pages} pages<br><small class="muted">${mb(m.bytes)}</small></td></tr>`;
   }).join("\n");
-  const html = `<!doctype html>
+  writeFileSync(join(OUT, "index.html"), `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PDFs of the RatMath Shelf docs</title>
-<meta name="description" content="Every RatMath Shelf library's documentation as a PDF, and all of them in one.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css">
-<script type="module" src="assets/site.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RatMath Shelf PDFs</title>
 <style>
-.pdf-table { width: 100%; border-collapse: collapse; font-size: .93rem; }
-.pdf-table th, .pdf-table td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--line, #d9dee7); }
-.pdf-table th { font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
-.pdf-table .muted { opacity: .75; }
-.pdf-wrap { overflow-x: auto; }
-@media (max-width: 640px) { .pdf-table th:nth-child(3), .pdf-table td:nth-child(3) { display: none; } }
+:root { color-scheme: light dark; --line: #d5dee1; --muted: #4a5e66; --bg: #f2f5f6; --fg: #15262e; --link: #b8730f; }
+@media (prefers-color-scheme: dark) { :root { --line: #2a3a42; --muted: #a9c0c7; --bg: #10181c; --fg: #e9f1f3; --link: #f1b24a; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 60rem; margin: 0 auto; padding: 2rem 16px 4rem; }
+h1 { margin: 0 0 .4rem; }
+a { color: var(--link); }
+.muted { color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+th, td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+.wrap { overflow-x: auto; }
 </style>
 </head>
 <body>
-<div class="shell">
-<aside></aside>
 <main>
-<article>
-<div class="eyebrow">ratmath</div>
-<h1>The docs as PDFs</h1>
-<p class="lede">Each library's documentation, printed from its docs site with every demo shown and every code box run, so the output is on the page. Each PDF has a contents page and bookmarks.</p>
-${s ? `<p><a href="pdf/ratmath-shelf.pdf"><strong>The whole Shelf in one PDF</strong></a>: ${s.packages.length} libraries, ${s.pages} pages, ${mb(s.bytes)}. Built ${esc(s.built)} with <code>ratmath</code> ${esc(s.version)}.</p>` : ""}
-<h2>One library at a time</h2>
-<div class="pdf-wrap"><table class="pdf-table">
+<h1>RatMath Shelf PDFs</h1>
+<p class="muted">Built locally by <code>bun run pdf</code> in ratmath/shelf. Not committed.</p>
+${s ? `<p><a href="ratmath-shelf.pdf"><strong>The whole Shelf in one PDF</strong></a>: ${s.packages.length} libraries, ${s.pages} pages, ${mb(s.bytes)}, built ${esc(s.built)} with <code>ratmath</code> ${esc(s.version)}.</p>` : ""}
+<div class="wrap"><table>
 <thead><tr><th>Library</th><th>Version</th><th>Commit</th><th>Built</th><th>Size</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
 </table></div>
-<p class="muted"><small>A * after a commit means the docs were printed from a checkout with uncommitted changes. The PDFs are rebuilt by hand with <code>bun run pdf</code> in <a href="https://github.com/ratmath/shelf">ratmath/shelf</a>, usually before a release, so a library's web docs can be newer than its PDF.</small></p>
-</article>
+<p class="muted"><small>A * after a commit: printed from a checkout with uncommitted changes to its docs or source.</small></p>
 </main>
-</div>
 </body>
 </html>
-`;
-  // Reuse the asset hash the docs build stamped on the other pages.
-  const v = /assets\/style\.css\?v=(\w+)/.exec(existsSync("docs/using.html") ? readFileSync("docs/using.html", "utf8") : "")?.[1];
-  writeFileSync("docs/pdf.html", v ? html.replace(/assets\/(style\.css|site\.js)"/g, `assets/$1?v=${v}"`) : html);
-  console.log("  docs/pdf.html written");
+`);
+  console.log("  pdf/index.html written");
 }
 
 // ---- run ----------------------------------------------------------------------------------

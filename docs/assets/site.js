@@ -1,15 +1,14 @@
 // Shared page furniture for the shelf docs: the contents column, the theme
 // switch and the code boxes. Add each topic page to PAGES as it is written.
 
-import * as A from "./ratmath.js?v=c6efb6fe6c";
-import { mountRunboxes } from "./runbox.js?v=c6efb6fe6c";
+import * as A from "./ratmath.js?v=e5222253a6";
+import { mountRunboxes } from "./runbox.js?v=e5222253a6";
 
 export { A };
 
 export const PAGES = [
   { href: "index.html", title: "The Shelf" },
   { href: "using.html", title: "Using it all", blurb: "One package, ratmath: install it, three ways to import, the browser file, and how versions fit together." },
-  { href: "pdf.html", title: "PDFs", blurb: "Every library's docs as a PDF, and the whole Shelf in one." },
 ];
 
 export const h = (tag, attrs = {}, ...kids) => {
