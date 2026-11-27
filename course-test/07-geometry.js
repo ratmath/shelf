@@ -108,7 +108,6 @@ graphics.conicType(atom.poly)`,
       a: t`\(55^\circ\).`,
       code: "R`110/2`",
       expect: "55",
-      status: "partial",
       note: "The inscribed angle theorem is in geo (<code>geo.proofs.inscribedAngle()</code> proves it), but using it here is just halving.",
     },
     {

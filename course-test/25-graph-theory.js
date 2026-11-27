@@ -82,10 +82,10 @@ const b = discrete.eulerTour(discrete.complete(4), { closed: true });
       q: t`The cube graph is planar with 8 vertices and 12 edges. How many faces does a plane drawing have?`,
       a: t`\(V - E + F = 2\): \(F = 2 - 8 + 12 = 6\).`,
       code: `const g = discrete.platonic("cube");
-[discrete.isPlanar(g), 2 - g.order + g.size]`,
-      expect: "[true, 6]",
-      status: "partial",
-      note: "Planarity is tested; the face count comes from Euler's formula by hand (no embedding or face list is returned).",
+const p = discrete.planarity(g);
+[p.planar, p.faces[0].length, g.order - g.size + p.faces[0].length]`,
+      expect: "[true, 6, 2]",
+      note: "planarity returns a plane embedding with its faces (one list per block); the cube has 6, and V − E + F = 2 checks Euler's formula.",
     },
     {
       topic: "Chromatic number",
