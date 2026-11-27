@@ -156,7 +156,6 @@ PRINT(k);
 analytic.firstOrder("-k*(T - 20)", { y: "T", x: "t" }).general`,
       expect: /T = .*exp/,
       expectText: "T = 20 + C e^(−kt); with k = ln(7/4)/10, T(20) = 300/7",
-      status: "partial",
       note: "Each step is available (the general solution, and \\(k\\) from the data), but the final value is assembled by hand.",
     },
   ],

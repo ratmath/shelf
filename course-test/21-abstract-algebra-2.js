@@ -148,10 +148,10 @@ A.minimalPolynomial(A.add(A.sqrt(A.fromRational(2)), A.sqrt(A.fromRational(3))))
       q: t`Is the regular 17-gon constructible?`,
       a: t`Yes (Gauss): 17 is a Fermat prime, \(\varphi(17) = 16 = 2^4\), and \(\mathbb Q(\cos\frac{2\pi}{17})\) is an abelian extension of degree 8.`,
       code: `const c = structures.constructible(algebraic.cosMinimal(17));
-c.constructible`,
-      expect: "true",
-      status: "gap",
-      note: "Returns <code>null</code>: the degree is 8 and Galois groups are only computed up to degree 7. For \\(\\cos(2\\pi/n)\\) the field is abelian, so the Gauss–Wantzel test (\\(\\varphi(n)\\) a power of 2) would settle it; worth adding.",
+[c.constructible, c.factors[0].cosine.n]`,
+      expect: "[true, 17]",
+      note: "The degree is 8, beyond the Galois groups computed directly, but the polynomial is recognised as the minimal polynomial of \\(\\cos(2\\pi/17)\\), so Gauss–Wantzel decides it.",
+      fix: "structures#6",
     },
     {
       topic: "Cyclotomic polynomials",

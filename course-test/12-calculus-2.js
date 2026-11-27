@@ -148,12 +148,11 @@ const S = h.divide(R\`3\`).multiply(f(0).add(R\`4\`.multiply(f(h))).add(R\`2\`.m
       topic: "Remainder bound",
       q: t`Approximate \(e^{0.1}\) by its degree-2 Maclaurin polynomial and bound the error.`,
       a: t`\(1 + 0.1 + 0.005 = 1.105\). \(|R_2| \le e^{0.1}\tfrac{(0.1)^3}{6} < 1.2 \cdot \tfrac{0.001}{6} = 0.0002\). (True error \(0.000171\).)`,
-      code: `const r = analytic.taylorRemainder("exp(x)", { about: 0, order: 2, on: [0, "0.1"] });
-PRINT(r);
-symbolic.taylor("exp(x)", "x", 0, 2)`,
-      expect: "1 + x + 1/2*x^2 + …",
-      status: "partial",
-      note: "taylorRemainder gives Lagrange's bound and the true maximum error (shown in the printed line); the value 1.105 is read from the polynomial.",
+      code: `const T = symbolic.taylor("exp(x)", "x", 0, 2);
+const r = analytic.taylorRemainder("exp(x)", { about: 0, order: 2, on: [0, "0.1"] });
+[String(T.polynomial), T.polynomial.evaluate({ x: "0.1" }).low.toDecimal(), r.bound.lessThan(R\`0.0002\`), r.actual.high.toDecimal(6)]`,
+      expect: '["1 + x + 1/2*x^2", "1.105", true, "0.000170"]',
+      note: "taylorRemainder gives Lagrange's bound (below 0.0002) and an enclosure of the true maximum error.",
     },
     {
       topic: "Polar area",

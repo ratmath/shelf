@@ -65,11 +65,11 @@ export default {
       topic: "Cauchy–Riemann equations",
       q: t`Check that \(f = (x^2 - y^2) + 2xy\,i\) satisfies the Cauchy–Riemann equations.`,
       a: t`\(u_x = 2x = v_y\) and \(u_y = -2y = -v_x\). (It is \(f = z^2\).)`,
-      code: `const d = (e, v) => symbolic.sym(e).diff(v);
-[symbolic.simplify(\`\${d("x^2 - y^2", "x")} - (\${d("2*x*y", "y")})\`), symbolic.simplify(\`\${d("x^2 - y^2", "y")} + \${d("2*x*y", "x")}\`)]`,
-      expect: "[0, 0]",
-      status: "partial",
-      note: "Checked with symbolic partial derivatives; there is no Cauchy–Riemann or analyticity test for a function given by its real and imaginary parts.",
+      code: `const r = complex.cauchyRiemann("x^2 - y^2", "2*x*y");
+[r.holds, r.ux, r.vy, r.uy, r.vx]`,
+      expect: '[true, "2*x", "2*x", "-2*y", "2*y"]',
+      note: "<code>cauchyRiemann</code> differentiates both parts and reduces the two residuals to 0; it also returns \\(f' = 2x + 2yi = 2z\\).",
+      fix: "complex#7",
     },
     {
       topic: "Contour integral",

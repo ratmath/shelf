@@ -83,8 +83,9 @@ function judge(ex, res) {
 
 /**
  * Pull requests that fix what the Course Test found, by "repo#number". An
- * exercise names the one that fixes it with `fix`. All of these were merged on
- * 2026-11-27, and the pages are built against the libraries' main branches.
+ * exercise names the one that fixes it with `fix`. The first eight were merged
+ * on 2026-11-27; the rest come from the roadmap batches (course-test/ROADMAP.md)
+ * and the pages are built against their branches until they merge.
  */
 export const FIX_PRS = {
   "stats#7": "textbook quartiles (<code>method: \"halves\"</code>, <code>\"tukey\"</code>); finite distributions accept Core's <code>Integer</code>",
@@ -95,6 +96,16 @@ export const FIX_PRS = {
   "numtheory#9": "<code>egcd</code>, <code>gcd</code>, <code>isqrt</code> and friends read any whole number",
   "chaos#8": "the escape test compares sizes, so long bounded orbits are not refused",
   "finance#6": "<code>parity</code> takes enclosed prices",
+  "numtheory#10": "<code>factorialValuation</code> (Legendre's formula)",
+  "structures#6": "<code>sign</code>/<code>isEven</code> of a permutation; Gauss–Wantzel inside <code>constructible</code>; <code>chainComplex</code> and homology",
+  "complex#7": "<code>cauchyRiemann(u, v)</code>",
+  "stats#8": "summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>; <code>fromDensity</code>, <code>transform</code> and <code>orderStatistic</code>",
+  "geo#11": "measurement helpers, 3D <code>vector</code> and <code>plane</code>, <code>conicProperties</code>; topology: <code>surface</code>, <code>simplicialComplex</code>, finite spaces",
+  "analytic#19": "<code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>, <code>gradientDescent</code>",
+  "algebraic#10": "<code>toFixed(k, mode)</code> on algebraic numbers",
+  "discrete#7": "<code>transportation</code>, <code>binary</code> option on <code>integerProgram</code>, <code>coreVertices</code>",
+  "symbolic#9": "<code>completeSquare</code>, <code>compose</code>, <code>sinusoid</code>, inverse trig values, <code>within</code>, <code>RealSet</code> operations and chained inequalities, <code>implicitDiff</code>, <code>leibniz</code>, constant factors in <code>sum</code>",
+  "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {
   const [repo, n] = id.split("#");
@@ -343,7 +354,7 @@ function findingsPage(courses) {
   const body = `<h1>Findings</h1>
 <p class="lede">Every exercise in the <a href="index.html">Course Test</a> where RatMath's answer is not simply the independent answer: disagreements and errors first, then partial answers, then the gaps.</p>
 <h2>Fixes</h2>
-<p>The bugs the test found were fixed in these pull requests, all merged. The pages are built against each library's main branch, so the exercises below show the fixed behaviour; each keeps a note of what used to go wrong.</p>
+<p>The bugs the test found, and the helpers it showed were missing, are fixed in these pull requests. The first eight are merged; the rest come from the follow-up roadmap and the pages are built against their branches until they merge. The exercises below show the fixed behaviour.</p>
 <div class="tablewrap"><table class="ct"><thead><tr><th>Pull request</th><th>What it fixes</th><th>Exercises</th></tr></thead><tbody>
 ${fixes}
 </tbody></table></div>

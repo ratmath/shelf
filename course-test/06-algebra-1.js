@@ -24,10 +24,10 @@ export default {
       topic: "Compound inequality",
       q: t`Solve \(-3 < 2x + 1 \le 7\).`,
       a: t`\(-4 < 2x \le 6\), so \(-2 < x \le 3\).`,
-      code: `[symbolic.solveInequality("2x + 1 > -3", "x"), symbolic.solveInequality("2x + 1 <= 7", "x")]`,
-      expect: "[(-2, inf), (-inf, 3]]",
-      status: "partial",
-      note: "<code>solveInequality</code> does not read a chained inequality (<code>-3 &lt; 2x + 1 &lt;= 7</code> is refused as \"not an inequality\"), and <code>RealSet</code> has no intersection, so the two halves are solved separately and intersected by hand.",
+      fix: "symbolic#9",
+      code: `symbolic.solveInequality("-3 < 2x + 1 <= 7", "x")`,
+      expect: "(-2, 3]",
+      note: "A chained inequality is read as the intersection of its two halves (<code>RealSet</code> now has <code>intersect</code>, <code>union</code> and <code>complement</code>).",
     },
     {
       topic: "Absolute value equation",
@@ -111,13 +111,11 @@ export default {
       topic: "Completing the square",
       q: t`Write \(y = x^2 - 8x + 11\) in vertex form and give the vertex.`,
       a: t`\(y = (x - 4)^2 - 5\); vertex \((4, -5)\).`,
-      code: `const f = symbolic.sym("x^2 - 8x + 11");
-const h = symbolic.solve(\`\${f.diff("x")} = 0\`, "x");
-PRINT(h);
-[R\`4\`, f.subs({ x: 4 }).simplify()]`,
-      expect: "[4, -5]",
-      status: "partial",
-      note: "The vertex comes out (from where the slope is zero), but there is no 'complete the square' or vertex-form rewrite: the form \\((x - 4)^2 - 5\\) is not produced.",
+      fix: "symbolic#9",
+      code: `const c = symbolic.completeSquare("x^2 - 8x + 11");
+[String(c.form), c.vertex.map(String)]`,
+      expect: '["(x - 4)^2 - 5", ["4", "-5"]]',
+      note: "<code>completeSquare</code> writes the vertex form and proves it by expanding back.",
     },
     {
       topic: "Function notation",

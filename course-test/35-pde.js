@@ -12,12 +12,11 @@ export default {
       topic: "Classification",
       q: t`Classify \(u_{xx} + 4u_{xy} + 3u_{yy} = 0\) as elliptic, parabolic or hyperbolic.`,
       a: t`\(B^2 - 4AC = 16 - 12 = 4 > 0\): hyperbolic.`,
-      code: `const [A, B, C] = [R\`1\`, R\`4\`, R\`3\`];
-const d = B.multiply(B).subtract(R\`4\`.multiply(A).multiply(C));
-[d, d.sign() > 0 ? "hyperbolic" : d.sign() < 0 ? "elliptic" : "parabolic"]`,
-      expect: '[4, "hyperbolic"]',
-      status: "partial",
-      note: "No library classifies a second-order equation; the discriminant is worked out with Core arithmetic.",
+      fix: "analytic#19",
+      code: `const c = analytic.pde.classify({ A: 1, B: 4, C: 3 });
+[c.discriminant, c.type]`,
+      expect: '["4", "hyperbolic"]',
+      note: "<code>pde.classify</code> takes the sign of \\(B^2 - 4AC\\); with coefficients in \\(x\\) and \\(y\\) it returns the region of each type.",
     },
     {
       topic: "Characteristics",

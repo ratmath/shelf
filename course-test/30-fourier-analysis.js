@@ -51,11 +51,10 @@ export default {
       topic: "Parseval's identity",
       q: t`Use Parseval's identity for \(f(x) = x\) on \((-1, 1)\) to find \(\sum 1/n^2\).`,
       a: t`\(\int_{-1}^1 x^2 = \tfrac23 = \sum b_n^2 = \sum \dfrac{4}{n^2\pi^2}\), so \(\sum \dfrac1{n^2} = \dfrac{\pi^2}6\).`,
-      code: `const zeta2 = symbolic.sum("1/n^2", "n", 1, "inf").value;
-[symbolic.integrate("x^2", "x", { from: -1, to: 1 }).value, symbolic.simplify(\`4/pi^2 * (\${zeta2})\`), zeta2]`,
+      fix: "symbolic#9",
+      code: `[symbolic.integrate("x^2", "x", { from: -1, to: 1 }).value, symbolic.sum("4/(n^2*pi^2)", "n", 1, "inf").value, symbolic.sum("1/n^2", "n", 1, "inf").value]`,
       expect: "[2/3, 2/3, pi^2/6]",
-      status: "partial",
-      note: "<code>symbolic.sum(\"4/(n^2*pi^2)\", \"n\", 1, \"inf\")</code> returns <code>null</code>: a constant factor containing \\(\\pi\\) is not taken outside the sum (<code>2/n^2</code> works). The factor is applied by hand.",
+      note: "A factor without the index, here \\(4/\\pi^2\\), comes outside the sum first, so both sides of Parseval's identity come out as \\(\\tfrac23\\).",
     },
     {
       topic: "Discrete Fourier transform",

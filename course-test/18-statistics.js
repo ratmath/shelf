@@ -48,11 +48,10 @@ export default {
       topic: "Interval for a variance",
       q: t`A sample of \(n = 10\) from a normal population has \(s^2 = 4\). Give a 95% confidence interval for \(\sigma^2\).`,
       a: t`\(\left(\dfrac{9\cdot4}{\chi^2_{0.975,9}}, \dfrac{9\cdot4}{\chi^2_{0.025,9}}\right) = \left(\dfrac{36}{19.023}, \dfrac{36}{2.7004}\right) \approx (1.8925, 13.331)\).`,
-      code: `const X = stats.chiSquare(9);
-[R\`36\`.divide(X.quantile("0.975").low), R\`36\`.divide(X.quantile("0.025").low)]`,
+      code: "const ci = stats.varianceInterval({ n: 10, variance: 4 });\n[ci.low, ci.high]",
       check: near([1.89247, 13.3314], 1e-4),
-      status: "partial",
-      note: "<code>varianceInterval</code> takes raw data only, so with just \\(n\\) and \\(s^2\\) the interval is built by hand from the chi-square quantiles.",
+      note: "<code>varianceInterval</code> takes \\(n\\) and \\(s^2\\) as a summary.",
+      fix: "stats#8",
     },
     {
       topic: "One-way ANOVA",
@@ -111,22 +110,19 @@ const r = m.test(1);
       topic: "Power of a z test",
       q: t`Test \(H_0: \mu = 100\) against \(\mu > 100\) with \(\sigma = 15\), \(n = 25\), \(\alpha = 0.05\). What is the power when the true mean is 106?`,
       a: t`Reject when \(\bar x > 100 + 1.645\cdot3 = 104.935\). Power \(= P(Z > (104.935 - 106)/3) = P(Z > -0.355) \approx 0.6388\).`,
-      code: `const Z = stats.normal();
-const cut = R\`100\`.add(Z.quantile("0.95").low.multiply(R\`3\`));
-R\`1\`.subtract(Z.cdf(cut.subtract(R\`106\`).divide(R\`3\`)).low)`,
+      code: "stats.power({ mu0: 100, mu: 106, sigma: 15, n: 25, alternative: \"greater\" }).power",
       check: near(0.63876, 1e-4),
-      status: "partial",
-      note: "No power or sample-size function for the standard tests (only the simulation-based <code>powerCurve</code>); the power is assembled from normal quantiles and the CDF.",
+      note: "<code>power</code> is the closed form \\(1 - \\Phi(z_{0.95} - \\delta)\\) with certified quantiles.",
+      fix: "stats#8",
     },
     {
       topic: "Sample size",
       q: t`How large a sample gives a margin of error of at most 3 percentage points for a proportion at 95% confidence (use \(p = 0.5\))?`,
       a: t`\(n \ge (1.96/0.03)^2 \cdot 0.25 = 1067.1\), so \(n = 1068\).`,
-      code: `const z = stats.normal().quantile("0.975").low;
-new Integer(z.divide(R\`0.03\`).pow(2).multiply(R\`1/4\`).ceil())`,
+      code: "stats.sampleSize({ margin: \"0.03\", p: \"1/2\" }).n",
       expect: "1068",
-      status: "partial",
-      note: "Done by hand from the normal quantile; there is no sample-size helper. (<code>ceil()</code> returns a bigint.)",
+      note: "<code>sampleSize</code> encloses \\(z^2 p(1-p)/m^2 = 1067.1\\) and rounds up once the enclosure settles it.",
+      fix: "stats#8",
     },
     {
       topic: "Conjugate prior",

@@ -11,17 +11,10 @@ export default {
       topic: "Finite topologies",
       q: t`How many topologies are there on a three-point set?`,
       a: t`Topologies on a finite set correspond to preorders (reflexive, transitive relations), via \(x \le y\) iff every open set containing \(x\) contains \(y\). On 3 points there are 29.`,
-      code: `const pts = [1, 2, 3];
-const off = [[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]];
-let n = 0;
-for (let m = 0; m < 64; m++) {
-  const pairs = [[1, 1], [2, 2], [3, 3], ...off.filter((_, i) => (m >> i) & 1)];
-  if (discrete.relation(pts, pairs).properties().transitive.holds) n++;
-}
-n`,
-      expect: "29",
-      status: "partial",
-      note: "No topology objects: the count goes through the correspondence with preorders, using discrete's relation properties to test transitivity.",
+      code: `[geo.countTopologies(3), geo.countTopologies(3, { t0: true })]`,
+      expect: "[29, 19]",
+      fix: "geo#11",
+      note: "<code>countTopologies</code> counts the preorders on 3 points (the open sets of a finite space are the up-sets of its specialisation preorder); 19 of the 29 are T₀. <code>finiteSpace</code> also checks the axioms, closure, bases and continuity directly.",
     },
     {
       topic: "Metrics",
@@ -87,38 +80,38 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
       topic: "Euler characteristic of a graph",
       q: t`For the Petersen graph as a 1-dimensional complex, find \(\chi\) and the rank of \(H_1\).`,
       a: t`\(\chi = V - E = 10 - 15 = -5\). It is connected, so \(b_0 = 1\) and \(b_1 = 1 - \chi = 6\) independent cycles.`,
-      code: `const P = discrete.petersen();
-[P.order - P.size, 1 - (P.order - P.size)]`,
+      code: `const P = geo.simplicial.fromGraph(discrete.petersen());
+[P.eulerCharacteristic, P.betti()[1]]`,
       expect: "[-5, 6]",
-      status: "partial",
-      note: "Counted from the graph; there is no simplicial complex or homology function.",
+      fix: "geo#11",
+      note: "The graph as a 1-dimensional simplicial complex; \\(b_1\\) comes from its homology, not from the formula.",
     },
     {
       topic: "Homology of the torus",
       q: t`The torus has a cell structure with one 0-cell, two 1-cells \(a, b\) and one 2-cell attached along \(aba^{-1}b^{-1}\). Find \(H_1\).`,
       a: t`\(\partial_2 = a + b - a - b = 0\) and \(\partial_1 = 0\), so \(H_1 = \mathbb Z^2/0 = \mathbb Z^2\).`,
-      code: `String(structures.integerModule([[0, 0]], 2))`,
+      code: `String(geo.surface("a b a^-1 b^-1").homology(1))`,
       expect: "Z^2",
-      status: "partial",
-      note: "The boundary maps are written by hand; <code>integerModule</code> then gives \\(\\mathbb Z^2/\\operatorname{im}\\partial_2\\).",
+      fix: "geo#11",
+      note: "<code>surface</code> reads the cell structure from the edge word (one vertex, two edges, one face) and structures' <code>chainComplex</code> computes the homology.",
     },
     {
       topic: "Homology of the projective plane",
       q: t`\(\mathbb{RP}^2\) has one cell in each dimension 0, 1, 2, the 2-cell attached along \(aa\). Find \(H_1\).`,
       a: t`\(\partial_2 = 2a\), \(\partial_1 = 0\): \(H_1 = \mathbb Z/2\).`,
-      code: `String(structures.integerModule([[2]], 1))`,
+      code: `String(geo.surface("a a").homology(1))`,
       expect: "Z/2",
-      status: "partial",
-      note: "As for the torus: boundary maps by hand, quotient by <code>integerModule</code>.",
+      fix: "geo#11",
+      note: "\\(\\partial_2 = 2a\\) is read from the word <code>a a</code>.",
     },
     {
       topic: "Homology of the Klein bottle",
       q: t`The Klein bottle is one 0-cell, 1-cells \(a, b\), and a 2-cell attached along \(aba^{-1}b\). Find \(H_1\).`,
       a: t`\(\partial_2 = a + b - a + b = 2b\): \(H_1 = \mathbb Z^2/\langle 2b\rangle = \mathbb Z \oplus \mathbb Z/2\).`,
-      code: `String(structures.integerModule([[0, 2]], 2))`,
+      code: `String(geo.surface("a b a^-1 b").homology(1))`,
       expect: "Z/2 × Z",
-      status: "partial",
-      note: "As above.",
+      fix: "geo#11",
+      note: "From the word: \\(\\partial_2 = a + b - a + b = 2b\\).",
     },
     {
       topic: "Smith normal form and torsion",
@@ -131,11 +124,11 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
       topic: "Classification of surfaces",
       q: t`A closed orientable surface has a triangulation with 8 vertices, 24 edges and 14 triangles. Which surface is it?`,
       a: t`\(\chi = 8 - 24 + 14 = -2 = 2 - 2g\): genus 2, the double torus.`,
-      code: `const chi = 8 - 24 + 14;
-[chi, (2 - chi) / 2]`,
+      code: `const s = geo.classifySurface({ euler: 8 - 24 + 14, orientable: true });
+[s.eulerCharacteristic, s.genus]`,
       expect: "[-2, 2]",
-      status: "gap",
-      note: "Plain arithmetic: no surface or classification code in RatMath.",
+      fix: "geo#11",
+      note: "<code>classifySurface</code> applies the classification theorem: orientable with \\(\\chi = -2\\) is the connected sum of 2 tori.",
     },
     {
       topic: "Genus of a graph",
@@ -166,12 +159,10 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
       topic: "Fundamental groups",
       q: t`What are the fundamental groups of the circle, the torus and \(\mathbb{RP}^2\)?`,
       a: t`\(\mathbb Z\), \(\mathbb Z^2\), \(\mathbb Z/2\).`,
-      code: `// The torus and RP^2 from their presentations ⟨a, b | aba⁻¹b⁻¹⟩ and ⟨a | a²⟩:
-[structures.presentation(["a", "b"], ["a b A B"]).abelianInvariants(), structures.presentation(["a"], ["a a"]).order()]`,
-      check: (v, out) => /2/.test(out),
-      expectText: "Z, Z², Z/2 (from the presentations)",
-      status: "partial",
-      note: "Given the presentations (by van Kampen), structures computes their abelianisations and orders; deriving the presentations is topology done by hand.",
+      code: `[geo.simplicial.sphere(1), geo.surface("a b a^-1 b^-1"), geo.surface("a a")].map((X) => String(X.fundamentalGroup()))`,
+      expect: `["⟨e3 | ⟩", "⟨a, b | aba⁻¹b⁻¹⟩", "⟨a | a²⟩"]`,
+      fix: "geo#11",
+      note: "<code>fundamentalGroup()</code> contracts a spanning tree and reads one relator per face (van Kampen), returning a presentation: free on one generator for the circle, \\(\\mathbb Z^2\\) for the torus, \\(\\mathbb Z/2\\) for \\(\\mathbb{RP}^2\\) (structures confirms the orders and abelianisations).",
     },
     {
       topic: "Stereographic projection",
@@ -184,10 +175,11 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
       topic: "A triangulated torus",
       q: t`Möbius and Császár's minimal triangulation of the torus has 7 vertices, 21 edges and 14 triangles. Check its Euler characteristic.`,
       a: t`\(7 - 21 + 14 = 0 = 2 - 2\cdot1\), as it must be for a torus. (Every pair of the 7 vertices is an edge: \(\binom72 = 21\).)`,
-      code: `[7 - 21 + 14, discrete.binomial(7, 2)]`,
-      expect: "[0, 21]",
-      status: "gap",
-      note: "Arithmetic only: there is no simplicial complex type to build the triangulation and compute \\(\\chi\\) or homology from it.",
+      code: `const T = geo.simplicial.torus();
+[T.fVector, T.eulerCharacteristic, String(T.homology(1)), T.classify().name]`,
+      expect: `[[7, 21, 14], 0, "Z^2", "torus"]`,
+      fix: "geo#11",
+      note: "The triangulation itself is built from its 14 triangles; the f-vector, χ, homology and the surface recognition all come from it.",
     },
   ],
 };

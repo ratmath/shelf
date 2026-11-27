@@ -55,13 +55,11 @@ new Integer(R\`1\`.divide(eps.multiply(eps)).floor() + 1n)`,
       topic: "Alternating series error",
       q: t`How many terms of \(\displaystyle\sum_{n\ge1} \frac{(-1)^{n+1}}{n^2}\) guarantee an error below 0.001?`,
       a: t`The error after \(N\) terms is below \(\dfrac1{(N+1)^2}\); \((N + 1)^2 > 1000\) needs \(N + 1 \ge 32\), so \(N = 31\).`,
-      code: `const S = analytic.sum("(-1)^(n+1)/n^2");
-let N = 1;
-while (!R\`1/(\${N + 1})^2\`.lessThan(R\`1/1000\`)) N++;
-[S.alternatingTest().verdict, N]`,
-      expect: `["convergent", 31]`,
-      status: "partial",
-      note: "The test confirms convergence and states the error bound; the number of terms is found with a short loop.",
+      fix: "analytic#19",
+      code: `const r = analytic.sum("(-1)^(n+1)/n^2").termsForError("1/1000");
+[r.terms, r.bound]`,
+      expect: `[31, 1/1024]`,
+      note: "<code>termsForError</code> proves the term sizes decrease, then finds the first \\(N\\) with \\(|a_{N+1}| \\le 0.001\\); the bound is \\(1/32^2\\).",
     },
     {
       topic: "Radius of convergence",
@@ -115,15 +113,11 @@ const worst = R\`2\`.add(d).pow(2).subtract(R\`4\`);   // x² − 4 is largest i
       topic: "Darboux sums",
       q: t`Compute the lower and upper sums of \(f(x) = x^2\) on \([0, 1]\) with four equal pieces.`,
       a: t`\(f\) is increasing: \(L = \tfrac14(0 + \tfrac1{16} + \tfrac4{16} + \tfrac9{16}) = \tfrac{7}{32}\), \(U = \tfrac14(\tfrac1{16} + \tfrac4{16} + \tfrac9{16} + 1) = \tfrac{15}{32}\).`,
-      code: `const f = (x) => x.multiply(x);
-const xs = [0, 1, 2, 3, 4].map((k) => R\`\${k}/4\`);
-const h = R\`1/4\`;
-let L = R\`0\`, U = R\`0\`;
-for (let i = 0; i < 4; i++) { L = L.add(f(xs[i]).multiply(h)); U = U.add(f(xs[i + 1]).multiply(h)); }
-[L, U]`,
-      expect: "[7/32, 15/32]",
-      status: "partial",
-      note: "Written out with Core arithmetic (using that \\(x^2\\) is increasing); there is no Darboux or Riemann sum helper with the inf and sup on each piece.",
+      fix: "analytic#19",
+      code: `const d = analytic.darboux("x^2", { interval: [0, 1], n: 4 });
+[d.lower, d.upper, d.exact]`,
+      expect: "[7/32, 15/32, true]",
+      note: "<code>darboux</code> proves \\(x^2\\) increasing on each piece, so the inf and sup are end values and the sums are exact.",
     },
     {
       topic: "An improper integral",

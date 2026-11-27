@@ -53,13 +53,12 @@ export default {
       topic: "Implicit differentiation",
       q: t`Find \(dy/dx\) for \(x^2 + y^2 = 25\) at the point \((3, 4)\).`,
       a: t`\(2x + 2yy' = 0\), \(y' = -x/y = -\tfrac34\).`,
-      code: `const F = symbolic.sym("x^2 + y^2 - 25");
-const slope = symbolic.simplify(\`-(\${F.diff("x")})/(\${F.diff("y")})\`);
-PRINT("dy/dx =", slope);
-symbolic.sym(String(slope)).subs({ x: 3, y: 4 }).simplify()`,
+      fix: "symbolic#9",
+      code: `const d = symbolic.implicitDiff("x^2 + y^2 = 25", "x", "y");
+PRINT("dy/dx =", d.first);
+d.at({ x: 3, y: 4 }).first`,
       expect: "-3/4",
-      status: "partial",
-      note: "There is no implicit differentiation; the code uses \\(dy/dx = -F_x/F_y\\), which the student has to know.",
+      note: "<code>implicitDiff</code> differentiates with \\(y = y(x)\\) and solves for \\(y'\\); <code>at</code> checks the point is on the curve.",
     },
     {
       topic: "Tangent line",
@@ -119,13 +118,10 @@ symbolic.expand(\`\${m}*(x - 1) + \${y1}\`)`,
       topic: "Newton's method",
       q: t`Apply Newton's method to \(x^2 - 2 = 0\) from \(x_0 = 1\). Give \(x_1, x_2, x_3\) as fractions.`,
       a: t`\(x_{n+1} = \tfrac{x_n}{2} + \tfrac{1}{x_n}\): \(\tfrac32, \tfrac{17}{12}, \tfrac{577}{408}\).`,
-      code: `let x = R\`1\`;
-const out = [];
-for (let i = 0; i < 3; i++) out.push((x = x.divide(R\`2\`).add(R\`1\`.divide(x))));
-out`,
+      fix: "analytic#19",
+      code: `analytic.newton("x^2 - 2", "1", { exact: true, steps: 3 }).iterations.slice(1).map((r) => r.x)`,
       expect: "[3/2, 17/12, 577/408]",
-      status: "partial",
-      note: "analytic's <code>newton</code> teaches the method in floating point (true errors, observed order); the exact iterates here are written as a loop over Core rationals.",
+      note: "<code>newton</code> with <code>exact: true</code> keeps the iterates as fractions; it also gives the float iterates beside them.",
     },
     {
       topic: "Riemann sum",
@@ -145,11 +141,10 @@ out`,
       topic: "Fundamental theorem",
       q: t`\(\dfrac{d}{dx}\displaystyle\int_0^{x^2}\cos t\,dt\)`,
       a: t`\(2x\cos(x^2)\).`,
-      code: `const F = symbolic.integrate("cos(t)", "t").result;     // sin(t)
-symbolic.sym(String(F).replace(/t/g, "(x^2)")).diff("x")`,
+      fix: "symbolic#9",
+      code: `symbolic.leibniz("cos(t)", "t", "0", "x^2").value`,
       expect: ["2*x*cos(x^2)", "2*cos(x^2)*x"],
-      status: "partial",
-      note: "No rule for differentiating an integral with a variable limit; the code integrates first and then differentiates.",
+      note: "<code>leibniz</code> applies the fundamental theorem with the chain rule: \\(f(b(x))\\,b'(x) - f(a(x))\\,a'(x)\\).",
     },
     {
       topic: "Substitution",

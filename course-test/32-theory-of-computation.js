@@ -127,7 +127,6 @@ compose(examples.add, [proj(1, 1), proj(1, 1)]).at(21)`,
 const f = { arity: 2, name: "gt", at: (y, x) => ((y + 1n) * (y + 1n) > x ? 0n : 1n) };
 mu(f).at(30)`,
       expect: "5",
-      status: "partial",
       note: "The test function is written in JavaScript rather than built from the primitive recursive pieces.",
     },
     {
@@ -156,7 +155,6 @@ loop.run("", { budget: 1000 }).status`,
 [c.size, c.depth]`,
       check: (v) => v[0] >= 16 && v[0] <= 24 && v[1] >= 7 && v[1] <= 12,
       expectText: "about 20 gates, depth about 9",
-      status: "partial",
       note: "The exact counts depend on how the half and full adders are built; the check accepts the textbook range.",
     },
     {

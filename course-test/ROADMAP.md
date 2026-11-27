@@ -56,6 +56,8 @@ Planned outcome of this roadmap:
 
 ## Step 0: Course Test corrections (Opus, no library code)
 
+Done 2026-11-27: 674 agree, 55 partial, 10 gap, 1 disagree, 0 error.
+
 | Row | Change |
 | --- | --- |
 | Graph theory #10 Euler's formula | Use `discrete.planarity(g).faces[0].length` (it returns the faces per block; 6 for the cube) |

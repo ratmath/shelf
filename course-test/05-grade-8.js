@@ -30,13 +30,13 @@ export default {
     },
     {
       topic: "Estimating irrational numbers",
-      fix: "algebraic#9",
+      fix: ["algebraic#9", "algebraic#10"],
       q: t`Between which two whole numbers does \(\sqrt{48}\) lie? Give it to the nearest tenth.`,
       a: t`\(6^2 = 36 < 48 < 49 = 7^2\), so between 6 and 7; \(6.9^2 = 47.61\), \(6.95^2 = 48.3\), so \(\sqrt{48} \approx 6.9\).`,
-      code: `algebraic.sqrt(48).toString(4)`,
-      expect: /^6\.92/,
-      note: "algebraic gives certified digits, \\(6.928\\ldots\\); rounding to tenths is left to the reader.",
-      status: "partial",
+      code: `const r = algebraic.sqrt(48);
+[r.toFixed(0, "floor"), r.toFixed(1)]`,
+      expect: '["6", "6.9"]',
+      note: "<code>toFixed</code> rounds a certified value, refining until the rounding is decided: \\(\\sqrt{48} = 6.928\\ldots\\).",
     },
     {
       topic: "Repeating decimal to fraction",
@@ -70,10 +70,10 @@ export default {
       topic: "Equation of a line",
       q: t`Write the equation of the line through \((-2, 5)\) and \((4, -7)\) in slope–intercept form.`,
       a: t`\(y - 5 = -2(x + 2)\), so \(y = -2x + 1\).`,
-      code: `geo.line([-2, 5], [4, -7])`,
-      expect: "2·x + y - 1 = 0",
-      status: "partial",
-      note: "geo writes a line as \\(ax + by + c = 0\\); the slope–intercept form is read off by hand.",
+      code: "const l = geo.line([-2, 5], [4, -7]);\n[l.toSlopeIntercept(), l.toPointSlope([-2, 5])]",
+      expect: '["y = -2x + 1", "y - 5 = -2(x + 2)"]',
+      note: "Lines print in slope–intercept and point–slope form.",
+      fix: "geo#11",
     },
     {
       topic: "System by substitution",
