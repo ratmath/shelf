@@ -81,6 +81,28 @@ function judge(ex, res) {
   return { verdict: ex.status === "partial" ? "partial" : ex.status === "gap" ? "gap" : "agrees", out };
 }
 
+/**
+ * Pull requests that fix what the Course Test found, by "repo#number". An
+ * exercise names the one that fixes it with `fix`. The pages are built against
+ * the libraries' main branches, so until a fix is merged its exercise still
+ * shows the failure.
+ */
+export const FIX_PRS = {
+  "stats#7": "textbook quartiles (<code>method: \"halves\"</code>, <code>\"tukey\"</code>); finite distributions accept Core's <code>Integer</code>",
+  "algebraic#9": "the arithmetic reads plain numbers, so <code>sqrt(48)</code> works",
+  "geo#10": "<code>dot</code> and <code>cross</code> exported",
+  "symbolic#8": "improper integrals: <code>\"inf\"</code> ends and integrands unbounded at an end",
+  "analytic#18": "exact starting values, <code>pointwise</code> limits, <code>sec</code>/<code>csc</code>/<code>cot</code>, integrating factors with \\(1/|x|\\), <code>ODESolution</code> exported",
+  "numtheory#9": "<code>egcd</code>, <code>gcd</code>, <code>isqrt</code> and friends read any whole number",
+  "chaos#8": "the escape test compares sizes, so long bounded orbits are not refused",
+  "finance#6": "<code>parity</code> takes enclosed prices",
+};
+const fixLink = (id) => {
+  const [repo, n] = id.split("#");
+  return `<a href="https://github.com/ratmath/${repo}/pull/${n}">ratmath/${repo}#${n}</a>`;
+};
+const fixHtml = (ex) => (ex.fix ? [ex.fix].flat().map((id) => `<div class="fix">Fix: ${fixLink(id)}, ${FIX_PRS[id] ?? ""}</div>`).join("") : "");
+
 export const VERDICTS = {
   agrees: { label: "Agrees", cls: "v-ok", blurb: "RatMath's answer is the independent answer." },
   partial: { label: "Partly", cls: "v-part", blurb: "RatMath gets the answer, but not all of what the question asks (a form, a step, a proof, or only a numeric check)." },
@@ -111,6 +133,7 @@ ol.ex > li > .head .v { margin-left: auto; }
 .ex pre.out { background: var(--exact-soft); border-color: transparent; white-space: pre-wrap; overflow-wrap: anywhere; }
 .ex pre.out.bad { background: var(--sunk); border-color: var(--bad); }
 .ex .note { border-left: 3px solid var(--float); background: var(--float-soft); padding: .45rem .7rem; border-radius: 6px; margin-top: .6rem; font-size: .9rem; }
+.ex .fix, .ct .fix { border-left: 3px solid var(--accent, #4a7); padding: .3rem .7rem; margin-top: .4rem; font-size: .88rem; }
 .ex .work { color: var(--fg); }
 .v { display: inline-block; font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .06em; padding: .28rem .5rem; border-radius: 999px; white-space: nowrap; }
 .v-ok { background: var(--exact-soft); color: var(--exact); }
@@ -227,7 +250,7 @@ function ratmathPage(c, courses) {
       const expect = shown !== undefined && ex.code ? `<div class="lbl">Independent answer, in RatMath's notation</div><pre>${escapeHtml(shown)}</pre>` : "";
       return `<li id="q${i + 1}">${exHead(c, i, ex, verdict)}<div class="q">${ex.q}</div>
 <div class="lbl">Independent answer</div><div class="a">${ex.a}</div>
-${code}${verdict !== "agrees" && verdict !== "partial" ? expect : ""}${ex.note ? `\n<div class="note">${ex.note}</div>` : ""}</li>`;
+${code}${verdict !== "agrees" && verdict !== "partial" ? expect : ""}${ex.note ? `\n<div class="note">${ex.note}</div>` : ""}${fixHtml(ex)}</li>`;
     })
     .join("\n");
   const t = tally(c.results);
@@ -308,13 +331,24 @@ function findingsPage(courses) {
   const sections = Object.entries(groups)
     .map(([k, list]) => {
       const lis = list.length
-        ? list.map(({ c, r, i }) => `<tr><td>${badge(r.verdict)}</td><td><a href="${c.slug}-ratmath.html#q${i + 1}">${escapeHtml(c.title)} ${i + 1}</a>${r.ex.topic ? `<div class="small muted">${escapeHtml(r.ex.topic)}</div>` : ""}</td><td>${r.ex.note ?? (r.verdict === "error" ? `<code>${escapeHtml(r.out)}</code>` : "")}</td></tr>`).join("\n")
+        ? list.map(({ c, r, i }) => `<tr><td>${badge(r.verdict)}</td><td><a href="${c.slug}-ratmath.html#q${i + 1}">${escapeHtml(c.title)} ${i + 1}</a>${r.ex.topic ? `<div class="small muted">${escapeHtml(r.ex.topic)}</div>` : ""}</td><td>${r.ex.note ?? (r.verdict === "error" ? `<code>${escapeHtml(r.out)}</code>` : "")}${fixHtml(r.ex)}</td></tr>`).join("\n")
         : `<tr><td colspan="3" class="muted">None.</td></tr>`;
       return `<h2>${titles[k]} (${list.length})</h2>\n<div class="tablewrap"><table class="ct"><tbody>\n${lis}\n</tbody></table></div>`;
     })
     .join("\n");
+  const fixedBy = {};
+  for (const c of courses) c.exercises.forEach((ex, i) => [ex.fix ?? []].flat().forEach((id) => (fixedBy[id] ??= []).push(`<a href="${c.slug}-ratmath.html#q${i + 1}">${escapeHtml(c.title)} ${i + 1}</a>`)));
+  const fixes = Object.entries(FIX_PRS)
+    .map(([id, what]) => `<tr><td>${fixLink(id)}</td><td>${what}</td><td>${(fixedBy[id] ?? []).join(", ")}</td></tr>`)
+    .join("\n");
   const body = `<h1>Findings</h1>
 <p class="lede">Every exercise in the <a href="index.html">Course Test</a> where RatMath's answer is not simply the independent answer: disagreements and errors first, then partial answers, then the gaps.</p>
+<h2>Fixes</h2>
+<p>The bugs the test found are fixed in these pull requests. The pages are built against each library's main branch, so an exercise keeps showing its failure until its fix is merged.</p>
+<div class="tablewrap"><table class="ct"><thead><tr><th>Pull request</th><th>What it fixes</th><th>Exercises</th></tr></thead><tbody>
+${fixes}
+</tbody></table></div>
+<p>Packaging, not mathematics: <code>@ratmath/chaos</code> asks for <code>@ratmath/complex</code> <code>^0.2.0</code> while complex is at 0.3.0, and <code>@ratmath/symbolic</code> asks for <code>@ratmath/structures</code> <code>^0.1.0</code> while structures is at 0.5.0. Both ranges need raising at the next release.</p>
 ${sections}`;
   return shell({ title: "Findings · RatMath Course Test", description: "Where the RatMath libraries disagree with independent answers, fail, or cannot yet answer course exercises.", eyebrow: "Course Test", body, nav: navHtml(courses, "findings"), wide: true });
 }

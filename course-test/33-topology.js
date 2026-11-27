@@ -69,6 +69,7 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
     },
     {
       topic: "Fixed point theorem",
+      fix: "analytic#18",
       q: t`Show every continuous \(f: [0, 1] \to [0, 1]\) has a fixed point, and find the fixed point of \(\cos\) on \([0, 1]\).`,
       a: t`\(g(x) = f(x) - x\) has \(g(0) \ge 0 \ge g(1)\), so \(g\) vanishes by the intermediate value theorem. For \(\cos\): \(x \approx 0.7390851\).`,
       code: `analytic.fixedPoint("cos(x)", "1/2").root`,

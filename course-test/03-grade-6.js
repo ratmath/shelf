@@ -137,6 +137,7 @@ export default {
     },
     {
       topic: "Range and interquartile range",
+      fix: "stats#7",
       q: t`For the data 3, 7, 8, 12, 13, 14, 18, 21, find the range, the quartiles and the interquartile range.`,
       a: t`Range \(21 - 3 = 18\). Lower half 3, 7, 8, 12 has median \(Q_1 = 7.5\); upper half 13, 14, 18, 21 has median \(Q_3 = 16\). IQR \(= 8.5\).`,
       code: `const d = [3, 7, 8, 12, 13, 14, 18, 21];

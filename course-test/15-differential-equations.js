@@ -37,10 +37,11 @@ export default {
     },
     {
       topic: "Homogeneous",
+      fix: "analytic#18",
       q: t`Solve \(y' = \dfrac{x + y}{x}\) for \(x > 0\).`,
       a: t`\(y = vx\): \(v + xv' = 1 + v\), \(v = \ln x + C\): \(y = x\ln x + Cx\).`,
       code: `analytic.firstOrder("(x + y)/x").general`,
-      expect: ["y = x*log(x) + C*x", "y = x*(log(x) + C)", "y = C*x + x*log(x)", "y = x*log(abs(x)) + C*x"],
+      expect: ["y = x*log(x) + C*x", "y = x*(log(x) + C)", "y = C*x + x*log(x)", "y = x*log(abs(x)) + C*x", "y = log(abs(x))*x + C*x"],
       note: "<code>firstOrder</code> recognises the equation as linear (and it is also homogeneous) but returns no solution.",
     },
     {
@@ -80,6 +81,7 @@ export default {
     },
     {
       topic: "Variation of parameters",
+      fix: "analytic#18",
       q: t`Find a particular solution of \(y'' + y = \sec x\).`,
       a: t`\(y_p = x\sin x + \cos x\ln|\cos x|\).`,
       code: `analytic.linearODE([1, 0, 1], "sec(x)").particular`,

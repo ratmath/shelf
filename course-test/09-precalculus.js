@@ -79,6 +79,7 @@ export default {
     },
     {
       topic: "Vectors",
+      fix: "geo#10",
       q: t`For \(\mathbf u = \langle 3, -4\rangle\) and \(\mathbf v = \langle 2, 1\rangle\), find \(|\mathbf u|\), \(\mathbf u\cdot\mathbf v\) and the angle between them to 0.01°.`,
       a: t`\(|\mathbf u| = 5\), \(\mathbf u\cdot\mathbf v = 2\), \(\cos\theta = \tfrac{2}{5\sqrt5}\), \(\theta \approx 79.70^\circ\).`,
       work: t`\(\arccos(0.178885) = 1.39094\) rad \(= 79.6952^\circ\) (Python).`,

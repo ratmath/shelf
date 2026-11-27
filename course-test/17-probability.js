@@ -94,6 +94,7 @@ J.covariance(([x]) => x, ([, y]) => y)`,
     },
     {
       topic: "Conditioning",
+      fix: "stats#7",
       q: t`Roll a die. If it is even, flip two coins; otherwise flip one. What is the expected number of heads?`,
       a: t`\(\tfrac12\cdot1 + \tfrac12\cdot\tfrac12 = \tfrac34\).`,
       code: "stats.die().expect((d) => (d % 2 === 0 ? R`1` : R`1/2`))",

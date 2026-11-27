@@ -8,6 +8,7 @@ export default {
   exercises: [
     {
       topic: "Bézout coefficients",
+      fix: "numtheory#9",
       q: t`Find \(\gcd(252, 198)\) and integers \(x, y\) with \(252x + 198y = \gcd(252, 198)\).`,
       a: t`\(252 = 1\cdot198 + 54\), \(198 = 3\cdot54 + 36\), \(54 = 1\cdot36 + 18\), \(36 = 2\cdot18\). So the gcd is 18, and back-substituting gives \(18 = 4\cdot252 - 5\cdot198\).`,
       code: `numtheory.egcd(252, 198)`,
@@ -128,6 +129,7 @@ export default {
     },
     {
       topic: "Continued fractions and Pell's equation",
+      fix: "algebraic#9",
       q: t`Find the continued fraction of \(\sqrt{13}\), and the smallest positive solution of \(x^2 - 7y^2 = 1\).`,
       a: t`\(\sqrt{13} = [3; \overline{1, 1, 1, 1, 6}]\). For \(D = 7\): \(\sqrt7 = [2; \overline{1,1,1,4}]\), convergent \(8/3\): \(64 - 63 = 1\), so \((8, 3)\).`,
       code: `const cf = numtheory.periodicContinuedFraction(numtheory.fromQuadratic(0, 1, 13, 1));

@@ -30,6 +30,7 @@ export default {
     },
     {
       topic: "Estimating irrational numbers",
+      fix: "algebraic#9",
       q: t`Between which two whole numbers does \(\sqrt{48}\) lie? Give it to the nearest tenth.`,
       a: t`\(6^2 = 36 < 48 < 49 = 7^2\), so between 6 and 7; \(6.9^2 = 47.61\), \(6.95^2 = 48.3\), so \(\sqrt{48} \approx 6.9\).`,
       code: `algebraic.sqrt(48).toString(4)`,
@@ -113,6 +114,7 @@ R\`\${f[0]} + \${f[1]}*10\``,
     },
     {
       topic: "Missing leg",
+      fix: "algebraic#9",
       q: t`A 13-foot ladder leans against a wall with its foot 5 feet from the wall. How high up the wall does it reach?`,
       a: t`\(\sqrt{169 - 25} = 12\) feet.`,
       code: `algebraic.sqrt(R\`13^2 - 5^2\`)`,

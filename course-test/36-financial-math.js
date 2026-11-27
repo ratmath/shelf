@@ -116,6 +116,7 @@ export default {
     },
     {
       topic: "Put–call parity",
+      fix: "finance#6",
       q: t`Use put–call parity to price the matching put.`,
       a: t`\(P = C - S + Ke^{-rT} = 10.450584 - 100 + 95.122942 \approx 5.5735\).`,
       code: `const v = finance.blackScholes({ spot: 100, strike: 100, rate: "5%", volatility: "20%", time: 1 });

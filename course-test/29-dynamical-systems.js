@@ -44,6 +44,7 @@ export default {
     },
     {
       topic: "Lyapunov exponent",
+      fix: "chaos#8",
       q: t`What is the Lyapunov exponent of the logistic map at \(r = 4\)?`,
       a: t`\(f\) is conjugate to the tent map with slope \(\pm2\) by \(x = \sin^2(\pi\theta/2)\), so \(\lambda = \ln 2 \approx 0.6931\) for almost every orbit.`,
       code: `chaos.lyapunov(chaos.logistic(4), "1/5").value`,

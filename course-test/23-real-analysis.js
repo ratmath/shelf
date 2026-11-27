@@ -127,6 +127,7 @@ for (let i = 0; i < 4; i++) { L = L.add(f(xs[i]).multiply(h)); U = U.add(f(xs[i 
     },
     {
       topic: "An improper integral",
+      fix: "symbolic#8",
       q: t`Evaluate \(\displaystyle\int_0^1 \ln x\,dx\).`,
       a: t`\(\displaystyle\lim_{a\to0^+}\big[x\ln x - x\big]_a^1 = -1 - \lim_{a\to0^+}(a\ln a - a) = -1\).`,
       code: `symbolic.integrate("ln(x)", "x", { from: 0, to: 1 }).value`,
@@ -136,6 +137,7 @@ for (let i = 0; i < 4; i++) { L = L.add(f(xs[i]).multiply(h)); U = U.add(f(xs[i 
     },
     {
       topic: "Pointwise limit",
+      fix: "analytic#18",
       q: t`Find the pointwise limit of \(f_n(x) = x^n\) on \([0, 1]\).`,
       a: t`\(0\) for \(0 \le x < 1\) and \(1\) at \(x = 1\): a discontinuous limit of continuous functions.`,
       code: `const F = analytic.functionSequence("x^n");
