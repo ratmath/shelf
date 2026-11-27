@@ -99,6 +99,7 @@ export const FIX_PRS = {
   "numtheory#10": "<code>factorialValuation</code> (Legendre's formula)",
   "structures#6": "<code>sign</code>/<code>isEven</code> of a permutation; Gauss–Wantzel inside <code>constructible</code>",
   "complex#7": "<code>cauchyRiemann(u, v)</code>",
+  "stats#8": "summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {

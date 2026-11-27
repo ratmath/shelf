@@ -113,13 +113,10 @@ export default {
       topic: "Confidence interval for a mean",
       q: t`A sample of 16 has mean 25.3 and standard deviation 4.2. Give a 95% \(t\) interval for the mean.`,
       a: t`\(t^* = 2.131\) (15 df), SE \(= 1.05\): \(25.3 \pm 2.238 = (23.06, 27.54)\).`,
-      code: `// summary statistics only: t* from the t distribution
-const tStar = stats.studentT(15).quantile(R\`0.975\`);
-const se = R\`4.2/4\`;
-[R\`25.3\`.subtract(tStar.low.multiply(se)), R\`25.3\`.add(tStar.low.multiply(se))]`,
+      code: "const ci = stats.meanInterval({ n: 16, mean: \"25.3\", sd: \"4.2\" });\n[ci.low, ci.high]",
       check: near([23.061978, 27.538022], 1e-5),
-      status: "partial",
-      note: "<code>meanInterval</code> takes raw data only, not a summary (n, mean, s) as textbook problems give it, so the interval is assembled from the \\(t\\) quantile by hand.",
+      note: "<code>meanInterval</code> takes the summary \\((n, \\bar x, s)\\) directly.",
+      fix: "stats#8",
     },
     {
       topic: "Test for a proportion",
