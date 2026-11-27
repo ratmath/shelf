@@ -350,7 +350,7 @@ for (const f of files) {
       console.log(`${slug} ${i + 1} [${j.verdict}] ${ex.topic ?? ""}`);
       for (const p of res.prints ?? []) console.log(`   print: ${p.text}`);
       console.log(`   out:    ${j.out}`);
-      if (j.verdict !== "agrees") console.log(`   expect: ${ex.expect ?? ex.check?.text}`);
+      if (j.verdict !== "agrees") console.log(`   expect: ${ex.expect ?? ex.expectText ?? ex.check?.text}`);
     }
   }
   if (!used.has("core") && c.exercises.some((ex) => ex.code)) used.add("core");
