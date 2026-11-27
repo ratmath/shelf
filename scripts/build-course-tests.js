@@ -96,6 +96,9 @@ export const FIX_PRS = {
   "numtheory#9": "<code>egcd</code>, <code>gcd</code>, <code>isqrt</code> and friends read any whole number",
   "chaos#8": "the escape test compares sizes, so long bounded orbits are not refused",
   "finance#6": "<code>parity</code> takes enclosed prices",
+  "numtheory#10": "<code>factorialValuation</code> (Legendre's formula)",
+  "structures#6": "<code>sign</code>/<code>isEven</code> of a permutation; Gauss–Wantzel inside <code>constructible</code>",
+  "complex#7": "<code>cauchyRiemann(u, v)</code>",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {

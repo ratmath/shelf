@@ -142,12 +142,10 @@ const p = numtheory.pell(7);
       topic: "Legendre's formula",
       q: t`What is the largest power of 2 dividing \(100!\)?`,
       a: t`\(\lfloor 100/2\rfloor + \lfloor100/4\rfloor + \dots = 50 + 25 + 12 + 6 + 3 + 1 = 97\).`,
-      code: `let f = 1n;
-for (let k = 2n; k <= 100n; k++) f *= k;
-numtheory.valuation(f, 2)`,
+      code: "numtheory.factorialValuation(100, 2)",
       expect: "97",
-      status: "partial",
-      note: "No factorial-valuation (Legendre formula) helper; the code builds \\(100!\\) and takes its 2-adic valuation.",
+      note: "<code>factorialValuation</code> applies Legendre's formula without building \\(100!\\).",
+      fix: "numtheory#10",
     },
     {
       topic: "Prime counting",
