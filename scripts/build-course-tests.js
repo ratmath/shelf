@@ -65,7 +65,7 @@ const norm = (s) => String(s).replace(/\s+/g, " ").replace(/(\d)n\b/g, "$1").tri
 function judge(ex, res) {
   const out = res.hasValue ? res.text : res.prints.map((p) => p.text).join("\n");
   if (ex.status === "gap" && !ex.code) return { verdict: "gap", out: "" };
-  if (res.error) return { verdict: "error", out: `${res.error.name}: ${res.error.message}` };
+  if (res.error) return { verdict: ex.status === "gap" ? "gap" : "error", out: `${res.error.name}: ${res.error.message}` };
   let agree;
   if (typeof ex.check === "function") {
     try {
