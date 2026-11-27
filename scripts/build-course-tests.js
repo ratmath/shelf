@@ -83,8 +83,9 @@ function judge(ex, res) {
 
 /**
  * Pull requests that fix what the Course Test found, by "repo#number". An
- * exercise names the one that fixes it with `fix`. All of these were merged on
- * 2026-11-27, and the pages are built against the libraries' main branches.
+ * exercise names the one that fixes it with `fix`. The first eight were merged
+ * on 2026-11-27; the rest come from the roadmap batches (course-test/ROADMAP.md)
+ * and the pages are built against their branches until they merge.
  */
 export const FIX_PRS = {
   "stats#7": "textbook quartiles (<code>method: \"halves\"</code>, <code>\"tukey\"</code>); finite distributions accept Core's <code>Integer</code>",
@@ -95,6 +96,7 @@ export const FIX_PRS = {
   "numtheory#9": "<code>egcd</code>, <code>gcd</code>, <code>isqrt</code> and friends read any whole number",
   "chaos#8": "the escape test compares sizes, so long bounded orbits are not refused",
   "finance#6": "<code>parity</code> takes enclosed prices",
+  "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {
   const [repo, n] = id.split("#");
