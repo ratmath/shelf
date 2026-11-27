@@ -324,13 +324,23 @@ ${sections}`;
 const SRC = "course-test";
 const OUT = "docs/course-test";
 const { scope, versions } = await loadScope();
+// Bun's transpiler writes non-ASCII characters inside String.raw templates as
+// \uXXXX escapes, which String.raw then keeps literally (Node does not). Turn
+// such escapes of non-ASCII characters back into the characters. TeX has no
+// command spelled \u followed by four hex digits, so this cannot eat one.
+function fixRaw(v) {
+  if (typeof v === "string") return v.replace(/\\u([0-9a-fA-F]{4})/g, (m, h) => (parseInt(h, 16) >= 0x80 ? String.fromCharCode(parseInt(h, 16)) : m));
+  if (Array.isArray(v)) return v.map(fixRaw);
+  if (v && typeof v === "object" && Object.getPrototypeOf(v) === Object.prototype) return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === "check" ? x : fixRaw(x)]));
+  return v;
+}
 const files = readdirSync(SRC).filter((f) => /^\d+-[\w-]+\.js$/.test(f)).sort();
 const courses = [];
 let problems = 0;
 for (const f of files) {
   const mod = (await import(pathToFileURL(resolve(SRC, f)).href)).default;
   const slug = f.replace(/^\d+-/, "").replace(/\.js$/, "");
-  const c = { slug, ...mod };
+  const c = fixRaw({ slug, ...mod });
   if (ONLY && slug !== ONLY) {
     if (!WRITE) continue;
   }

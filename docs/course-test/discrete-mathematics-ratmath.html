@@ -72,7 +72,24 @@ table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85r
 <a href="differential-equations.html">Ordinary differential equations</a>
 <a href="discrete-mathematics.html" class="on">Discrete mathematics</a>
 <a href="probability.html">Probability</a>
-<a href="statistics.html">Mathematical statistics</a></nav>
+<a href="statistics.html">Mathematical statistics</a>
+<div class="group">University: upper level</div>
+<a href="number-theory.html">Number theory</a>
+<a href="abstract-algebra-1.html">Abstract algebra I: groups</a>
+<a href="abstract-algebra-2.html">Abstract algebra II: rings, fields and Galois theory</a>
+<a href="complex-analysis.html">Complex analysis</a>
+<a href="real-analysis.html">Real analysis</a>
+<a href="numerical-analysis.html">Numerical analysis</a>
+<a href="graph-theory.html">Graph theory</a>
+<a href="combinatorics.html">Combinatorics</a>
+<a href="game-theory.html">Game theory</a>
+<a href="college-geometry.html">College geometry</a>
+<a href="dynamical-systems.html">Dynamical systems and chaos</a>
+<a href="fourier-analysis.html">Fourier analysis and transforms</a>
+<a href="logic.html">Mathematical logic</a>
+<a href="theory-of-computation.html">Theory of computation</a>
+<a href="topology.html">Topology</a>
+<a href="differential-geometry.html">Differential geometry</a></nav>
 </aside>
 <main>
 <article>
@@ -141,7 +158,7 @@ discrete.inclusionExclusion([upTo(3), upTo(5), upTo(7)].map((l) =&gt; l.map(Stri
 <div class="lbl">RatMath code</div><pre><code>[discrete.eulerTour(discrete.complete(5)).exists, discrete.eulerTour(discrete.complete(4)).exists]</code></pre>
 <div class="lbl">Output</div><pre class="out">[true, false]</pre></li>
 <li id="q15"><div class="head"><span class="n">15.</span><span class="topic">Shortest path</span><span class="v-wrap" style="margin-left:auto"><span class="v v-ok">Agrees</span></span></div><div class="q">Edges with weights: AB 4, AC 2, BC 1, BD 5, CD 8, CE 10, DE 2. Find the shortest path from A to E.</div>
-<div class="lbl">Independent answer</div><div class="a">A\u2013C\u2013B\u2013D\u2013E, length <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>+</mo><mn>1</mn><mo>+</mo><mn>5</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">2 + 1 + 5 + 2 = 10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span>.</div>
+<div class="lbl">Independent answer</div><div class="a">A–C–B–D–E, length <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>+</mo><mn>1</mn><mo>+</mo><mn>5</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">2 + 1 + 5 + 2 = 10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span>.</div>
 <div class="lbl">RatMath code</div><pre><code>const g = discrete.graph([["A", "B", 4], ["A", "C", 2], ["B", "C", 1], ["B", "D", 5], ["C", "D", 8], ["C", "E", 10], ["D", "E", 2]]);
 const p = discrete.shortestPath(g, "A", "E");
 [p.path, p.distance]</code></pre>
