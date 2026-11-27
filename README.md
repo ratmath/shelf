@@ -12,11 +12,14 @@ npm install ratmath
 import * as Ratmath from "ratmath";      // one object, still tree-shaken
 
 Ratmath.R`1/3 + 1/6`;                     // 1/2, exactly
-// Ratmath.linalg, Ratmath.stats, ... as each library is published
+Ratmath.linalg.Matrix.from([[1, "1/2"], [0, 3]]);
+// Ratmath.algebraic, .analytic, .chaos, .complex, .discrete, .finance, .geo,
+// .graphics, .linalg, .logic, .numtheory, .stats, .structures, .symbolic
 ```
 
-The first releases hold Core only. Each Shelf library joins as soon as it is on
-npm; `Ratmath.shelf` lists all fourteen and says which this release includes.
+Every Shelf library is included, each under its own name and never merged into
+the top level, since 111 names (such as `factor`, `format` and `norm`) mean different things in
+different libraries. `Ratmath.shelf` lists all fourteen.
 
 ## Ways in
 
@@ -25,7 +28,7 @@ npm; `Ratmath.shelf` lists all fourteen and says which this release includes.
 | `import * as Ratmath from "ratmath"` | One object; bundlers keep only what is used. Start here. |
 | `import { R, Rational, core } from "ratmath"` | Just the names you use. |
 | `import Ratmath from "ratmath"` | A plain frozen object with everything. Handy in scripts and notebooks; bundlers keep all of it. |
-| `import { Rational } from "ratmath/core"` | One library only (`ratmath/<library>` as each joins). |
+| `import { Matrix } from "ratmath/linalg"` | One library only: `ratmath/core`, `ratmath/linalg`, `ratmath/stats`, and so on. |
 | `<script src="https://cdn.jsdelivr.net/npm/ratmath/dist/ratmath.global.js">` | A global `Ratmath` in a page with no build step. |
 
 All of these hand out the libraries' own objects, never copies, so a
@@ -41,7 +44,12 @@ All of these hand out the libraries' own objects, never copies, so a
 
 ## This repository
 
-- `index.js`, `index.d.ts`: the package. `core.js`: the `ratmath/core` subpath.
+- `index.js`, `index.d.ts`: the package. `core.js`, `linalg.js`, …: the
+  `ratmath/<library>` subpaths, one line each.
+- `scripts/check-ranges.js`: checks that the fourteen libraries' `package.json`
+  files on GitHub main fit together (each sibling range accepts that sibling's
+  version, Core is a peer whose range accepts the Core `ratmath` uses). CI runs
+  it; run it before publishing any library too.
 - `scripts/build.js`: builds `dist/ratmath.global.js` (not committed; built by
   `bun run build`, and before every publish).
 - `tests/`: checks every way in against Core itself, including the browser file
@@ -113,13 +121,22 @@ output:
   was built from (`pdf/manifest.json` holds the same data). A `*` after a
   commit means the library had uncommitted changes to its docs or source.
 
-### Adding a library when it is published
+### Releasing
 
-1. Add `"@ratmath/<name>": "^x.y.z"` to `dependencies`.
+`ratmath` follows Core's minor version (0.11.x goes with Core 0.11). For a
+release, raise each `@ratmath/<library>` range to the version now on npm, run
+`bun scripts/check-ranges.js`, `bun install`, and `bun run test`, then
+`npm publish` (which builds the browser file and runs the tests first) and tag
+`v<version>`.
+
+### Adding a new library
+
+1. Add `"@ratmath/<name>": "^x.y.z"` to `dependencies`, and the name to the list in
+   `scripts/check-ranges.js` and `tests/package.test.js`.
 2. In `index.js` and `index.d.ts`: `import * as <name> from "@ratmath/<name>"`,
-   export it, add it to the default object, and set `included: true` in `shelf`.
-3. Add a `./<name>` subpath (a one-line `<name>.js` re-export, like `core.js`).
-4. Extend the tests, and the "What is in this release" text in `docs/src/using.html`.
+   export it, add it to the default object and the `shelf` list.
+3. Add a `./<name>` subpath (one-line `<name>.js` and `<name>.d.ts`, like `core.js`)
+   to `exports` and `files`.
 
 ## Licence
 

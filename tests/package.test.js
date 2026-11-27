@@ -30,18 +30,39 @@ test("the default object holds everything and cannot be changed", () => {
   expect(new RatmathDefault.Rational(1, 3).add(new Core.Rational(1, 6)).toString()).toBe("1/2");
 });
 
-test("the shelf list names every planned library, none included yet", () => {
-  expect(shelf.map((s) => s.name)).toEqual([
-    "algebraic", "analytic", "discrete", "logic",
-    "structures", "linalg", "numtheory", "geo", "complex", "chaos", "stats",
-    "symbolic", "graphics", "finance",
-  ]);
+const LIBS = [
+  "algebraic", "analytic", "discrete", "logic",
+  "structures", "linalg", "numtheory", "geo", "complex", "chaos", "stats",
+  "symbolic", "graphics", "finance",
+];
+
+test("the shelf list names every library, all included", () => {
+  expect(shelf.map((s) => s.name)).toEqual(LIBS);
   for (const s of shelf) {
     expect(s.package).toBe(`@ratmath/${s.name}`);
-    expect(s.included).toBe(false);
-    expect(s.name in Ratmath).toBe(false);
+    expect(s.included).toBe(true);
   }
   expect(Object.isFrozen(shelf)).toBe(true);
+});
+
+test("each library is its own namespace, three ways in, never a copy", async () => {
+  for (const name of LIBS) {
+    const lib = await import(`@ratmath/${name}`);
+    const sub = await import(`../${name}.js`);
+    expect(Ratmath[name]).toBe(lib);
+    expect(RatmathDefault[name]).toBe(lib);
+    for (const key of Object.keys(lib)) expect(sub[key]).toBe(lib[key]);
+  }
+});
+
+test("no library name hides a Core name", () => {
+  for (const name of LIBS) expect(name in Core).toBe(false);
+});
+
+test("the libraries share Core's Rational", () => {
+  const x = Ratmath.linalg.Matrix.from([[1, "1/2"], [0, 3]]).get(0, 1);
+  expect(x instanceof Core.Rational).toBe(true);
+  expect(x.add(new Ratmath.Rational(1, 2)).toString()).toBe("1");
 });
 
 test("the browser bundle sets a global Ratmath", async () => {
@@ -57,4 +78,5 @@ test("the browser bundle sets a global Ratmath", async () => {
   expect(G.R`1/3 + 1/6`.toString()).toBe("1/2");
   expect(G.core.Rational).toBe(G.Rational);
   expect(G.shelf.length).toBe(14);
+  for (const name of LIBS) expect(typeof G[name]).toBe("object");
 });

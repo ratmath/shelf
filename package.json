@@ -1,7 +1,7 @@
 {
   "name": "ratmath",
-  "version": "0.0.1",
-  "description": "All of RatMath in one import: exact arithmetic (Core) now, and the RatMath Shelf subject libraries as they are published",
+  "version": "0.11.0",
+  "description": "All of RatMath in one import: exact arithmetic (Core) and the fourteen RatMath Shelf subject libraries, each under its own name",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
@@ -14,6 +14,62 @@
       "types": "./core.d.ts",
       "default": "./core.js"
     },
+    "./algebraic": {
+      "types": "./algebraic.d.ts",
+      "default": "./algebraic.js"
+    },
+    "./analytic": {
+      "types": "./analytic.d.ts",
+      "default": "./analytic.js"
+    },
+    "./discrete": {
+      "types": "./discrete.d.ts",
+      "default": "./discrete.js"
+    },
+    "./logic": {
+      "types": "./logic.d.ts",
+      "default": "./logic.js"
+    },
+    "./structures": {
+      "types": "./structures.d.ts",
+      "default": "./structures.js"
+    },
+    "./linalg": {
+      "types": "./linalg.d.ts",
+      "default": "./linalg.js"
+    },
+    "./numtheory": {
+      "types": "./numtheory.d.ts",
+      "default": "./numtheory.js"
+    },
+    "./geo": {
+      "types": "./geo.d.ts",
+      "default": "./geo.js"
+    },
+    "./complex": {
+      "types": "./complex.d.ts",
+      "default": "./complex.js"
+    },
+    "./chaos": {
+      "types": "./chaos.d.ts",
+      "default": "./chaos.js"
+    },
+    "./stats": {
+      "types": "./stats.d.ts",
+      "default": "./stats.js"
+    },
+    "./symbolic": {
+      "types": "./symbolic.d.ts",
+      "default": "./symbolic.js"
+    },
+    "./graphics": {
+      "types": "./graphics.d.ts",
+      "default": "./graphics.js"
+    },
+    "./finance": {
+      "types": "./finance.d.ts",
+      "default": "./finance.js"
+    },
     "./browser": "./dist/ratmath.global.js",
     "./package.json": "./package.json"
   },
@@ -24,6 +80,34 @@
     "index.d.ts",
     "core.js",
     "core.d.ts",
+    "algebraic.js",
+    "algebraic.d.ts",
+    "analytic.js",
+    "analytic.d.ts",
+    "discrete.js",
+    "discrete.d.ts",
+    "logic.js",
+    "logic.d.ts",
+    "structures.js",
+    "structures.d.ts",
+    "linalg.js",
+    "linalg.d.ts",
+    "numtheory.js",
+    "numtheory.d.ts",
+    "geo.js",
+    "geo.d.ts",
+    "complex.js",
+    "complex.d.ts",
+    "chaos.js",
+    "chaos.d.ts",
+    "stats.js",
+    "stats.d.ts",
+    "symbolic.js",
+    "symbolic.d.ts",
+    "graphics.js",
+    "graphics.d.ts",
+    "finance.js",
+    "finance.d.ts",
     "dist/",
     "README.md",
     "CHANGELOG.md",
@@ -54,7 +138,21 @@
     "url": "https://github.com/ratmath/shelf/issues"
   },
   "dependencies": {
-    "@ratmath/core": ">=0.10.0 <0.12.0"
+    "@ratmath/core": "^0.11.1",
+    "@ratmath/algebraic": "^0.1.0",
+    "@ratmath/analytic": "^0.1.0",
+    "@ratmath/discrete": "^0.3.0",
+    "@ratmath/logic": "^0.2.0",
+    "@ratmath/structures": "^0.5.0",
+    "@ratmath/linalg": "^0.1.0",
+    "@ratmath/numtheory": "^0.3.0",
+    "@ratmath/geo": "^0.4.0",
+    "@ratmath/complex": "^0.3.0",
+    "@ratmath/chaos": "^0.3.0",
+    "@ratmath/stats": "^0.3.0",
+    "@ratmath/symbolic": "^0.2.0",
+    "@ratmath/graphics": "^0.1.0",
+    "@ratmath/finance": "^0.2.0"
   },
   "devDependencies": {
     "katex": "0.19.1",
