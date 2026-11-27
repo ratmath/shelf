@@ -53,7 +53,26 @@ table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85r
 <nav class="toc" aria-label="Courses"><a href="index.html" class="on">Course Test</a>
 <a href="findings.html">Findings</a>
 <div class="group">School: elementary and middle</div>
-<a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a></nav>
+<a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a>
+<a href="grades-3-5.html">Grades 3–5: multiplication, fractions and decimals</a>
+<a href="grade-6.html">Grade 6: ratios, negative numbers and expressions</a>
+<a href="grade-7.html">Grade 7: proportional reasoning and rational numbers</a>
+<a href="grade-8.html">Grade 8: linear equations, functions and the Pythagorean theorem</a>
+<div class="group">School: high school</div>
+<a href="algebra-1.html">Algebra I</a>
+<a href="geometry.html">Geometry (high school)</a>
+<a href="algebra-2.html">Algebra II</a>
+<a href="precalculus.html">Precalculus and trigonometry</a>
+<a href="statistics-high-school.html">High-school statistics (AP Statistics)</a>
+<div class="group">University: first two years</div>
+<a href="calculus-1.html">Calculus I</a>
+<a href="calculus-2.html">Calculus II</a>
+<a href="calculus-3.html">Calculus III: several variables and vector calculus</a>
+<a href="linear-algebra.html">Linear algebra</a>
+<a href="differential-equations.html">Ordinary differential equations</a>
+<a href="discrete-mathematics.html">Discrete mathematics</a>
+<a href="probability.html">Probability</a>
+<a href="statistics.html">Mathematical statistics</a></nav>
 </aside>
 <main>
 <article class="wide">
@@ -63,17 +82,17 @@ table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85r
 <h2>How the tests were made</h2>
 <ol>
 <li><strong>The tests.</strong> For each course, twenty exercises of the kind a teacher sets in that course, spread over its usual topics. They are ordinary exercises, not chosen to suit the libraries.</li>
-<li><strong>Independent answers.</strong> Each exercise was answered by hand first, with the working shown, without RatMath. Long arithmetic was checked a second way (by a different method or in another tool), never with RatMath.</li>
+<li><strong>Independent answers.</strong> Each exercise was answered by hand first, with the working shown, without RatMath. Long arithmetic and the statistical tables were checked a second way, by another method or in Python (SymPy, SciPy), never with RatMath.</li>
 <li><strong>RatMath answers.</strong> Then each exercise was answered with code that uses only RatMath Core and the Shelf libraries. The code is run whenever these pages are built, and what it prints is compared with the independent answer.</li>
 <li><strong>Verdicts.</strong> A question is <em>Agrees</em> when the outputs match, <em>Partly</em> when RatMath gets the answer but not all the question asks (a form, a step, a proof, or only a numeric check), and <em>Can't yet</em> when no library has the tool. A disagreement or an error is a finding: either a bug, now fixed or reported, or a convention worth knowing.</li>
 </ol>
 <p class="small muted">The code on these pages uses each library under its own name (<code>linalg</code>, <code>stats</code>, …) with Core's names (<code>R</code>, <code>Rational</code>, …) and Core's units (<code>units.Q</code>) in scope. The Shelf libraries are not yet on npm, so the code boxes here are not live; the outputs shown are those printed when the pages were built (<code>bun run course-tests</code>).</p>
 
 <h2>Overall</h2>
-<p>1 courses, 20 exercises.</p>
-<p class="legend"><span class="v v-ok">Agrees</span> 16 <span class="v v-part">Partly</span> 3 <span class="v v-bad">Disagrees</span> 1</p>
-<div class="bar" aria-hidden="true"><span class="b-ok" style="width:80%"></span><span class="b-part" style="width:15%"></span><span class="b-bad" style="width:5%"></span></div>
-<p class="legend"><span class="v v-ok">Agrees</span> RatMath's answer is the independent answer.<br><span class="v v-part">Partly</span> RatMath gets the answer, but not all of what the question asks (a form, a step, a proof, or only a numeric check).<br><span class="v v-gap">Can't yet</span> The libraries have no tool for this yet.<br><span class="v v-bad">Disagrees</span> RatMath's answer differs from the independent answer.<br><span class="v v-bad">Error</span> The RatMath code threw an error.</p>
+<p>18 courses, 360 exercises.</p>
+<p class="legend"><span class="v v-ok">Agrees</span> 317 <span class="v v-part">Partly</span> 33 <span class="v v-bad">Disagrees</span> 6 <span class="v v-bad">Error</span> 4</p>
+<div class="bar" aria-hidden="true"><span class="b-ok" style="width:88.05555555555556%"></span><span class="b-part" style="width:9.166666666666666%"></span><span class="b-bad" style="width:1.6666666666666667%"></span><span class="b-bad" style="width:1.1111111111111112%"></span></div>
+<ul class="small" style="list-style:none;padding:0"><li><span class="v v-ok">Agrees</span> RatMath's answer is the independent answer.</li><li><span class="v v-part">Partly</span> RatMath gets the answer, but not all of what the question asks (a form, a step, a proof, or only a numeric check).</li><li><span class="v v-gap">Can't yet</span> The libraries have no tool for this yet.</li><li><span class="v v-bad">Disagrees</span> RatMath's answer differs from the independent answer.</li><li><span class="v v-bad">Error</span> The RatMath code threw an error.</li></ul>
 <h2>Courses</h2>
 <div class="tablewrap"><table class="ct">
 <thead><tr><th>Course</th><th class="num">Agrees</th><th class="num">Partly</th><th class="num">Can't yet</th><th class="num">Wrong</th><th></th></tr></thead>
@@ -81,6 +100,42 @@ table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85r
 <tr class="grp"><th colspan="6">School: elementary and middle</th></tr>
 <tr><td><strong><a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a></strong><div class="small muted">Counting, place value, adding and subtracting within 1000, measurement, money, time.</div><div class="links"><a href="grades-k-2.html">Test</a><a href="grades-k-2-answers.html">Answers</a><a href="grades-k-2-ratmath.html">RatMath</a></div></td>
 <td class="num">16</td><td class="num">3</td><td class="num">0</td><td class="num">1</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:80%"></span><span class="b-part" style="width:15%"></span><span class="b-bad" style="width:5%"></span></div></td></tr>
+<tr><td><strong><a href="grades-3-5.html">Grades 3–5: multiplication, fractions and decimals</a></strong><div class="small muted">Multi-digit multiplication and division, fraction and decimal operations, factors, area and volume.</div><div class="links"><a href="grades-3-5.html">Test</a><a href="grades-3-5-answers.html">Answers</a><a href="grades-3-5-ratmath.html">RatMath</a></div></td>
+<td class="num">20</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:100%"></span></div></td></tr>
+<tr><td><strong><a href="grade-6.html">Grade 6: ratios, negative numbers and expressions</a></strong><div class="small muted">Ratios and rates, percent, fraction division, GCF and LCM, integers, expressions, one-step equations, statistics.</div><div class="links"><a href="grade-6.html">Test</a><a href="grade-6-answers.html">Answers</a><a href="grade-6-ratmath.html">RatMath</a></div></td>
+<td class="num">19</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:95%"></span><span class="b-bad" style="width:5%"></span></div></td></tr>
+<tr><td><strong><a href="grade-7.html">Grade 7: proportional reasoning and rational numbers</a></strong><div class="small muted">Proportions, percent change, operations on rational numbers, two-step equations, circles, probability.</div><div class="links"><a href="grade-7.html">Test</a><a href="grade-7-answers.html">Answers</a><a href="grade-7-ratmath.html">RatMath</a></div></td>
+<td class="num">19</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:95%"></span><span class="b-part" style="width:5%"></span></div></td></tr>
+<tr><td><strong><a href="grade-8.html">Grade 8: linear equations, functions and the Pythagorean theorem</a></strong><div class="small muted">Exponents and roots, scientific notation, linear equations and systems, slope, Pythagoras, volume, transformations, scatter plots.</div><div class="links"><a href="grade-8.html">Test</a><a href="grade-8-answers.html">Answers</a><a href="grade-8-ratmath.html">RatMath</a></div></td>
+<td class="num">17</td><td class="num">1</td><td class="num">0</td><td class="num">2</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:85%"></span><span class="b-part" style="width:5%"></span><span class="b-bad" style="width:10%"></span></div></td></tr>
+<tr class="grp"><th colspan="6">School: high school</th></tr>
+<tr><td><strong><a href="algebra-1.html">Algebra I</a></strong><div class="small muted">Linear equations and inequalities, systems, exponents, polynomials, factoring, quadratics, sequences.</div><div class="links"><a href="algebra-1.html">Test</a><a href="algebra-1-answers.html">Answers</a><a href="algebra-1-ratmath.html">RatMath</a></div></td>
+<td class="num">18</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:90%"></span><span class="b-part" style="width:10%"></span></div></td></tr>
+<tr><td><strong><a href="geometry.html">Geometry (high school)</a></strong><div class="small muted">Coordinate geometry, triangles, similarity, right-triangle trigonometry, circles, transformations, solids, proof.</div><div class="links"><a href="geometry.html">Test</a><a href="geometry-answers.html">Answers</a><a href="geometry-ratmath.html">RatMath</a></div></td>
+<td class="num">16</td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:80%"></span><span class="b-part" style="width:20%"></span></div></td></tr>
+<tr><td><strong><a href="algebra-2.html">Algebra II</a></strong><div class="small muted">Complex numbers, polynomials, rational and radical equations, exponentials and logarithms, series, binomial theorem.</div><div class="links"><a href="algebra-2.html">Test</a><a href="algebra-2-answers.html">Answers</a><a href="algebra-2-ratmath.html">RatMath</a></div></td>
+<td class="num">19</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:95%"></span><span class="b-part" style="width:5%"></span></div></td></tr>
+<tr><td><strong><a href="precalculus.html">Precalculus and trigonometry</a></strong><div class="small muted">Unit circle, identities, trigonometric equations, inverse trig, polar form, vectors, rational functions, conics, limits.</div><div class="links"><a href="precalculus.html">Test</a><a href="precalculus-answers.html">Answers</a><a href="precalculus-ratmath.html">RatMath</a></div></td>
+<td class="num">13</td><td class="num">6</td><td class="num">0</td><td class="num">1</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:65%"></span><span class="b-part" style="width:30%"></span><span class="b-bad" style="width:5%"></span></div></td></tr>
+<tr><td><strong><a href="statistics-high-school.html">High-school statistics (AP Statistics)</a></strong><div class="small muted">Describing data, normal distributions, correlation and regression, probability, sampling distributions, inference.</div><div class="links"><a href="statistics-high-school.html">Test</a><a href="statistics-high-school-answers.html">Answers</a><a href="statistics-high-school-ratmath.html">RatMath</a></div></td>
+<td class="num">19</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:95%"></span><span class="b-part" style="width:5%"></span></div></td></tr>
+<tr class="grp"><th colspan="6">University: first two years</th></tr>
+<tr><td><strong><a href="calculus-1.html">Calculus I</a></strong><div class="small muted">Limits, derivatives and their rules, tangent lines, extrema, related rates, optimisation, Newton's method, integrals and the fundamental theorem.</div><div class="links"><a href="calculus-1.html">Test</a><a href="calculus-1-answers.html">Answers</a><a href="calculus-1-ratmath.html">RatMath</a></div></td>
+<td class="num">17</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:85%"></span><span class="b-part" style="width:15%"></span></div></td></tr>
+<tr><td><strong><a href="calculus-2.html">Calculus II</a></strong><div class="small muted">Techniques of integration, improper integrals, applications, numerical integration, sequences and series, Taylor series, polar area.</div><div class="links"><a href="calculus-2.html">Test</a><a href="calculus-2-answers.html">Answers</a><a href="calculus-2-ratmath.html">RatMath</a></div></td>
+<td class="num">17</td><td class="num">1</td><td class="num">0</td><td class="num">2</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:85%"></span><span class="b-part" style="width:5%"></span><span class="b-bad" style="width:10%"></span></div></td></tr>
+<tr><td><strong><a href="calculus-3.html">Calculus III: several variables and vector calculus</a></strong><div class="small muted">Vectors and planes, partial derivatives, gradients, optimisation, multiple integrals, line and surface integrals, the theorems of Green, Stokes and Gauss.</div><div class="links"><a href="calculus-3.html">Test</a><a href="calculus-3-answers.html">Answers</a><a href="calculus-3-ratmath.html">RatMath</a></div></td>
+<td class="num">17</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:85%"></span><span class="b-part" style="width:15%"></span></div></td></tr>
+<tr><td><strong><a href="linear-algebra.html">Linear algebra</a></strong><div class="small muted">Row reduction, determinants, inverses, subspaces, eigenvalues, orthogonality, least squares, diagonalisation, SVD, Jordan form.</div><div class="links"><a href="linear-algebra.html">Test</a><a href="linear-algebra-answers.html">Answers</a><a href="linear-algebra-ratmath.html">RatMath</a></div></td>
+<td class="num">20</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:100%"></span></div></td></tr>
+<tr><td><strong><a href="differential-equations.html">Ordinary differential equations</a></strong><div class="small muted">First-order methods, linear equations with constant coefficients, Laplace transforms, systems and phase planes, series solutions, Euler's method.</div><div class="links"><a href="differential-equations.html">Test</a><a href="differential-equations-answers.html">Answers</a><a href="differential-equations-ratmath.html">RatMath</a></div></td>
+<td class="num">17</td><td class="num">1</td><td class="num">0</td><td class="num">2</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:85%"></span><span class="b-part" style="width:5%"></span><span class="b-bad" style="width:10%"></span></div></td></tr>
+<tr><td><strong><a href="discrete-mathematics.html">Discrete mathematics</a></strong><div class="small muted">Logic, sets, counting, recurrences, induction sums, modular arithmetic, graphs, trees, relations.</div><div class="links"><a href="discrete-mathematics.html">Test</a><a href="discrete-mathematics-answers.html">Answers</a><a href="discrete-mathematics-ratmath.html">RatMath</a></div></td>
+<td class="num">20</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:100%"></span></div></td></tr>
+<tr><td><strong><a href="probability.html">Probability</a></strong><div class="small muted">Counting probabilities, discrete and continuous distributions, expectation and variance, joint distributions, the central limit theorem, Markov chains.</div><div class="links"><a href="probability.html">Test</a><a href="probability-answers.html">Answers</a><a href="probability-ratmath.html">RatMath</a></div></td>
+<td class="num">16</td><td class="num">3</td><td class="num">0</td><td class="num">1</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:80%"></span><span class="b-part" style="width:15%"></span><span class="b-bad" style="width:5%"></span></div></td></tr>
+<tr><td><strong><a href="statistics.html">Mathematical statistics</a></strong><div class="small muted">Maximum likelihood, t tests and ANOVA, regression inference, nonparametric tests, power and sample size, Bayesian updating.</div><div class="links"><a href="statistics.html">Test</a><a href="statistics-answers.html">Answers</a><a href="statistics-ratmath.html">RatMath</a></div></td>
+<td class="num">17</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td><div class="bar" aria-hidden="true"><span class="b-ok" style="width:85%"></span><span class="b-part" style="width:15%"></span></div></td></tr>
 </tbody></table></div>
 <h2>Versions tested</h2>
 <p class="small"><code>@ratmath/core</code> 0.11.1, <code>@ratmath/algebraic</code> 0.1.0, <code>@ratmath/analytic</code> 0.1.0, <code>@ratmath/linalg</code> 0.1.0, <code>@ratmath/graphics</code> 0.1.0, <code>@ratmath/structures</code> 0.5.0, <code>@ratmath/symbolic</code> 0.2.0, <code>@ratmath/complex</code> 0.3.0, <code>@ratmath/discrete</code> 0.3.0, <code>@ratmath/stats</code> 0.3.0, <code>@ratmath/numtheory</code> 0.3.0, <code>@ratmath/logic</code> 0.2.0, <code>@ratmath/chaos</code> 0.3.0, <code>@ratmath/geo</code> 0.4.0, <code>@ratmath/finance</code> 0.2.0.</p>
