@@ -119,13 +119,10 @@ symbolic.expand(\`\${m}*(x - 1) + \${y1}\`)`,
       topic: "Newton's method",
       q: t`Apply Newton's method to \(x^2 - 2 = 0\) from \(x_0 = 1\). Give \(x_1, x_2, x_3\) as fractions.`,
       a: t`\(x_{n+1} = \tfrac{x_n}{2} + \tfrac{1}{x_n}\): \(\tfrac32, \tfrac{17}{12}, \tfrac{577}{408}\).`,
-      code: `let x = R\`1\`;
-const out = [];
-for (let i = 0; i < 3; i++) out.push((x = x.divide(R\`2\`).add(R\`1\`.divide(x))));
-out`,
+      fix: "analytic#19",
+      code: `analytic.newton("x^2 - 2", "1", { exact: true, steps: 3 }).iterations.slice(1).map((r) => r.x)`,
       expect: "[3/2, 17/12, 577/408]",
-      status: "partial",
-      note: "analytic's <code>newton</code> teaches the method in floating point (true errors, observed order); the exact iterates here are written as a loop over Core rationals.",
+      note: "<code>newton</code> with <code>exact: true</code> keeps the iterates as fractions; it also gives the float iterates beside them.",
     },
     {
       topic: "Riemann sum",

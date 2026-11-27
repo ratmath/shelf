@@ -101,6 +101,8 @@ export const FIX_PRS = {
   "complex#7": "<code>cauchyRiemann(u, v)</code>",
   "stats#8": "summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>",
   "geo#11": "measurement helpers, 3D <code>vector</code> and <code>plane</code>, <code>conicProperties</code>",
+  "analytic#19": "<code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>",
+  "algebraic#10": "<code>toFixed(k, mode)</code> on algebraic numbers",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {
@@ -350,7 +352,7 @@ function findingsPage(courses) {
   const body = `<h1>Findings</h1>
 <p class="lede">Every exercise in the <a href="index.html">Course Test</a> where RatMath's answer is not simply the independent answer: disagreements and errors first, then partial answers, then the gaps.</p>
 <h2>Fixes</h2>
-<p>The bugs the test found were fixed in these pull requests, all merged. The pages are built against each library's main branch, so the exercises below show the fixed behaviour; each keeps a note of what used to go wrong.</p>
+<p>The bugs the test found, and the helpers it showed were missing, are fixed in these pull requests. The first eight are merged; the rest come from the follow-up roadmap and the pages are built against their branches until they merge. The exercises below show the fixed behaviour.</p>
 <div class="tablewrap"><table class="ct"><thead><tr><th>Pull request</th><th>What it fixes</th><th>Exercises</th></tr></thead><tbody>
 ${fixes}
 </tbody></table></div>
