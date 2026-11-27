@@ -34,6 +34,7 @@
     "build": "bun scripts/build.js",
     "test": "bun test ./tests",
     "docs:build": "bun scripts/build-docs.js",
+    "course-tests": "bun scripts/build-course-tests.js",
     "prepublishOnly": "bun run build && bun test ./tests",
     "pdf": "bun scripts/build-pdfs.js"
   },

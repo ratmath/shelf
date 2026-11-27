@@ -1,0 +1,8 @@
+<h2>How the tests were made</h2>
+<ol>
+<li><strong>The tests.</strong> For each course, twenty exercises of the kind a teacher sets in that course, spread over its usual topics. They are ordinary exercises, not chosen to suit the libraries.</li>
+<li><strong>Independent answers.</strong> Each exercise was answered by hand first, with the working shown, without RatMath. Long arithmetic and the statistical tables were checked a second way, by another method or in Python (SymPy, SciPy), never with RatMath.</li>
+<li><strong>RatMath answers.</strong> Then each exercise was answered with code that uses only RatMath Core and the Shelf libraries. The code is run whenever these pages are built, and what it prints is compared with the independent answer.</li>
+<li><strong>Verdicts.</strong> A question is <em>Agrees</em> when the outputs match, <em>Partly</em> when RatMath gets the answer but not all the question asks (a form, a step, a proof, or only a numeric check), and <em>Can't yet</em> when no library has the tool. A disagreement or an error is a finding: either a bug, now fixed or reported, or a convention worth knowing.</li>
+</ol>
+<p class="small muted">The code on these pages uses each library under its own name (<code>linalg</code>, <code>stats</code>, …) with Core's names (<code>R</code>, <code>Rational</code>, …) and Core's units (<code>units.Q</code>) in scope. The Shelf libraries are not yet on npm, so the code boxes here are not live; the outputs shown are those printed when the pages were built (<code>bun run course-tests</code>).</p>
