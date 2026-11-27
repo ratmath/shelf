@@ -58,7 +58,8 @@ async function loadScope() {
 
 // ------------------------------------------------------------------ verdicts
 
-const norm = (s) => String(s).replace(/\s+/g, " ").trim();
+// A BigInt prints as 7n; the suffix is a JavaScript type marker, not part of the value.
+const norm = (s) => String(s).replace(/\s+/g, " ").replace(/(\d)n\b/g, "$1").trim();
 
 /** Compare a run with an exercise's independent answer. */
 function judge(ex, res) {
