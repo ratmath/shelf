@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Financial mathematics: test · RatMath Course Test</title>
+<meta name="description" content="Twenty representative exercises from Financial mathematics.">
+<meta property="og:title" content="Financial mathematics: test · RatMath Course Test">
+<meta property="og:description" content="Twenty representative exercises from Financial mathematics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://ratmath.com/assets/katex/0.19.1/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.ct-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 1.4rem; }
+.ct-tabs a { padding: .3rem .7rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-size: .88rem; color: var(--fg); background: var(--surface); }
+.ct-tabs a.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+ol.ex { padding-left: 0; list-style: none; counter-reset: ex; display: flex; flex-direction: column; gap: 1rem; }
+ol.ex > li { max-width: none; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: .8rem 1rem; }
+ol.ex > li > .head { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: baseline; margin-bottom: .3rem; }
+ol.ex > li > .head .n { font: 600 1rem/1 var(--font-display); }
+ol.ex > li > .head .topic { color: var(--muted); font-size: .82rem; }
+ol.ex > li > .head .v { margin-left: auto; }
+.ex .q { margin: .2rem 0; }
+.ex .lbl { font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: .8rem 0 .3rem; }
+.ex pre { margin: .2rem 0; }
+.ex pre.out { background: var(--exact-soft); border-color: transparent; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ex pre.out.bad { background: var(--sunk); border-color: var(--bad); }
+.ex .note { border-left: 3px solid var(--float); background: var(--float-soft); padding: .45rem .7rem; border-radius: 6px; margin-top: .6rem; font-size: .9rem; }
+.ex .work { color: var(--fg); }
+.v { display: inline-block; font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .06em; padding: .28rem .5rem; border-radius: 999px; white-space: nowrap; }
+.v-ok { background: var(--exact-soft); color: var(--exact); }
+.v-part { background: var(--float-soft); color: var(--float); }
+.v-gap { background: var(--sunk); color: var(--muted); border: 1px dashed var(--line); }
+.v-bad { background: var(--bad); color: var(--surface); }
+table.ct { border-collapse: collapse; width: 100%; font-size: .9rem; }
+table.ct th, table.ct td { text-align: left; vertical-align: top; padding: .45rem .5rem; border-bottom: 1px solid var(--line); }
+table.ct th { font: 600 .72rem/1.3 var(--font-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+table.ct td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.ct tr.grp th { padding-top: 1.4rem; font: 600 .95rem/1.3 var(--font-display); text-transform: none; letter-spacing: 0; color: var(--fg); }
+table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85rem; }
+.bar { display: flex; height: .55rem; border-radius: 999px; overflow: hidden; background: var(--sunk); min-width: 6rem; margin-top: .35rem; }
+.bar span { display: block; }
+.bar .b-ok { background: var(--exact); } .bar .b-part { background: var(--float); } .bar .b-gap { background: var(--line); } .bar .b-bad { background: var(--bad); }
+.legend { display: flex; flex-wrap: wrap; gap: .5rem 1rem; font-size: .85rem; color: var(--muted); align-items: center; }
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+<header class="brand"><a href="../index.html"><div class="mark">RatMath <span>shelf</span></div></a><small>Course Test</small></header>
+<nav class="toc" aria-label="Courses"><a href="index.html">Course Test</a>
+<a href="findings.html">Findings</a>
+<div class="group">School: elementary and middle</div>
+<a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a>
+<a href="grades-3-5.html">Grades 3–5: multiplication, fractions and decimals</a>
+<a href="grade-6.html">Grade 6: ratios, negative numbers and expressions</a>
+<a href="grade-7.html">Grade 7: proportional reasoning and rational numbers</a>
+<a href="grade-8.html">Grade 8: linear equations, functions and the Pythagorean theorem</a>
+<div class="group">School: high school</div>
+<a href="algebra-1.html">Algebra I</a>
+<a href="geometry.html">Geometry (high school)</a>
+<a href="algebra-2.html">Algebra II</a>
+<a href="precalculus.html">Precalculus and trigonometry</a>
+<a href="statistics-high-school.html">High-school statistics (AP Statistics)</a>
+<div class="group">University: first two years</div>
+<a href="calculus-1.html">Calculus I</a>
+<a href="calculus-2.html">Calculus II</a>
+<a href="calculus-3.html">Calculus III: several variables and vector calculus</a>
+<a href="linear-algebra.html">Linear algebra</a>
+<a href="differential-equations.html">Ordinary differential equations</a>
+<a href="discrete-mathematics.html">Discrete mathematics</a>
+<a href="probability.html">Probability</a>
+<a href="statistics.html">Mathematical statistics</a>
+<div class="group">University: upper level</div>
+<a href="number-theory.html">Number theory</a>
+<a href="abstract-algebra-1.html">Abstract algebra I: groups</a>
+<a href="abstract-algebra-2.html">Abstract algebra II: rings, fields and Galois theory</a>
+<a href="complex-analysis.html">Complex analysis</a>
+<a href="real-analysis.html">Real analysis</a>
+<a href="numerical-analysis.html">Numerical analysis</a>
+<a href="graph-theory.html">Graph theory</a>
+<a href="combinatorics.html">Combinatorics</a>
+<a href="game-theory.html">Game theory</a>
+<a href="college-geometry.html">College geometry</a>
+<a href="dynamical-systems.html">Dynamical systems and chaos</a>
+<a href="fourier-analysis.html">Fourier analysis and transforms</a>
+<a href="logic.html">Mathematical logic</a>
+<a href="theory-of-computation.html">Theory of computation</a>
+<a href="topology.html">Topology</a>
+<a href="differential-geometry.html">Differential geometry</a>
+<a href="pde.html">Partial differential equations</a>
+<a href="financial-math.html" class="on">Financial mathematics</a>
+<a href="optimisation.html">Optimisation</a></nav>
+</aside>
+<main>
+<article>
+<div class="eyebrow">Course Test · University: upper level</div>
+<h1>Financial mathematics: test</h1>
+<nav class="ct-tabs" aria-label="This course"><a href="financial-math.html" class="on">Test</a><a href="financial-math-answers.html">Independent answers</a><a href="financial-math-ratmath.html">RatMath answers</a></nav>
+<p class="lede">Effective and continuous rates, annuities and perpetuities, amortised loans, net present value and internal rate of return, bond prices, yields and duration, forward rates, Black–Scholes and binomial option prices, option strategies, depreciation and a first life table.</p>
+<p class="small muted">Twenty exercises of the kind this course sets. Answers are on the <a href="financial-math-answers.html">independent answers</a> page; the same exercises done with RatMath are on the <a href="financial-math-ratmath.html">RatMath answers</a> page.</p>
+<ol class="ex">
+<li id="q1"><div class="head"><span class="n">1.</span><span class="topic">Effective rate</span></div><div class="q">What effective annual rate corresponds to 6% compounded monthly?</div></li>
+<li id="q2"><div class="head"><span class="n">2.</span><span class="topic">Compound interest</span></div><div class="q">What does \$1000 grow to in 10 years at 5% compounded annually?</div></li>
+<li id="q3"><div class="head"><span class="n">3.</span><span class="topic">Continuous compounding</span></div><div class="q">What does \$1000 grow to in 10 years at 5% compounded continuously?</div></li>
+<li id="q4"><div class="head"><span class="n">4.</span><span class="topic">Annuity-immediate</span></div><div class="q">Find the present value of \$100 paid at the end of each year for 10 years at 5%.</div></li>
+<li id="q5"><div class="head"><span class="n">5.</span><span class="topic">Annuity-due</span></div><div class="q">The same payments are made at the start of each year instead. Find the present value.</div></li>
+<li id="q6"><div class="head"><span class="n">6.</span><span class="topic">Growing perpetuity</span></div><div class="q">A perpetuity pays \$100 next year, growing by 2% a year after that. At 6%, what is it worth?</div></li>
+<li id="q7"><div class="head"><span class="n">7.</span><span class="topic">Loan payment</span></div><div class="q">Find the monthly payment on a \$250{,}000, 30-year loan at 6% a year compounded monthly.</div></li>
+<li id="q8"><div class="head"><span class="n">8.</span><span class="topic">Paying extra</span></div><div class="q">With \$200 a month extra on the same loan, how many payments does it take?</div></li>
+<li id="q9"><div class="head"><span class="n">9.</span><span class="topic">Net present value</span></div><div class="q">A project costs \$1000 now and returns \$300, \$400 and \$500 at the ends of the next three years. Find its NPV at 10%.</div></li>
+<li id="q10"><div class="head"><span class="n">10.</span><span class="topic">Internal rate of return</span></div><div class="q">Find the internal rate of return of the same project.</div></li>
+<li id="q11"><div class="head"><span class="n">11.</span><span class="topic">Bond price</span></div><div class="q">A 10-year bond with face 100 pays a 5% coupon semi-annually. Price it at a yield of 6% (compounded semi-annually).</div></li>
+<li id="q12"><div class="head"><span class="n">12.</span><span class="topic">Yield at par</span></div><div class="q">At what yield does the same bond sell at par?</div></li>
+<li id="q13"><div class="head"><span class="n">13.</span><span class="topic">Duration</span></div><div class="q">Find the Macaulay and modified durations of the bond at a 6% yield.</div></li>
+<li id="q14"><div class="head"><span class="n">14.</span><span class="topic">Forward rates</span></div><div class="q">The one-year spot rate is 4% and the two-year spot rate is 5%. Find the one-year forward rate a year from now.</div></li>
+<li id="q15"><div class="head"><span class="n">15.</span><span class="topic">Black–Scholes</span></div><div class="q">Price a one-year European call with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mi>K</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">S = K = 100</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">100</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>5</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">r = 5\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">5%</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>20</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\sigma = 20\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">20%</span></span></span></span>.</div></li>
+<li id="q16"><div class="head"><span class="n">16.</span><span class="topic">Put–call parity</span></div><div class="q">Use put–call parity to price the matching put.</div></li>
+<li id="q17"><div class="head"><span class="n">17.</span><span class="topic">American put on a tree</span></div><div class="q">A stock at 50 moves up by 1.2 or down by 0.8 each step; one step grows money by 1.05. Price a two-step American put struck at 52.</div></li>
+<li id="q18"><div class="head"><span class="n">18.</span><span class="topic">Option strategies</span></div><div class="q">A straddle buys a call (premium 5) and a put (premium 4), both struck at 100. Where does it break even?</div></li>
+<li id="q19"><div class="head"><span class="n">19.</span><span class="topic">Depreciation</span></div><div class="q">A machine costs \$10{,}000, lasts 5 years and is sold for \$1000. Find the yearly straight-line depreciation and the first year's double-declining-balance depreciation.</div></li>
+<li id="q20"><div class="head"><span class="n">20.</span><span class="topic">Life expectancy</span></div><div class="q">Under de Moivre's law with limiting age 100, what is the complete life expectancy at age 40?</div></li>
+</ol>
+<footer class="sitelinks"><a href="index.html">Course Test</a> · <a href="findings.html">Findings</a> · <a href="../index.html">The Shelf</a> · <a href="https://github.com/ratmath/shelf">GitHub</a> · <a href="https://ratmath.com/">ratmath.com</a></footer>
+</article>
+</main>
+</div>
+</body>
+</html>

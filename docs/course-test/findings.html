@@ -89,7 +89,10 @@ table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85r
 <a href="logic.html">Mathematical logic</a>
 <a href="theory-of-computation.html">Theory of computation</a>
 <a href="topology.html">Topology</a>
-<a href="differential-geometry.html">Differential geometry</a></nav>
+<a href="differential-geometry.html">Differential geometry</a>
+<a href="pde.html">Partial differential equations</a>
+<a href="financial-math.html">Financial mathematics</a>
+<a href="optimisation.html">Optimisation</a></nav>
 </aside>
 <main>
 <article class="wide">
@@ -126,7 +129,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <tr><td><span class="v v-bad">Error</span></td><td><a href="number-theory-ratmath.html#q1">Number theory 1</a><div class="small muted">Bézout coefficients</div></td><td>Every other numtheory function takes plain numbers, but <code>egcd</code> needs BigInts: <code>egcd(252n, 198n)</code> gives <code>{ g: 18n, x: 4n, y: -5n }</code>.</td></tr>
 <tr><td><span class="v v-bad">Error</span></td><td><a href="real-analysis-ratmath.html#q15">Real analysis 15</a><div class="small muted">Pointwise limit</div></td><td>Throws “an exponent may oscillate with growing size”: <code>pointwise</code> hands <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> to the sequence as a parameter that the limit code never substitutes. A bug; see the analytic fix.</td></tr>
 </tbody></table></div>
-<h2>Partial answers (56)</h2>
+<h2>Partial answers (61)</h2>
 <div class="tablewrap"><table class="ct"><tbody>
 <tr><td><span class="v v-part">Partly</span></td><td><a href="grades-k-2-ratmath.html#q6">Grades K–2: number sense and early arithmetic 6</a><div class="small muted">Place value</div></td><td>Core has no digit or place-value helper; the code takes the tens digit with integer division and remainder, which is the arithmetic behind place value rather than the idea itself.</td></tr>
 <tr><td><span class="v v-part">Partly</span></td><td><a href="grades-k-2-ratmath.html#q11">Grades K–2: number sense and early arithmetic 11</a><div class="small muted">Money</div></td><td>The units catalogue has no coins (quarter, dime, penny), so the coin values are typed in by hand.</td></tr>
@@ -206,6 +209,11 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <tr><td><span class="v v-part">Partly</span></td><td><a href="topology-ratmath.html#q12">Topology 12</a><div class="small muted">Homology of the Klein bottle</div></td><td>As above.</td></tr>
 <tr><td><span class="v v-part">Partly</span></td><td><a href="topology-ratmath.html#q15">Topology 15</a><div class="small muted">Genus of a graph</div></td><td>Planarity is tested; the genus comes from Ringel–Youngs' formula by hand (no embedding on a torus is found).</td></tr>
 <tr><td><span class="v v-part">Partly</span></td><td><a href="topology-ratmath.html#q18">Topology 18</a><div class="small muted">Fundamental groups</div></td><td>Given the presentations (by van Kampen), structures computes their abelianisations and orders; deriving the presentations is topology done by hand.</td></tr>
+<tr><td><span class="v v-part">Partly</span></td><td><a href="pde-ratmath.html#q1">Partial differential equations 1</a><div class="small muted">Classification</div></td><td>No library classifies a second-order equation; the discriminant is worked out with Core arithmetic.</td></tr>
+<tr><td><span class="v v-part">Partly</span></td><td><a href="pde-ratmath.html#q2">Partial differential equations 2</a><div class="small muted">Characteristics</div></td><td>There is no first-order PDE solver: the characteristic <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>−</mo><mn>2</mn><mi>t</mi></mrow><annotation encoding="application/x-tex">x - 2t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mord mathnormal">t</span></span></span></span> is found by hand and the library only evaluates the initial data there.</td></tr>
+<tr><td><span class="v v-part">Partly</span></td><td><a href="financial-math-ratmath.html#q16">Financial mathematics 16</a><div class="small muted">Put–call parity</div></td><td><code>parity</code> wants exact amounts, so it refuses the enclosed call that <code>blackScholes</code> itself returns (“cannot read … as an exact amount”). The put printed here comes from <code>blackScholes</code> directly. Fix: let <code>parity</code> accept intervals and return an enclosure.</td></tr>
+<tr><td><span class="v v-part">Partly</span></td><td><a href="optimisation-ratmath.html#q9">Optimisation 9</a><div class="small muted">Transportation problem</div></td><td>No transportation-problem helper: the program is written out as a linear program in the six shipping amounts.</td></tr>
+<tr><td><span class="v v-part">Partly</span></td><td><a href="optimisation-ratmath.html#q18">Optimisation 18</a><div class="small muted">Gradient descent</div></td><td>There is no descent routine: the step is taken by hand from the library's gradient.</td></tr>
 </tbody></table></div>
 <h2>Gaps: what the libraries can't do yet (11)</h2>
 <div class="tablewrap"><table class="ct"><tbody>
