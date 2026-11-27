@@ -57,10 +57,11 @@ export default {
       topic: "Knapsack",
       q: t`Items weigh 2, 3, 4, 5 and are worth 3, 4, 5, 6. Which should go in a knapsack holding weight 5?`,
       a: t`The pairs within weight 5: only \(\{1, 2\}\) (weight 5, worth 7); single items are worth at most 6. Take items 1 and 2, worth 7.`,
-      code: `const ip = discrete.integerProgram({ maximize: [3, 4, 5, 6], constraints: [[[2, 3, 4, 5], "<=", 5], [[1, 0, 0, 0], "<=", 1], [[0, 1, 0, 0], "<=", 1], [[0, 0, 1, 0], "<=", 1], [[0, 0, 0, 1], "<=", 1]] });
+      fix: "discrete#7",
+      code: `const ip = discrete.integerProgram({ maximize: [3, 4, 5, 6], constraints: [[[2, 3, 4, 5], "<=", 5]] }, { binary: true });
 [ip.value, ip.x]`,
       expect: "[7, [1, 1, 0, 0]]",
-      note: "There is no 0–1 bound option, so each \\(x_i \\le 1\\) is written as a constraint.",
+      note: "<code>binary: true</code> makes every variable 0 or 1.",
     },
     {
       topic: "Assignment problem",
@@ -74,14 +75,11 @@ export default {
       topic: "Transportation problem",
       q: t`Two warehouses hold 20 and 30 units; three stores need 10, 25 and 15. Shipping costs per unit are \(\begin{pmatrix} 8&6&10\\9&12&13 \end{pmatrix}\). Find the cheapest plan's cost.`,
       a: t`Warehouse 1 sends 20 to store 2; warehouse 2 sends 10, 5, 15. Cost \(120 + 90 + 60 + 195 = 465\) (checked by the stepping-stone test: every unused route has nonnegative reduced cost).`,
-      code: `const cost = [8, 6, 10, 9, 12, 13];
-const lp = discrete.linearProgram({ minimize: cost, constraints: [
-  [[1, 1, 1, 0, 0, 0], "=", 20], [[0, 0, 0, 1, 1, 1], "=", 30],
-  [[1, 0, 0, 1, 0, 0], "=", 10], [[0, 1, 0, 0, 1, 0], "=", 25], [[0, 0, 1, 0, 0, 1], "=", 15]] });
-lp.value`,
-      expect: "465",
-      status: "partial",
-      note: "No transportation-problem helper: the program is written out as a linear program in the six shipping amounts.",
+      fix: "discrete#7",
+      code: `const t = discrete.transportation([20, 30], [10, 25, 15], [[8, 6, 10], [9, 12, 13]]);
+[t.cost, t.plan]`,
+      expect: "[465, [[0, 20, 0], [10, 5, 15]]]",
+      note: "<code>transportation</code> solves the program exactly; its dual prices are the stepping-stone potentials that prove the plan optimal.",
     },
     {
       topic: "Optimising a rectangle",
@@ -151,12 +149,10 @@ const r = analytic.lagrange("x*y*z", "x + y + z - 3", ["x", "y", "z"], { x: ["1/
       topic: "Gradient descent",
       q: t`Take one gradient-descent step of size 0.1 from \((1, 1)\) on \(f = x^2 + 4y^2\).`,
       a: t`\(\nabla f = (2x, 8y) = (2, 8)\), so the step lands at \((1, 1) - 0.1(2, 8) = (0.8, 0.2)\).`,
-      code: `const f = analytic.field("x^2 + 4*y^2", ["x", "y"]);
-const g = f.gradient().map((c) => c.value({ x: 1, y: 1 }).exact());
-[R\`1\`.subtract(R\`1/10\`.multiply(g[0].low)), R\`1\`.subtract(R\`1/10\`.multiply(g[1].low))]`,
+      fix: "analytic#19",
+      code: `analytic.gradientDescent("x^2 + 4*y^2", ["1", "1"], { step: "1/10", steps: 1 }).final`,
       expect: "[4/5, 1/5]",
-      status: "partial",
-      note: "There is no descent routine: the step is taken by hand from the library's gradient.",
+      note: "<code>gradientDescent</code> keeps exact iterates for a polynomial objective; it is labelled a simulation of the method.",
     },
     {
       topic: "Newton's method for a minimum",

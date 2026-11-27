@@ -101,8 +101,9 @@ export const FIX_PRS = {
   "complex#7": "<code>cauchyRiemann(u, v)</code>",
   "stats#8": "summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>",
   "geo#11": "measurement helpers, 3D <code>vector</code> and <code>plane</code>, <code>conicProperties</code>",
-  "analytic#19": "<code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>",
+  "analytic#19": "<code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>, <code>gradientDescent</code>",
   "algebraic#10": "<code>toFixed(k, mode)</code> on algebraic numbers",
+  "discrete#7": "<code>transportation</code>, <code>binary</code> option on <code>integerProgram</code>, <code>coreVertices</code>",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {

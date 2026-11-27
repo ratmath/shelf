@@ -99,12 +99,12 @@ const b = discrete.backwardInduction(tree);
       topic: "The core",
       q: t`Find the core of the glove game.`,
       a: t`Core constraints \(x_L + x_{R1} \ge 1\), \(x_L + x_{R2} \ge 1\), total 1, all \(\ge 0\), force \(x_{R1} = x_{R2} = 0\): the core is the single point \((1, 0, 0)\). Competition between the right gloves gives L everything.`,
+      fix: "discrete#7",
       code: `const g = discrete.cooperativeGame(["L", "R1", "R2"], (S) => (S.includes("L") && (S.includes("R1") || S.includes("R2")) ? 1 : 0));
-const c = discrete.core(g);
-[c.empty, (${map})(c.allocation)]`,
-      expect: `[false, { L: "1", R1: "0", R2: "0" }]`,
-      status: "partial",
-      note: "<code>core</code> says the core is non-empty and returns one allocation in it; that it is the only one is shown by hand.",
+const c = discrete.coreVertices(g);
+[c.kind, c.vertices.map(${map})]`,
+      expect: `["point", [{ L: "1", R1: "0", R2: "0" }]]`,
+      note: "<code>coreVertices</code> lists every vertex of the core: one, so the core is the single point.",
     },
     {
       topic: "Voting power",
