@@ -83,9 +83,8 @@ function judge(ex, res) {
 
 /**
  * Pull requests that fix what the Course Test found, by "repo#number". An
- * exercise names the one that fixes it with `fix`. The pages are built against
- * the libraries' main branches, so until a fix is merged its exercise still
- * shows the failure.
+ * exercise names the one that fixes it with `fix`. All of these were merged on
+ * 2026-11-27, and the pages are built against the libraries' main branches.
  */
 export const FIX_PRS = {
   "stats#7": "textbook quartiles (<code>method: \"halves\"</code>, <code>\"tukey\"</code>); finite distributions accept Core's <code>Integer</code>",
@@ -344,11 +343,11 @@ function findingsPage(courses) {
   const body = `<h1>Findings</h1>
 <p class="lede">Every exercise in the <a href="index.html">Course Test</a> where RatMath's answer is not simply the independent answer: disagreements and errors first, then partial answers, then the gaps.</p>
 <h2>Fixes</h2>
-<p>The bugs the test found are fixed in these pull requests. The pages are built against each library's main branch, so an exercise keeps showing its failure until its fix is merged.</p>
+<p>The bugs the test found were fixed in these pull requests, all merged. The pages are built against each library's main branch, so the exercises below show the fixed behaviour; each keeps a note of what used to go wrong.</p>
 <div class="tablewrap"><table class="ct"><thead><tr><th>Pull request</th><th>What it fixes</th><th>Exercises</th></tr></thead><tbody>
 ${fixes}
 </tbody></table></div>
-<p>Packaging, not mathematics: <code>@ratmath/chaos</code> asks for <code>@ratmath/complex</code> <code>^0.2.0</code> while complex is at 0.3.0, and <code>@ratmath/symbolic</code> asks for <code>@ratmath/structures</code> <code>^0.1.0</code> while structures is at 0.5.0. Both ranges need raising at the next release.</p>
+<p>Packaging, not mathematics: <code>@ratmath/chaos</code> asks for <code>@ratmath/complex</code> <code>^0.2.0</code> while complex is at 0.3.0, and <code>@ratmath/symbolic</code> asks for <code>@ratmath/structures</code> <code>^0.1.0</code> while structures is at 0.5.0. Both ranges are being raised in <a href="https://github.com/ratmath/chaos/pull/7">ratmath/chaos#7</a> and <a href="https://github.com/ratmath/symbolic/pull/7">ratmath/symbolic#7</a>.</p>
 ${sections}`;
   return shell({ title: "Findings · RatMath Course Test", description: "Where the RatMath libraries disagree with independent answers, fail, or cannot yet answer course exercises.", eyebrow: "Course Test", body, nav: navHtml(courses, "findings"), wide: true });
 }

@@ -141,9 +141,9 @@ export default {
       q: t`For the data 3, 7, 8, 12, 13, 14, 18, 21, find the range, the quartiles and the interquartile range.`,
       a: t`Range \(21 - 3 = 18\). Lower half 3, 7, 8, 12 has median \(Q_1 = 7.5\); upper half 13, 14, 18, 21 has median \(Q_3 = 16\). IQR \(= 8.5\).`,
       code: `const d = [3, 7, 8, 12, 13, 14, 18, 21];
-[stats.range(d), stats.quartiles(d), stats.iqr(d)]`,
+[stats.range(d), stats.quartiles(d, { method: "halves" }), stats.iqr(d, { method: "halves" })]`,
       expect: "[18, [15/2, 25/2, 16], 17/2]",
-      note: "stats computes quartiles by interpolation (the default <code>linear</code> method, as in R and NumPy): \\(Q_1 = 7.75\\), \\(Q_3 = 15\\), IQR 7.25. School textbooks and the TI-84 take the medians of the lower and upper halves, and stats has no method for that. (<code>method: \"hazen\"</code> happens to agree here, with eight values, but not in general.)",
+      note: "School textbooks and the TI-84 take Q1 and Q3 as the medians of the lower and upper halves: <code>method: \"halves\"</code>. The default <code>linear</code> method interpolates (as R and NumPy do) and gives \\(Q_1 = 7.75\\), \\(Q_3 = 15\\), IQR 7.25.",
     },
     {
       topic: "One-step inequality",
