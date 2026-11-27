@@ -2,14 +2,9 @@
 // such as jsDelivr or unpkg) that sets a global `Ratmath`.
 //
 //   bun run build
-const out = await Bun.build({
-  entrypoints: ["./scripts/global-entry.js"],
-  outdir: "./dist",
-  naming: "ratmath.global.js",
-  target: "browser",
-  format: "iife",
-  minify: { whitespace: true, syntax: true, identifiers: true, keepNames: true },
-});
+import { GLOBAL_BUILD } from "./global-build.js";
+
+const out = await Bun.build({ ...GLOBAL_BUILD, outdir: "./dist", naming: "ratmath.global.js" });
 if (!out.success) {
   for (const m of out.logs) console.error(m);
   process.exit(1);

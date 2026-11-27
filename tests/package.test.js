@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
+import { GLOBAL_BUILD } from "../scripts/global-build.js";
 import { runInNewContext } from "node:vm";
 import * as Ratmath from "../index.js";
 import RatmathDefault, { Rational, core, shelf } from "../index.js";
@@ -44,8 +44,12 @@ test("the shelf list names every planned library, none included yet", () => {
   expect(Object.isFrozen(shelf)).toBe(true);
 });
 
-test("the browser bundle sets a global Ratmath", () => {
-  const code = readFileSync(new URL("../dist/ratmath.global.js", import.meta.url), "utf8");
+test("the browser bundle sets a global Ratmath", async () => {
+  // Built in memory with the same options as dist/ratmath.global.js, so the
+  // test needs no build step first (the umbrella runs it with plain bun test).
+  const out = await Bun.build(GLOBAL_BUILD);
+  expect(out.success).toBe(true);
+  const code = await out.outputs[0].text();
   const sandbox = {};
   runInNewContext(code, sandbox);
   const G = sandbox.Ratmath;

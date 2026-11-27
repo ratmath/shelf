@@ -44,13 +44,15 @@ All of these hand out the libraries' own objects, never copies, so a
 - `index.js`, `index.d.ts`: the package. `core.js`: the `ratmath/core` subpath.
 - `scripts/build.js`: builds `dist/ratmath.global.js` (not committed; built by
   `bun run build`, and before every publish).
-- `tests/`: checks every way in against Core itself, including the browser file.
+- `tests/`: checks every way in against Core itself, including the browser file
+  (built in memory, so plain `bun test` works, as in the umbrella repo).
 - `docs/`: the site at [ratmath.com/shelf](https://ratmath.com/shelf/), served by
   GitHub Pages from `main`, `/docs`.
 
 ```sh
 bun install
-bun run test          # builds dist/, then runs the tests
+bun run test          # runs the tests (the browser file is built in memory)
+bun run build         # writes dist/ratmath.global.js
 bun run docs:build    # builds docs/ and runs every page's code box
 ```
 

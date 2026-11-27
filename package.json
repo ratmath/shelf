@@ -32,7 +32,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "bun scripts/build.js",
-    "test": "bun run build && bun test ./tests",
+    "test": "bun test ./tests",
     "docs:build": "bun scripts/build-docs.js",
     "prepublishOnly": "bun run build && bun test ./tests",
     "pdf": "bun scripts/build-pdfs.js"
