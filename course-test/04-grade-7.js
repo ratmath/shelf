@@ -119,10 +119,10 @@ const x = R\`35\`;
       topic: "Surface area",
       q: t`Find the surface area of a rectangular prism 4 cm by 5 cm by 6 cm.`,
       a: t`\(2(20 + 24 + 30) = 148\ \text{cm}^2\).`,
-      code: "R`2*(4*5 + 4*6 + 5*6)`",
+      code: "geo.box(4, 5, 6).surfaceArea",
       expect: "148",
-      status: "partial",
-      note: "geo's solids (Polyhedron) are the Platonic solids and their kin; there is no box with given edges, so the formula is typed in.",
+      note: "<code>box</code> builds the prism as an exact polyhedron with its surface area and volume.",
+      fix: "geo#11",
     },
     {
       topic: "Simple probability",
