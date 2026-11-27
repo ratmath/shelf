@@ -448,9 +448,9 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
         </article>
         <article class="pkg" id="complex">
           <div>
-            <h3>Complex<span class="status status-done">First parts available</span></h3>
+            <h3>Complex<span class="status status-done">Available</span></h3>
             <span class="id">@ratmath/complex</span>
-            <p class="about">Complex numbers that say which branch they took, with quaternions and octonions. Built so far: exact complex numbers, certified functions with branch reporting, the Cayley–Dickson numbers, and Möbius maps on the Riemann sphere. Complex analysis is <a href="#complex-planned">planned</a>.</p>
+            <p class="about">Complex numbers that say which branch they took, complex analysis with proofs, and quaternions and octonions: exact complex numbers, certified functions with branch reporting, Möbius maps on the Riemann sphere, Taylor models on discs, contour integrals, zeros counted and found, residues, the gamma and zeta functions, and the Cayley–Dickson numbers.</p>
             <p class="links"><a href="https://ratmath.com/complex/">Overview</a> <a href="https://ratmath.com/complex/explore.html">Explore</a> <a href="https://ratmath.com/complex/reference.html">Reference</a> <a href="https://github.com/ratmath/complex">Source</a></p>
           </div>
           <ul class="topics">
@@ -464,6 +464,12 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><a href="https://ratmath.com/complex/integer-quaternions.html">Integer quaternions</a><span>Division with remainder and sums of four squares.</span></li>
             <li><a href="https://ratmath.com/complex/mobius.html">Möbius maps</a><span>Möbius and conformal maps, composed and classified exactly.</span></li>
             <li><a href="https://ratmath.com/complex/riemann-sphere.html">The Riemann sphere</a><span>The plane with its point at infinity, where Möbius maps act.</span></li>
+            <li><a href="https://ratmath.com/complex/taylor-models.html">Taylor models</a><span>A polynomial and a proven bound: a whole function enclosed on a disc.</span></li>
+            <li><a href="https://ratmath.com/complex/contour-integrals.html">Contour integrals</a><span>Integrals along segments and arcs, as rectangles certain to contain them.</span></li>
+            <li><a href="https://ratmath.com/complex/zeros.html">Zeros and the argument principle</a><span>Zeros counted as a proven whole number, then found with their multiplicities.</span></li>
+            <li><a href="https://ratmath.com/complex/residues.html">Residues and Laurent series</a><span>Laurent coefficients, residues, and the kind of every singularity.</span></li>
+            <li><a href="https://ratmath.com/complex/real-integrals.html">Real integrals by residues</a><span>Integrals over the line and over a period, with the steps shown.</span></li>
+            <li><a href="https://ratmath.com/complex/gamma-zeta.html">Gamma and zeta</a><span>Γ and ζ on the plane, and zeros of ζ proved on the critical line.</span></li>
           </ul>
         </article>
         <article class="pkg" id="discrete">
@@ -503,9 +509,9 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
         </article>
         <article class="pkg" id="numtheory">
           <div>
-            <h3>Number theory<span class="status status-done">First parts available</span></h3>
+            <h3>Number theory<span class="status status-done">Available</span></h3>
             <span class="id">@ratmath/numtheory</span>
-            <p class="about">Number theory with proofs attached. Built so far: primes with certificates checked by an independent verifier, factoring, congruences, reciprocity, sums of squares, Diophantine and Pell equations, continued fractions, quadratic forms and p-adic numbers. Elliptic curves and algebraic number theory are <a href="#numtheory-planned">planned</a>.</p>
+            <p class="about">Number theory with proofs attached: primes with certificates checked by an independent verifier, factoring, congruences, reciprocity, sums of squares, Diophantine and Pell equations, continued fractions, quadratic forms and p-adic numbers; elliptic curves, with the elliptic curve method and curve-based primality certificates; rings of integers, prime ideals, class groups and units of number fields; and prime counting, Dirichlet characters, and zeta and L values.</p>
             <p class="links"><a href="https://ratmath.com/numtheory/">Overview</a> <a href="https://ratmath.com/numtheory/explore.html">Explore</a> <a href="https://ratmath.com/numtheory/reference.html">Reference</a> <a href="https://github.com/ratmath/numtheory">Source</a></p>
           </div>
           <ul class="topics">
@@ -520,6 +526,17 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><a href="https://ratmath.com/numtheory/pell.html">Pell equations</a><span>x² − Dy² = N: every class of solutions.</span></li>
             <li><a href="https://ratmath.com/numtheory/quadratic-forms.html">Quadratic forms</a><span>Reduction with proof, composition, class groups and their structure.</span></li>
             <li><a href="https://ratmath.com/numtheory/padic.html">p-adic numbers</a><span>Lazy exact digits, square and Hensel roots, exp and log.</span></li>
+            <li><a href="https://ratmath.com/numtheory/elliptic-curves.html">Elliptic curves</a><span>The group law over Q, torsion, minimal models, reduction, and proven height bounds.</span></li>
+            <li><a href="https://ratmath.com/numtheory/point-counting.html">Counting points</a><span>Curves over F_p: Hasse’s bound, baby steps and giant steps, Schoof’s algorithm.</span></li>
+            <li><a href="https://ratmath.com/numtheory/ecm.html">The elliptic curve method</a><span>Lenstra’s method: many groups instead of one, and the factors of F₇.</span></li>
+            <li><a href="https://ratmath.com/numtheory/elliptic-certificates.html">Elliptic curve certificates</a><span>Atkin–Morain proofs for primes that n − 1 cannot certify, checked independently.</span></li>
+            <li><a href="https://ratmath.com/numtheory/number-fields.html">Rings of integers</a><span>Integral bases by the Round 2 algorithm, discriminants, the index.</span></li>
+            <li><a href="https://ratmath.com/numtheory/prime-ideals.html">Prime ideals</a><span>How primes split, ramify or stay inert; unique factorisation of ideals.</span></li>
+            <li><a href="https://ratmath.com/numtheory/class-groups.html">Class groups</a><span>Class numbers and group structure, proven without the Riemann hypothesis.</span></li>
+            <li><a href="https://ratmath.com/numtheory/units.html">Units</a><span>Dirichlet’s theorem, roots of unity, fundamental units and the regulator.</span></li>
+            <li><a href="https://ratmath.com/numtheory/prime-counting.html">Counting primes</a><span>π(10¹²) in a second: Legendre’s φ and Meissel’s formula.</span></li>
+            <li><a href="https://ratmath.com/numtheory/characters.html">Dirichlet characters</a><span>Conrey’s numbering, exact values, conductors, Gauss sums, orthogonality.</span></li>
+            <li><a href="https://ratmath.com/numtheory/l-values.html">Zeta and L values</a><span>Exact values from Bernoulli numbers, proven enclosures in the whole plane.</span></li>
           </ul>
         </article>
         <article class="pkg" id="logic">
@@ -583,9 +600,9 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
         </article>
         <article class="pkg" id="chaos">
           <div>
-            <h3>Chaos<span class="status status-done">First parts available</span></h3>
+            <h3>Chaos<span class="status status-done">Available</span></h3>
             <span class="id">@ratmath/chaos</span>
-            <p class="about">Dynamical systems, where exact arithmetic shows the true orbit. Built so far: maps of the line, with orbits, periodic points, Lyapunov exponents, proven bifurcations and symbolic dynamics; fractals, from iterated function systems and Cantor sets to L-systems; cellular automata; and Mandelbrot, Julia and Newton pictures with every pixel proved or marked undecided. Maps of the plane and flows are <a href="#chaos-planned">planned</a>.</p>
+            <p class="about">Dynamical systems, where exact arithmetic shows the true orbit: maps of the line, with orbits, periodic points, Lyapunov exponents, proven bifurcations and symbolic dynamics; fractals, from iterated function systems and Cantor sets to L-systems; cellular automata; and Mandelbrot, Julia and Newton pictures with every pixel proved or marked undecided. Maps of the plane and flows come with proofs too: periodic points and closed orbits proven to exist, the cat map and the horseshoe done exactly, and equilibria classified with their bifurcations bracketed.</p>
             <p class="links"><a href="https://ratmath.com/chaos/">Overview</a> <a href="https://ratmath.com/chaos/explore.html">Explore</a> <a href="https://ratmath.com/chaos/reference.html">Reference</a> <a href="https://github.com/ratmath/chaos">Source</a></p>
           </div>
           <ul class="topics">
@@ -594,6 +611,11 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><a href="https://ratmath.com/chaos/lyapunov.html">Lyapunov exponents</a><span>Certified averages along true orbits; sensitive dependence measured.</span></li>
             <li><a href="https://ratmath.com/chaos/bifurcations.html">Bifurcations</a><span>Period doublings and windows, each parameter proven; Feigenbaum ratios.</span></li>
             <li><a href="https://ratmath.com/chaos/symbolic-dynamics.html">Symbolic dynamics</a><span>Itineraries, kneading sequences and Sharkovskii's order.</span></li>
+            <li><a href="https://ratmath.com/chaos/plane-maps.html">Maps of the plane</a><span>Hénon and standard maps: true orbits, periodic points proven.</span></li>
+            <li><a href="https://ratmath.com/chaos/cat-map-and-horseshoe.html">The cat map and the horseshoe</a><span>Chaos done exactly: periods on the torus, symbolic dynamics of Smale’s horseshoe.</span></li>
+            <li><a href="https://ratmath.com/chaos/flows.html">Flows, enclosed</a><span>Solutions of differential equations inside proven boxes; Lorenz, Rössler, Van der Pol.</span></li>
+            <li><a href="https://ratmath.com/chaos/periodic-orbits.html">Sections and periodic orbits</a><span>Return maps with derivatives; closed orbits proven to exist.</span></li>
+            <li><a href="https://ratmath.com/chaos/equilibria.html">Equilibria and their bifurcations</a><span>Every rest point in a box, classified; saddle-node, pitchfork and Hopf parameters bracketed.</span></li>
             <li><a href="https://ratmath.com/chaos/iterated-function-systems.html">Iterated function systems</a><span>Exact stages, contraction bounds, similarity dimensions and the chaos game.</span></li>
             <li><a href="https://ratmath.com/chaos/cantor-sets.html">Cantor sets and dimension</a><span>Exact membership of fractions.</span></li>
             <li><a href="https://ratmath.com/chaos/l-systems.html">L-systems</a><span>Symbol counts by matrix power; turtle paths exact in a + b√3.</span></li>
@@ -606,7 +628,7 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
           <div>
             <h3>Geometry<span class="status status-done">First parts available</span></h3>
             <span class="id">@ratmath/geo</span>
-            <p class="about">Geometry with exact coordinates, so that collinear, concyclic and tangent are decided. Built so far: the Euclidean plane with constructions and checked theorems, exact computational and lattice geometry, taxicab geometry, the projective plane and finite geometries, and polyhedra, symmetry groups and tilings. Spherical and hyperbolic geometry are <a href="#geo-planned">planned</a>.</p>
+            <p class="about">Geometry with exact coordinates, so that collinear, concyclic and tangent are decided. Built so far: the Euclidean plane with constructions and checked theorems, exact computational and lattice geometry, taxicab geometry, spherical and hyperbolic geometry, the projective plane and finite geometries, and polyhedra, symmetry groups and tilings. General proofs of theorems are <a href="#geo-planned">planned</a>.</p>
             <p class="links"><a href="https://ratmath.com/geo/">Overview</a> <a href="https://ratmath.com/geo/explore.html">Explore</a> <a href="https://ratmath.com/geo/reference.html">Reference</a> <a href="https://github.com/ratmath/geo">Source</a></p>
           </div>
           <ul class="topics">
@@ -617,6 +639,10 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><a href="https://ratmath.com/geo/computational.html">Computational geometry</a><span>Hulls, polygons, Delaunay and Voronoi with exact predicates.</span></li>
             <li><a href="https://ratmath.com/geo/lattice.html">Lattice geometry</a><span>Pick's theorem and points visible from the origin.</span></li>
             <li><a href="https://ratmath.com/geo/metrics.html">Taxicab geometry</a><span>Square circles, bent bisectors, and where congruence fails.</span></li>
+            <li><a href="https://ratmath.com/geo/spherical.html">Spherical geometry</a><span>Great circles, triangles and their excess, exact trigonometry, rotations.</span></li>
+            <li><a href="https://ratmath.com/geo/hyperbolic.html">The hyperbolic plane</a><span>Four models of one plane; exact distance, parallels, circles.</span></li>
+            <li><a href="https://ratmath.com/geo/hyperbolic-triangles.html">Hyperbolic triangles, motions, tilings</a><span>Defect as area, isometries classified, the tilings {p, q}.</span></li>
+            <li><a href="https://ratmath.com/geo/parallel-postulate.html">The parallel postulate</a><span>One parallel, none, or infinitely many: counted in five geometries.</span></li>
             <li><a href="https://ratmath.com/geo/projective.html">The projective plane</a><span>Duality, the cross-ratio, projective maps and conics; Desargues, Pappus, Pascal and Brianchon checked exactly.</span></li>
             <li><a href="https://ratmath.com/geo/finite-geometries.html">Finite geometries</a><span>The Fano plane, PG(2, q) and AG(2, q) over finite fields, and their collineation groups.</span></li>
             <li><a href="https://ratmath.com/geo/polyhedra.html">Polyhedra</a><span>Platonic and Archimedean solids with exact coordinates, volumes, dihedral angles, duals and symmetry groups.</span></li>
@@ -654,30 +680,6 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
         <h2>Planned</h2>
         <p>Not built yet. The full plan, with scope and order, is in the <a href="https://github.com/ratmath/ratmath/blob/main/docs/design/library-roadmap.md" style="color:var(--ink);font-weight:600;text-decoration-color:var(--ochre);text-underline-offset:3px">library roadmap</a>.</p>
       </div>
-        <article class="pkg" id="complex-planned">
-          <div>
-            <h3>Complex, continued<span class="status status-plan">Planned</span></h3>
-            <span class="id">@ratmath/complex</span>
-            <p class="about">Complex analysis with proofs, on top of the <a href="#complex">numbers and functions already built</a>.</p>
-          </div>
-          <ul class="topics">
-            <li><span>Contour integrals and the argument principle</span></li>
-            <li><span>Residues and Laurent series</span></li>
-            <li><span>The complex gamma and zeta functions</span></li>
-          </ul>
-        </article>
-        <article class="pkg" id="numtheory-planned">
-          <div>
-            <h3>Number theory, continued<span class="status status-plan">Planned</span></h3>
-            <span class="id">@ratmath/numtheory</span>
-            <p class="about">Elliptic curves and algebraic number theory, on top of the <a href="#numtheory">primes, congruences, forms and p-adics already built</a>.</p>
-          </div>
-          <ul class="topics">
-            <li><span>Elliptic curves, ECM and curve-based primality certificates</span></li>
-            <li><span>Integral bases, class groups and units</span></li>
-            <li><span>π(x), characters, ζ and L values</span></li>
-          </ul>
-        </article>
         <article class="pkg" id="structures-planned">
           <div>
             <h3>Structures, continued<span class="status status-plan">Planned</span></h3>
@@ -703,24 +705,13 @@ R`<span class="n">1.2[3:6]</span>`         <span class="c">// 1.23 to 1.26</span
             <li><span>Peano arithmetic and Gödel numbering</span></li>
           </ul>
         </article>
-        <article class="pkg" id="chaos-planned">
-          <div>
-            <h3>Chaos, continued<span class="status status-plan">Planned</span></h3>
-            <span class="id">@ratmath/chaos</span>
-            <p class="about">More on top of the <a href="#chaos">maps of the line, fractals and cellular automata already built</a>.</p>
-          </div>
-          <ul class="topics">
-            <li><span>Maps of the plane; flows, sections and periodic orbits</span></li>
-          </ul>
-        </article>
         <article class="pkg" id="geo-planned">
           <div>
             <h3>Geometry, continued<span class="status status-plan">Planned</span></h3>
             <span class="id">@ratmath/geo</span>
-            <p class="about">More on top of the <a href="#geo">plane, projective and finite geometry, polyhedra and symmetry already built</a>.</p>
+            <p class="about">More on top of the <a href="#geo">plane, spherical, hyperbolic, projective and finite geometry, polyhedra and symmetry already built</a>.</p>
           </div>
           <ul class="topics">
-            <li><span>Spherical and hyperbolic geometry</span></li>
             <li><span>General proofs of theorems by elimination</span></li>
           </ul>
         </article>
