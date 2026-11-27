@@ -2,6 +2,8 @@
 //
 //   bun scripts/check-ranges.js              reads each library's package.json on GitHub main
 //   bun scripts/check-ranges.js --dir DIR    reads DIR/<library>/package.json (local clones)
+//   add --libraries-only to skip the checks on ratmath itself (Core is then
+//   checked against the latest @ratmath/core on npm); the publish script uses it
 //
 // For every library: each @ratmath/<sibling> range in `dependencies` must accept
 // that sibling's current version (under 0.x, ^0.2.0 rejects 0.3.0, and npm then
@@ -28,8 +30,11 @@ const LIBS = [
   "symbolic", "graphics", "finance",
 ];
 const pkgs = Object.fromEntries(await Promise.all(LIBS.map(async (n) => [n, await manifest(n)])));
-const self = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-const coreWanted = self.dependencies["@ratmath/core"].replace(/^[\^~]/, "");
+const librariesOnly = process.argv.includes("--libraries-only");
+const self = librariesOnly ? null : JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+const coreWanted = librariesOnly
+  ? (await (await fetch("https://registry.npmjs.org/@ratmath/core/latest")).json()).version
+  : self.dependencies["@ratmath/core"].replace(/^[\^~]/, "");
 const problems = [];
 const short = (name) => name.replace(/^@ratmath\//, "");
 
@@ -45,9 +50,9 @@ for (const n of LIBS) {
   }
   const peer = p.peerDependencies?.["@ratmath/core"];
   if (!peer) problems.push(`${n}: no @ratmath/core peer dependency`);
-  else if (!Bun.semver.satisfies(coreWanted, peer)) problems.push(`${n}: Core peer "${peer}" rejects Core ${coreWanted}, which ratmath uses`);
+  else if (!Bun.semver.satisfies(coreWanted, peer)) problems.push(`${n}: Core peer "${peer}" rejects Core ${coreWanted}${librariesOnly ? " (latest on npm)" : ", which ratmath uses"}`);
 }
-for (const n of LIBS) {
+for (const n of librariesOnly ? [] : LIBS) {
   const range = self.dependencies[`@ratmath/${n}`];
   if (!range) { problems.push(`ratmath: no dependency on @ratmath/${n}`); continue; }
   if (!Bun.semver.satisfies(pkgs[n].version, range)) problems.push(`ratmath: @ratmath/${n} "${range}" rejects ${n} ${pkgs[n].version}`);
