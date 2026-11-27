@@ -35,7 +35,8 @@
     "test": "bun test ./tests",
     "docs:build": "bun scripts/build-docs.js",
     "course-tests": "bun scripts/build-course-tests.js",
-    "prepublishOnly": "bun run build && bun test ./tests"
+    "prepublishOnly": "bun run build && bun test ./tests",
+    "pdf": "bun scripts/build-pdfs.js"
   },
   "keywords": [
     "ratmath",
@@ -57,7 +58,9 @@
     "@ratmath/core": ">=0.10.0 <0.12.0"
   },
   "devDependencies": {
-    "katex": "0.19.1"
+    "katex": "0.19.1",
+    "pdf-lib": "^1.17.1",
+    "playwright-core": "^1.65.1"
   },
   "author": "James Taylor",
   "engines": {
