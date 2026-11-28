@@ -151,12 +151,13 @@ analytic.planarSystem(["x*(3 - x - y)", "y*(x - 1)"]).equilibria({ x: ["-1", "4"
       topic: "Newton's law of cooling",
       q: t`Coffee at 90° cools in a 20° room, \(T' = -k(T - 20)\). After 10 minutes it is 60°. What is it after 20 minutes?`,
       a: t`\(T - 20 = 70e^{-kt}\), \(e^{-10k} = \tfrac47\). At 20 minutes: \(20 + 70\cdot\tfrac{16}{49} = \tfrac{300}{7} \approx 42.86°\).`,
-      code: `const k = symbolic.solve("70*exp(-10*k) = 40", "k");
-PRINT(k);
-analytic.firstOrder("-k*(T - 20)", { y: "T", x: "t" }).general`,
-      expect: /T = .*exp/,
-      expectText: "T = 20 + C e^(−kt); with k = ln(7/4)/10, T(20) = 300/7",
-      note: "Each step is available (the general solution, and \\(k\\) from the data), but the final value is assembled by hand.",
+      code: `PRINT(analytic.firstOrder("-k*(T - 20)", { y: "T", x: "t" }).general);   // T = 20 + C e^(−kt), and C = 70 from T(0) = 90
+const k = symbolic.solve("70*exp(-10*k) = 40", "k").solutions[0].value;
+PRINT("k =", k);
+String(symbolic.simplify(\`20 + 70*exp(-20*(\${k}))\`))`,
+      expect: "300/7",
+      expectText: "T(20) = 300/7",
+      note: "The general solution comes from <code>firstOrder</code>, \\(k\\) from the data by <code>solve</code>, and \\(T(20)\\) is simplified exactly to \\(300/7\\). Reading off \\(C = 70\\) from \\(T(0) = 90\\) is done by hand.",
     },
   ],
 };

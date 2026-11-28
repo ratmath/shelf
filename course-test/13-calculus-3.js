@@ -158,7 +158,7 @@ analytic.lineIntegral(["-y", "x"], ["x", "y"], { x: "cos(2*pi*t)", y: "sin(2*pi*
       q: t`Find the flux of \(\mathbf F = (x, y, z)\) out of the unit sphere.`,
       a: t`\(\iiint 3\,dV = 3\cdot\tfrac43\pi = 4\pi\).`,
       code: `analytic.surfaceIntegral(["x", "y", "z"], ["x", "y", "z"], { x: "sin(u)*cos(v)", y: "sin(u)*sin(v)", z: "cos(u)" }, ["u", "v"], { u: [0, "pi"], v: [0, "2*pi"] }).exact()`,
-      check: near(4 * Math.PI, 1e-8),
+      check: near(4 * Math.PI, 1e-5),
       expectText: "4π ≈ 12.566",
     },
     {

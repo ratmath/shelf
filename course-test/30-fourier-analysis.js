@@ -38,7 +38,7 @@ export default {
       q: t`To what does the Fourier series of the square wave converge at \(x = 0\)?`,
       a: t`To the average of the one-sided limits, \(\tfrac{-1 + 1}{2} = 0\) (every \(\sin n\pi\cdot0 = 0\)).`,
       code: `analytic.fourier("-1 if -1:x:!0; 1 if 0:x:1", [-1, 1], { terms: 9 }).exact().value(0)`,
-      check: near(0, 1e-12),
+      check: near(0, 1e-10),
     },
     {
       topic: "Orthogonality",
@@ -128,7 +128,7 @@ export default {
       q: t`Solve \(u_t = u_{xx}\) on \(0 < x < 1\) with \(u = 0\) at both ends and \(u(x, 0) = \sin\pi x\). Find \(u(\tfrac12, \tfrac1{10})\).`,
       a: t`\(u = e^{-\pi^2t}\sin\pi x\); \(u(\tfrac12, \tfrac1{10}) = e^{-\pi^2/10} \approx 0.372708\).`,
       code: `analytic.heat({ k: 1, length: 1, initial: "sin(pi*x)", terms: 3 }).at("1/2", "1/10").value`,
-      check: near(Math.exp(-(PI ** 2) / 10), 1e-9),
+      check: near(Math.exp(-(PI ** 2) / 10), 1e-6),
     },
     {
       topic: "Wave equation",
@@ -154,7 +154,7 @@ export default {
       a: t`\(\hat f\hat g = \dfrac{4}{(1 + \omega^2)^2}\), whose inverse transform at 1 is \(\dfrac{1}{2\pi}\int\dfrac{4e^{i\omega}}{(1 + \omega^2)^2}d\omega = 2e^{-1}\), the same as the direct convolution.`,
       code: `const r = analytic.convolution("exp(-abs(x))", "exp(-abs(x))").theorem(1);
 [r.agrees, r.viaTransforms]`,
-      check: (v) => v[0] === true && near(2 / Math.E, 1e-9)(v[1]),
+      check: (v) => v[0] === true && near(2 / Math.E, 1e-7)(v[1]),
       expectText: "[true, 2/e ≈ 0.7357589]",
     },
     {

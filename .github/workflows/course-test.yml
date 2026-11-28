@@ -1,0 +1,36 @@
+name: Course Test
+
+# Runs the integrated Course Test against every library's main branch and
+# fails on an error (a gap whose code throws included) or an unexpected
+# disagreement. Not run on pull requests: a Course Test change often waits
+# for library pull requests to merge first.
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  course-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: shelf
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - name: Libraries at main, side by side
+        run: |
+          mkdir -p node_modules/@ratmath
+          for lib in core algebraic analytic linalg graphics structures symbolic complex discrete stats numtheory logic chaos geo finance; do
+            git clone --depth 1 "https://github.com/ratmath/$lib.git" "$lib"
+            ln -s "$GITHUB_WORKSPACE/$lib" "node_modules/@ratmath/$lib"
+          done
+      - run: bun install --frozen-lockfile
+        working-directory: shelf
+      - name: Course Test (strict)
+        working-directory: shelf
+        run: bun scripts/build-course-tests.js --root "$GITHUB_WORKSPACE" --no-write --strict

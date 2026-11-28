@@ -281,3 +281,21 @@ Built in this order; each uses the one before.
 Theory of computation #10 (pumping lemma) and #15 (halting problem), Topology
 #3 (a bounded metric) and #4 (connectedness and compactness). The pages
 already say why.
+
+## External QA review, 2026-11-28
+
+An outside review of the Course Test (Astra, 2026-11-27) found answers graded
+"agrees" that were partial or impossible. Changed: Topology 14 had an
+impossible f-vector (8, 24, 14 fails 3F = 2E) and now uses 10, 36, 24 with the
+incidence check in the code; Topology 7 (proof plus computation) is "partial";
+Real Analysis 10 solves on (0, 2) so only the right root comes back; Real
+Analysis 19 checks both contraction hypotheses; Differential Equations 20
+computes T(20) = 300/7 instead of matching the general solution; Dynamical
+Systems 1 reports that 2/3 attracts at r = 3 (chaos#10); Topology 4 proves
+total disconnectedness, not just disconnectedness. `near` now needs both ends
+of an interval within the tolerance (it used the midpoint, so [−99, 101]
+passed for 1), which tightened five rows to the precision actually certified.
+A gap whose code throws keeps its error, `--strict` exits 1 on errors and
+unexpected disagreements, and `.github/workflows/course-test.yml` runs that
+weekly against every library's main. The index records each library's commit.
+Result: 734 agree, 1 partial, 4 gap, 1 disagree, 0 error.
