@@ -1,8 +1,8 @@
 // Shared page furniture for the shelf docs: the contents column, the theme
 // switch and the code boxes. Add each topic page to PAGES as it is written.
 
-import * as A from "./ratmath.js?v=e5222253a6";
-import { mountRunboxes } from "./runbox.js?v=e5222253a6";
+import * as A from "./ratmath.js?v=114a250d83";
+import { mountRunboxes } from "./runbox.js?v=114a250d83";
 
 export { A };
 

@@ -38,8 +38,8 @@ All of these hand out the libraries' own objects, never copies, so a
 
 - Each library keeps its own version number.
 - The libraries list `@ratmath/core` as a peer dependency with an explicit
-  range (`">=0.10.0 <0.12.0"`), so a program has exactly one Core.
-- `ratmath` follows Core: `ratmath` 0.11 is Core 0.11 plus library versions
+  range (`">=0.12.0"`), so a program has exactly one Core.
+- `ratmath` follows Core: `ratmath` 0.12 is Core 0.12 plus library versions
   tested with it.
 
 ## This repository
@@ -147,7 +147,7 @@ output:
 
 ### Releasing
 
-`ratmath` follows Core's minor version (0.11.x goes with Core 0.11). For a
+`ratmath` follows Core's minor version (0.12.x goes with Core 0.12). For a
 release, raise each `@ratmath/<library>` range to the version now on npm, run
 `bun scripts/check-ranges.js`, `bun install`, and `bun run test`, then
 `npm publish` (which builds the browser file and runs the tests first) and tag

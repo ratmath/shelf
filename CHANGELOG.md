@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.0
+## 0.12.0
 
 - All fourteen RatMath Shelf libraries are in: `Ratmath.algebraic`,
   `.analytic`, `.chaos`, `.complex`, `.discrete`, `.finance`, `.geo`,
@@ -8,7 +8,9 @@
   `.symbolic`, in the default object and the browser global too, and each at
   its own subpath (`ratmath/linalg`, ...). They are the libraries' own objects,
   never copies, and all share one Core.
-- Core 0.11 (`^0.11.1`): `ratmath` now follows Core's minor version.
+- Core 0.12 (`^0.12.0`): `ratmath` now follows Core's minor version. Core 0.12
+  returns Integers from `round`/`floor`/`ceil`/`trunc` and rounds half up by
+  default; every library's Core peer range is `>=0.12.0`.
 - `scripts/check-ranges.js`, run in CI: checks that the libraries' published
   version ranges fit together, so `npm install ratmath` always resolves.
 
