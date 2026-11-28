@@ -39,7 +39,7 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
     {
       topic: "Connectedness and compactness",
       q: t`Is \([0, 1]\) compact? Is \((0, 1)\)? Is \(\mathbb Q\) connected?`,
-      a: t`\([0, 1]\) is compact (Heine–Borel); \((0, 1)\) is not (the cover \((1/n, 1)\) has no finite subcover). \(\mathbb Q\) is totally disconnected: \((-\infty, \sqrt2) \cap \mathbb Q\) and \((\sqrt2, \infty) \cap \mathbb Q\) separate it.`,
+      a: t`\([0, 1]\) is compact (Heine–Borel); \((0, 1)\) is not (the cover \((1/n, 1)\) has no finite subcover). \(\mathbb Q\) is not connected: \((-\infty, \sqrt2) \cap \mathbb Q\) and \((\sqrt2, \infty) \cap \mathbb Q\) separate it. It is even totally disconnected: between any two distinct rationals \(p < q\) lies an irrational \(s\) (such as \(p + (q - p)/\sqrt2\)), and the same cut at \(s\) puts \(p\) and \(q\) in different pieces, so no connected subset has two points.`,
       code: `"no computation"`,
       expect: "proofs",
       status: "gap",
@@ -67,7 +67,8 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
       a: t`\(g(x) = f(x) - x\) has \(g(0) \ge 0 \ge g(1)\), so \(g\) vanishes by the intermediate value theorem. For \(\cos\): \(x \approx 0.7390851\).`,
       code: `analytic.fixedPoint("cos(x)", "1/2").root`,
       check: near(0.7390851332151607, 1e-12),
-      note: "Returns <code>null</code>: the starting value <code>\"1/2\"</code> is read with <code>Number()</code>, which gives NaN, and no error is raised. From <code>\"1\"</code> or <code>\"0\"</code> the certified root \\(0.7390851\\ldots\\) is found. A bug; see the analytic fix.",
+      status: "partial",
+      note: "The certified fixed point of \\(\\cos\\) is found (since the analytic fix the exact start <code>\"1/2\"</code> works). The general statement is a proof by the intermediate value theorem, given in the answer; RatMath does not check proofs, so this counts as partial.",
     },
     {
       topic: "Euler characteristic of polyhedra",
@@ -122,13 +123,14 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
     },
     {
       topic: "Classification of surfaces",
-      q: t`A closed orientable surface has a triangulation with 8 vertices, 24 edges and 14 triangles. Which surface is it?`,
-      a: t`\(\chi = 8 - 24 + 14 = -2 = 2 - 2g\): genus 2, the double torus.`,
-      code: `const s = geo.classifySurface({ euler: 8 - 24 + 14, orientable: true });
-[s.eulerCharacteristic, s.genus]`,
-      expect: "[-2, 2]",
+      q: t`A closed orientable surface has a triangulation with 10 vertices, 36 edges and 24 triangles. Check that these counts are possible, and say which surface it is.`,
+      a: t`In a closed triangulated surface every triangle has 3 edges and every edge lies on exactly 2 triangles, so \(3F = 2E\): \(72 = 72\). Then \(\chi = 10 - 36 + 24 = -2 = 2 - 2g\): genus 2, the double torus. (This is the f-vector of a minimal genus-2 triangulation.)`,
+      code: `const [V, E, F] = [10, 36, 24];
+const s = geo.classifySurface({ euler: V - E + F, orientable: true });
+[3 * F === 2 * E, s.eulerCharacteristic, s.genus]`,
+      expect: "[true, -2, 2]",
       fix: "geo#11",
-      note: "<code>classifySurface</code> applies the classification theorem: orientable with \\(\\chi = -2\\) is the connected sum of 2 tori.",
+      note: "The incidence count \\(3F = 2E\\) is checked first (the earlier version of this exercise used 8, 24, 14, for which \\(3F = 42 \\ne 48 = 2E\\): no such triangulation exists). <code>classifySurface</code> then applies the classification theorem: orientable with \\(\\chi = -2\\) is the connected sum of 2 tori.",
     },
     {
       topic: "Genus of a graph",

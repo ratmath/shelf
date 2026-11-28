@@ -141,7 +141,7 @@ export default {
       topic: "Steady state with a source",
       q: t`Find the steady temperature of a rod with a uniform heat source, \(u'' = -1\), \(u(0) = u(1) = 0\), at the midpoint.`,
       a: t`\(u = \tfrac12 x(1 - x)\), so \(u(\tfrac12) = \tfrac18\).`,
-      code: `analytic.bvp({ f: "-1", interval: [0, 1], left: { y: 0 }, right: { y: 0 } }).exact().at("1/2")`,
+      code: `analytic.bvp({ f: "-1", interval: [0, 1], left: { y: 0 }, right: { y: 0 }, digits: 15 }).exact().at("1/2")`,
       check: near(1 / 8, 1e-9),
     },
     {

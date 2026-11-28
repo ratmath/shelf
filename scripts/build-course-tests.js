@@ -17,10 +17,15 @@
 // repository ratmath/ratmath, where this repository sits at shelf/ratmath
 // (so the root is ../..). Point elsewhere with --root <dir> or RATMATH_ROOT.
 //
-//   bun run course-tests [--root <dir>] [--only <slug>] [--report] [--no-write]
+//   bun run course-tests [--root <dir>] [--only <slug>] [--report] [--no-write] [--strict]
 //
 // --report prints every exercise's output and verdict to the terminal.
-import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
+// --strict exits with status 1 when any exercise errors (a gap whose code
+// throws included) or disagrees without being marked `expected: "disagrees"`
+// (the K–2 rounding row, a deliberate convention), so CI can fail on a
+// regression.
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, realpathSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { resolve, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { renderMath, escapeHtml, KATEX_LINK } from "./docs-kit.js";
@@ -35,6 +40,7 @@ const ROOT = resolve(opt("--root") ?? process.env.RATMATH_ROOT ?? "../..");
 const ONLY = opt("--only");
 const REPORT = args.includes("--report");
 const WRITE = !args.includes("--no-write");
+const STRICT = args.includes("--strict");
 
 export const LIBRARIES = ["core", "algebraic", "analytic", "linalg", "graphics", "structures", "symbolic", "complex", "discrete", "stats", "numtheory", "logic", "chaos", "geo", "finance"];
 
@@ -45,7 +51,14 @@ async function loadScope() {
     const dir = join(ROOT, "node_modules", "@ratmath", name);
     if (!existsSync(join(dir, "package.json"))) throw new Error(`@ratmath/${name} not found under ${ROOT}/node_modules (use --root <dir>)`);
     const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
-    versions[name] = pkg.version;
+    // the commit too, where the library is a git checkout: unreleased changes share a version number
+    let commit = "";
+    try {
+      commit = execFileSync("git", ["-C", realpathSync(dir), "rev-parse", "--short", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    } catch {
+      // not a checkout (an installed package)
+    }
+    versions[name] = commit ? `${pkg.version} (commit ${commit})` : pkg.version;
     const main = pkg.exports?.["."]?.default ?? pkg.exports?.["."] ?? pkg.main ?? "index.js";
     scope[name] = await import(pathToFileURL(join(dir, typeof main === "string" ? main : "index.js")).href);
   }
@@ -65,7 +78,8 @@ const norm = (s) => String(s).replace(/\s+/g, " ").replace(/(\d)n\b/g, "$1").tri
 function judge(ex, res) {
   const out = res.hasValue ? res.text : res.prints.map((p) => p.text).join("\n");
   if (ex.status === "gap" && !ex.code) return { verdict: "gap", out: "" };
-  if (res.error) return { verdict: ex.status === "gap" ? "gap" : "error", out: `${res.error.name}: ${res.error.message}` };
+  // a gap whose code throws stays a gap on the page, but the error is kept so it is not hidden
+  if (res.error) return { verdict: ex.status === "gap" ? "gap" : "error", errored: true, out: `${res.error.name}: ${res.error.message}` };
   let agree;
   if (typeof ex.check === "function") {
     try {
@@ -109,6 +123,7 @@ export const FIX_PRS = {
   "symbolic#10": "<code>eliminate</code> (resultants over sin and cos) and <code>reverseOrder</code>",
   "chaos#9": "<code>lyapunovExponent</code>: the exponent as a certified integral against the invariant density",
   "discrete#8": "<code>genus</code> of a graph by rotation systems",
+  "chaos#10": "neutral fixed points classified beyond the linear test (<code>nonlinear</code>, by the Schwarzian derivative)",
   "stats#9": "<code>fromDensity</code> says where its nonnegativity proof stops",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
@@ -386,6 +401,7 @@ function fixRaw(v) {
 const files = readdirSync(SRC).filter((f) => /^\d+-[\w-]+\.js$/.test(f)).sort();
 const courses = [];
 let problems = 0;
+const regressions = [];
 for (const f of files) {
   const mod = (await import(pathToFileURL(resolve(SRC, f)).href)).default;
   const slug = f.replace(/^\d+-/, "").replace(/\.js$/, "");
@@ -405,6 +421,7 @@ for (const f of files) {
     const j = judge(ex, res);
     c.results.push({ ex, ...j });
     if (j.verdict === "disagrees" || j.verdict === "error") problems++;
+    if (j.errored || (j.verdict === "disagrees" && ex.expected !== "disagrees")) regressions.push(`${slug} ${i + 1} [${j.errored ? `${j.verdict}, code threw` : j.verdict}] ${j.out}`);
     if (REPORT && (!ONLY || slug === ONLY)) {
       console.log(`${slug} ${i + 1} [${j.verdict}] ${ex.topic ?? ""}`);
       for (const p of res.prints ?? []) console.log(`   print: ${p.text}`);
@@ -435,3 +452,8 @@ if (WRITE) {
 const all = tally(courses.flatMap((c) => c.results));
 console.log(`${courses.length} courses: ${Object.entries(all).map(([k, v]) => `${v} ${k}`).join(", ")}`);
 if (problems) console.log(`${problems} exercise(s) disagree or fail: see docs/course-test/findings.html`);
+if (regressions.length) {
+  console.log(`${regressions.length} unexpected result(s):`);
+  for (const r of regressions) console.log(`   ${r}`);
+  if (STRICT) process.exit(1);
+}

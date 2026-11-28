@@ -63,6 +63,7 @@ export default {
       a: t`70 (a 5 in the ones place rounds up).`,
       code: "new Rational(65n).roundTo(-1)",
       expect: "70",
+      expected: "disagrees",
       note: "Core rounds half to even unless told otherwise, so 65 goes to 60; school rounding is half up, <code>roundTo(-1, \"half-up\")</code>, which gives 70. Not a bug, but the default surprises anyone checking school work; the Rationals docs now say so first. <code>roundInteger(\"half-up\")</code> returns a Core Integer, so <code>.multiply</code> can follow.",
     },
     {

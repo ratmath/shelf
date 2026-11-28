@@ -10,9 +10,11 @@ export default {
     {
       topic: "Fixed points and stability",
       q: t`Find the fixed points of the logistic map \(f(x) = 3x(1 - x)\) and classify them.`,
-      a: t`\(x = 3x - 3x^2\): \(x = 0\) or \(x = \tfrac23\). \(f'(x) = 3 - 6x\): \(f'(0) = 3\) (repelling), \(f'(\tfrac23) = -1\) (neutral: the boundary where the period doubling starts).`,
-      code: `chaos.logistic(3).fixedPoints().map((p) => [p.text, p.stability])`,
-      expect: `[["0", "repelling"], ["2/3", "neutral"]]`,
+      a: t`\(x = 3x - 3x^2\): \(x = 0\) or \(x = \tfrac23\). \(f'(x) = 3 - 6x\): \(f'(0) = 3\) (repelling), \(f'(\tfrac23) = -1\): the linear test is inconclusive there (the boundary where the period doubling starts). Writing \(x = \tfrac23 + u\), \(f\) is \(u \mapsto -u - 3u^2\) and \(f \circ f\) is \(u - 18u^3 - 27u^4\), so \(\tfrac23\) attracts, slowly (equivalently, the Schwarzian derivative \(-\tfrac32 f''^2 = -54\) is negative).`,
+      code: `chaos.logistic(3).fixedPoints().map((p) => [p.text, p.stability, p.nonlinear ?? null])`,
+      expect: `[["0", "repelling", null], ["2/3", "neutral", "attracting"]]`,
+      fix: "chaos#10",
+      note: "\\(\\tfrac23\\) has multiplier exactly \\(-1\\), so the linear test says <code>\"neutral\"</code>; the higher-order terms (the Schwarzian derivative) then decide that it attracts.",
     },
     {
       topic: "Multipliers",
