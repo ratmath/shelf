@@ -55,7 +55,7 @@
     "url": "https://github.com/ratmath/shelf/issues"
   },
   "dependencies": {
-    "@ratmath/core": ">=0.10.0 <0.12.0"
+    "@ratmath/core": ">=0.12.0"
   },
   "devDependencies": {
     "katex": "0.19.1",
