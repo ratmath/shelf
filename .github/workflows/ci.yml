@@ -17,9 +17,13 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.2
+      - name: Shelf version ranges fit together
+        run: bun scripts/check-ranges.js
       - run: bun install --frozen-lockfile
       - name: Tests
         run: bun run test
+      - name: Types (every library's index.d.ts, strict, no skipLibCheck)
+        run: bunx -p typescript@5.6.3 tsc --noEmit --strict --module nodenext --moduleResolution nodenext tests/types-check.ts
       - name: Browser file
         run: bun run build
       - name: Docs build (runs every code box)
