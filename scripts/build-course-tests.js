@@ -125,7 +125,8 @@ export const FIX_PRS = {
   "discrete#8": "<code>genus</code> of a graph by rotation systems",
   "chaos#10": "neutral fixed points classified beyond the linear test (<code>nonlinear</code>, by the Schwarzian derivative)",
   "stats#9": "<code>fromDensity</code> says where its nonnegativity proof stops",
-  "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
+  "core#15": "<code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code> (its <code>roundInteger</code> was folded into <code>round</code> in Core 0.12)",
+  "core#16": "Core 0.12: <code>round</code>/<code>floor</code>/<code>ceil</code>/<code>trunc</code> return Integers, rounding defaults to half up, <code>rounding(mode)</code> rounders",
 };
 const fixLink = (id) => {
   const [repo, n] = id.split("#");
