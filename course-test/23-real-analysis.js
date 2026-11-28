@@ -18,22 +18,22 @@ export default {
       topic: "An N for a given ε",
       q: t`Find the least \(N\) such that \(\dfrac1{\sqrt n} < 0.01\) for every \(n \ge N\).`,
       a: t`\(\sqrt n > 100 \iff n > 10000\): \(N = 10001\).`,
-      code: `const eps = R\`1/100\`;
-// 1/√n < ε  ⟺  n > 1/ε²
-new Integer(R\`1\`.divide(eps.multiply(eps)).floor() + 1n)`,
-      expect: "10001",
-      status: "partial",
-      note: "Done by solving the inequality by hand; there is no helper that finds an \\(N\\) for a given \\(\\varepsilon\\).",
+      code: `const r = analytic.sequence("1/sqrt(n)").nFor("1/100");
+[r.N, r.least, analytic.verifyCertificate(r.certificate).valid]`,
+      expect: "[10001, true, true]",
+      fix: "analytic#20",
+      note: "<code>nFor</code> proves the tail (the terms fall to the limit, so the distance never grows) and finds the least \\(N\\): 10000 fails because \\(1/\\sqrt{10000}\\) equals \\(\\varepsilon\\). <code>verifyCertificate</code> rechecks the result by another route.",
     },
     {
       topic: "Monotone sequences and the supremum",
       q: t`Let \(a_n = 1 - \tfrac1n\). Is it monotone? Find \(\sup a_n\) and \(\inf a_n\).`,
       a: t`Increasing, since \(\tfrac1n\) decreases. \(\inf = a_1 = 0\) (attained); \(\sup = \lim a_n = 1\) (not attained).`,
       code: `const a = analytic.sequence("1 - 1/n");
-[a.monotone().direction, a.bounds().lower, a.limit()]`,
-      expect: `["increasing", 0, 1]`,
-      status: "partial",
-      note: "<code>bounds()</code> gives a proven upper bound of 5/4, not the supremum 1; the supremum is read off as the limit of an increasing sequence.",
+const [s, i] = [a.supremum(), a.infimum()];
+[a.monotone().direction, s.value, s.attained, i.value, i.attained]`,
+      expect: `["increasing", 1, false, 0, true]`,
+      fix: "analytic#20",
+      note: "<code>supremum()</code> and <code>infimum()</code> give the value and whether a term takes it, from the proven direction: an increasing sequence approaches its limit without reaching it, and its first term is its least.",
     },
     {
       topic: "Telescoping series",
@@ -46,10 +46,11 @@ new Integer(R\`1\`.divide(eps.multiply(eps)).floor() + 1n)`,
       topic: "Ratio test",
       q: t`Does \(\displaystyle\sum \frac{n!}{n^n}\) converge? Find the limit of the ratio of consecutive terms.`,
       a: t`\(\dfrac{a_{n+1}}{a_n} = \left(\dfrac{n}{n+1}\right)^n \to \dfrac1e < 1\): converges.`,
-      code: `[analytic.sum("n!/n^n").ratioTest().verdict, symbolic.limit("(n/(n+1))^n", "n", "inf").value]`,
-      expect: `["convergent", 1/e]`,
-      status: "gap",
-      note: "<code>analytic.sum(…).ratioTest()</code> says “inconclusive: the limit of |a(n+1)/a(n)| was not found”, and <code>convergence()</code> is undecided; the limit itself is found by <code>symbolic.limit</code>, and the conclusion is drawn by hand.",
+      code: `[analytic.sum("n!/n^n").ratioTest().verdict, analytic.sequence("(n/(n+1))^n").limit()]`,
+      check: (v) => v[0] === "convergent" && Math.abs((v[1].low.toNumber() + v[1].high.toNumber()) / 2 - Math.exp(-1)) < 1e-12,
+      expectText: `["convergent", 1/e ≈ 0.367879441171]`,
+      fix: "analytic#20",
+      note: "The ratio \\((n/(n+1))^n\\) is a power with a moving exponent; its limit \\(1/e\\) is now proven (as an enclosure), so <code>ratioTest()</code> concludes.",
     },
     {
       topic: "Alternating series error",
@@ -79,12 +80,12 @@ new Integer(R\`1\`.divide(eps.multiply(eps)).floor() + 1n)`,
       topic: "A δ for a given ε",
       q: t`For \(f(x) = x^2\) at \(a = 2\) and \(\varepsilon = 0.01\), show \(\delta = \min(1, \varepsilon/5) = 0.002\) works.`,
       a: t`If \(|x - 2| < \delta \le 1\) then \(|x + 2| < 5\), so \(|x^2 - 4| = |x - 2||x + 2| < 5\delta \le \varepsilon\). Concretely the worst case is \((2.002)^2 - 4 = 0.008004 < 0.01\).`,
-      code: `const d = R\`0.002\`;
-const worst = R\`2\`.add(d).pow(2).subtract(R\`4\`);   // x² − 4 is largest in size at x = 2 + δ
-[worst, worst.lessThan(R\`0.01\`)]`,
-      expect: "[2001/250000, true]",
-      status: "partial",
-      note: "Only the worst case is checked, by hand; no ε–δ helper.",
+      code: `const r = analytic.deltaFor("x^2", 2, "1/100", { delta: "0.002" });
+[r.holds, r.worst, analytic.verifyCertificate(r.certificate).valid, analytic.deltaFor("x^2", 2, "1/100").largest]`,
+      check: (v) => v[0] === true && String(v[1]) === "2001/250000" && v[2] === true && Math.abs((v[3].low.toNumber() + v[3].high.toNumber()) / 2 - (Math.sqrt(4.01) - 2)) < 1e-9,
+      expectText: "[true, 2001/250000, true, √4.01 − 2 ≈ 0.0024984]",
+      fix: "analytic#20",
+      note: "<code>deltaFor</code> proves that \\(\\delta = 0.002\\) works (the worst case is at the end \\(2.002\\), since \\(x^2\\) is monotone on each side of 2), the certificate is rechecked by plain interval evaluation, and without a \\(\\delta\\) it also gives the largest one, \\(\\sqrt{4.01} - 2\\).",
     },
     {
       topic: "Mean value theorem",
@@ -144,18 +145,19 @@ const worst = R\`2\`.add(d).pow(2).subtract(R\`4\`);   // x² − 4 is largest i
       a: t`On \([0, \tfrac12]\): \(\sup|x^n| = 2^{-n} \to 0\), so yes. On \([0, 1)\): \(\sup = 1\) for every \(n\), so no.`,
       code: `const F = analytic.functionSequence("x^n");
 [F.uniform(["0", "1/2"]).verdict, F.uniform(["0", "1"]).verdict]`,
-      expect: "[uniform, not uniform]",
-      status: "gap",
-      note: "Gives <code>undecided</code> on \\([0, \\tfrac12]\\) (the suprema \\(2^{-n}\\) are listed, but no bound for every \\(n\\) is proven) and <code>not uniform so far</code> on \\([0, 1]\\), which it calls evidence rather than proof. The sup of a monotone power is attained at the end, which would settle both.",
+      expect: `["uniform", "not uniform"]`,
+      fix: "analytic#20",
+      note: "Both are now proven: \\(x^n\\) is increasing in \\(x\\) on the interval for every \\(n\\), so the supremum is at the right end, where it tends to 0 on \\([0, \\tfrac12]\\) and to 1 on \\([0, 1]\\) (and the supremum over \\([0, 1)\\) is the same, by continuity).",
     },
     {
       topic: "Limits superior and inferior",
       q: t`Find \(\limsup\) and \(\liminf\) of \(a_n = (-1)^n\left(1 + \tfrac1n\right)\).`,
       a: t`Even terms \(1 + \tfrac1n \to 1\); odd terms \(-(1 + \tfrac1n) \to -1\). \(\limsup = 1\), \(\liminf = -1\); no limit.`,
-      code: `analytic.sequence("(-1)^n*(1 + 1/n)").limit()`,
-      expect: "no limit (limsup 1, liminf -1)",
-      status: "gap",
-      note: "No lim sup or lim inf. <code>limit()</code> throws “the argument of a logarithm could not be shown positive near infinity”, a confusing message for a sequence that simply has no limit, and <code>bounds()</code> cannot bound it either.",
+      code: `const a = analytic.sequence("(-1)^n*(1 + 1/n)");
+[a.limsup(), a.liminf(), a.accumulation().converges]`,
+      expect: "[1, -1, false]",
+      fix: "analytic#20",
+      note: "The sequence is split into \\(n = 2m\\) and \\(n = 2m + 1\\); the two limits are the only accumulation points. <code>limit()</code> now refuses with “the terms oscillate, with lim sup 1 and lim inf -1”.",
     },
     {
       topic: "Series value",
@@ -175,10 +177,13 @@ const worst = R\`2\`.add(d).pow(2).subtract(R\`4\`);   // x² − 4 is largest i
       topic: "Euler's number",
       q: t`Find \(\displaystyle\lim_{n\to\infty}\left(1 + \frac1n\right)^n\) and show the sequence is increasing.`,
       a: t`The limit is \(e\). By AM–GM on \(n\) copies of \(1 + \tfrac1n\) and one 1, \(a_n \le a_{n+1}\).`,
-      code: `symbolic.limit("(1 + 1/n)^n", "n", "inf").value`,
-      expect: "e",
-      status: "partial",
-      note: "The limit is found; <code>analytic.sequence(\"(1 + 1/n)^n\").monotone()</code> throws “no ray was found on which (1 + 1/n)^n is proven monotone”, so monotonicity is left to the proof.",
+      code: `const a = analytic.sequence("(1 + 1/n)^n");
+const m = a.monotone();
+[a.limit(), m.direction, m.proven]`,
+      check: (v) => Math.abs((v[0].low.toNumber() + v[0].high.toNumber()) / 2 - Math.E) < 1e-12 && v[1] === "increasing" && v[2] === "for every n ≥ 1",
+      expectText: `[e ≈ 2.718281828459, "increasing", "for every n ≥ 1"]`,
+      fix: "analytic#20",
+      note: "The limit is enclosed, and <code>monotone()</code> now proves the direction through the derivative of the logarithm, \\(\\log(1 + 1/n) - 1/(n + 1)\\), which tends to 0 while decreasing and so is positive.",
     },
   ],
 };

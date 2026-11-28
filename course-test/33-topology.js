@@ -134,10 +134,11 @@ xs.every((x) => xs.every((y) => xs.every((z) => !d(x, z).greaterThan(d(x, y).add
       topic: "Genus of a graph",
       q: t`What is the genus of \(K_5\) (the least genus of a surface it embeds in)?`,
       a: t`It is not planar, and it embeds in the torus: genus 1. (\(\lceil (n-3)(n-4)/12 \rceil = 1\).)`,
-      code: `[discrete.isPlanar(discrete.complete(5)), Math.ceil(((5 - 3) * (5 - 4)) / 12)]`,
-      expect: "[false, 1]",
-      status: "partial",
-      note: "Planarity is tested; the genus comes from Ringel–Youngs' formula by hand (no embedding on a torus is found).",
+      code: `const t = discrete.genus(discrete.complete(5));
+[discrete.isPlanar(discrete.complete(5)), t.genus, t.proven, discrete.embeddingGenus(discrete.complete(5), t.blocks[0].rotation).faces.length]`,
+      expect: "[false, 1, true, 5]",
+      fix: "discrete#8",
+      note: "<code>genus</code> searches rotation systems: it returns an embedding of \\(K_5\\) with 5 faces, so \\(V - E + F = 5 - 10 + 5 = 0\\) and the surface is a torus; not planar gives the lower bound.",
     },
     {
       topic: "The Cantor set",

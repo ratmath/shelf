@@ -142,11 +142,11 @@ export default {
       topic: "Laplace's equation on a disc",
       q: t`Solve \(\Delta u = 0\) in the unit disc with \(u = \cos\theta\) on the boundary. Find \(u\) at \(r = \tfrac12\), \(\theta = 0\).`,
       a: t`\(u = r\cos\theta\) (harmonic and right on the circle): \(u = \tfrac12\).`,
-      code: `analytic.laplaceDisc({ boundary: "cos(theta)" }).at("1/2", 0).value`,
-      check: (v) => v.low.toNumber() <= 0.5 && v.high.toNumber() >= 0.5 && v.high.toNumber() - v.low.toNumber() < 0.05,
-      expectText: "1/2 (an enclosure containing it)",
-      status: "partial",
-      note: "The enclosure is \\([0.484, 0.516]\\): correct, but the default 8 terms with a tail bound leave it wide for a boundary function that has only one mode.",
+      code: `const u = analytic.laplaceDisc({ boundary: "cos(theta)" });
+[u.closedForm, u.at("1/2", 0).value]`,
+      expect: `["r*cos(theta)", 1/2]`,
+      fix: "analytic#20",
+      note: "Boundary values with finitely many modes give the exact finite sum: the solution is \\(r\\cos\\theta\\) and the value is the fraction \\(\\tfrac12\\), with no tail.",
     },
     {
       topic: "Convolution theorem",

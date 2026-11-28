@@ -44,13 +44,14 @@ export default {
     },
     {
       topic: "Lyapunov exponent",
-      fix: "chaos#8",
       q: t`What is the Lyapunov exponent of the logistic map at \(r = 4\)?`,
       a: t`\(f\) is conjugate to the tent map with slope \(\pm2\) by \(x = \sin^2(\pi\theta/2)\), so \(\lambda = \ln 2 \approx 0.6931\) for almost every orbit.`,
-      code: `chaos.lyapunov(chaos.logistic(4), "1/5").value`,
-      check: near(Math.LN2, 5e-3),
-      status: "partial",
-      note: "A certified average over 200 steps of one exact orbit (\\(\\approx 0.69296\\)), not the limit. Longer averages work (<code>steps: 2000</code> takes about a minute; it used to be refused as escaping), but no finite average proves the limit \\(\\ln 2\\), which comes from the conjugacy with the tent map.",
+      code: `const e = chaos.lyapunovExponent(chaos.logistic(4), { digits: 4 });
+[e.value, e.invariance.proven]`,
+      check: (v) => v[0].low.toNumber() <= Math.LN2 && Math.LN2 <= v[0].high.toNumber() && v[0].high.toNumber() - v[0].low.toNumber() < 2e-4 && v[1] === true,
+      expectText: "[an interval of width under 0.0002 containing ln 2 ≈ 0.693147, true]",
+      fix: ["chaos#8", "chaos#9"],
+      note: "<code>lyapunovExponent</code> encloses \\(\\int \\log|f'|\\,d\\mu\\) against the invariant measure \\(dx/(\\pi\\sqrt{x(1-x)})\\), which is the limit itself and not a finite average. The measure is invariant by the conjugacy with the tent map; ergodicity is taken from the theory. <code>lyapunov</code> still gives the certified average along one orbit.",
     },
     {
       topic: "Tent map orbits",

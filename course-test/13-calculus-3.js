@@ -79,10 +79,11 @@ analytic.field("x^3 + y^3 - 3*x*y", ["x", "y"]).criticalPoints({ x: [-2, 2], y: 
       topic: "Reversing the order",
       q: t`\(\displaystyle\int_0^1\!\!\int_x^1 e^{y^2}\,dy\,dx\)`,
       a: t`Reverse: \(\int_0^1\int_0^y e^{y^2}\,dx\,dy = \int_0^1 ye^{y^2}\,dy = \tfrac{e - 1}{2}\).`,
-      code: `symbolic.integrate("y*exp(y^2)", "y", { from: 0, to: 1 }).value`,
-      expect: ["e/2 - 1/2", "(e - 1)/2", "-1/2 + e/2"],
-      status: "partial",
-      note: "The order of integration is reversed by hand; the libraries do not change the order over a region.",
+      code: `const r = symbolic.reverseOrder("exp(y^2)", { outer: ["x", 0, 1], inner: ["y", "x", 1] });
+[r.text, String(r.value), r.agree]`,
+      expect: [`["∫ from 0 to 1 ∫ from 0 to y exp(y^2) dx dy", "e/2 - 1/2", "checked"]`],
+      fix: "symbolic#10",
+      note: "<code>reverseOrder</code> describes the triangle with \\(y\\) outside and integrates in that order. The original order has no closed form, so the two are compared as certified numerical values over the region (<code>agree: \"checked\"</code>).",
     },
     {
       topic: "Polar coordinates",

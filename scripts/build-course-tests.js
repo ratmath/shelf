@@ -105,6 +105,11 @@ export const FIX_PRS = {
   "algebraic#10": "<code>toFixed(k, mode)</code> on algebraic numbers",
   "discrete#7": "<code>transportation</code>, <code>binary</code> option on <code>integerProgram</code>, <code>coreVertices</code>",
   "symbolic#9": "<code>completeSquare</code>, <code>compose</code>, <code>sinusoid</code>, inverse trig values, <code>within</code>, <code>RealSet</code> operations and chained inequalities, <code>implicitDiff</code>, <code>leibniz</code>, constant factors in <code>sum</code>",
+  "analytic#20": "<code>nFor</code>, <code>deltaFor</code> and <code>verifyCertificate</code>; <code>supremum</code>, <code>limsup</code>, <code>liminf</code>; limits of \\(f(n)^{g(n)}\\); uniform convergence decided both ways; <code>pde.transport</code>; exact finite-mode Laplace solutions",
+  "symbolic#10": "<code>eliminate</code> (resultants over sin and cos) and <code>reverseOrder</code>",
+  "chaos#9": "<code>lyapunovExponent</code>: the exponent as a certified integral against the invariant density",
+  "discrete#8": "<code>genus</code> of a graph by rotation systems",
+  "stats#9": "<code>fromDensity</code> says where its nonnegativity proof stops",
   "core#15": "<code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code>",
 };
 const fixLink = (id) => {

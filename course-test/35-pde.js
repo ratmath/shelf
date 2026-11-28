@@ -22,11 +22,11 @@ export default {
       topic: "Characteristics",
       q: t`Solve \(u_t + 2u_x = 0\) with \(u(x, 0) = e^{-x^2}\), and find \(u(1, \tfrac12)\).`,
       a: t`\(u\) is constant on the lines \(x - 2t = \text{const}\), so \(u = e^{-(x - 2t)^2}\) and \(u(1, \tfrac12) = e^0 = 1\).`,
-      code: `const f = analytic.fn("exp(-x^2)");     // the initial data
-f.value(R\`1 - 2*1/2\`).exact()           // at the foot of the characteristic, x - 2t`,
-      check: near(1, 1e-12),
-      status: "partial",
-      note: "There is no first-order PDE solver: the characteristic \\(x - 2t\\) is found by hand and the library only evaluates the initial data there.",
+      code: `const u = analytic.pde.transport({ speed: 2, initial: "exp(-x^2)" });
+[u.formula, u.characteristics, u.at(1, "1/2").value]`,
+      expect: `["exp(-(x - 2*t)^2)", "x - 2*t = const", 1]`,
+      fix: "analytic#20",
+      note: "<code>pde.transport</code> solves along characteristics: here a closed formula, and the value at the point is exactly 1 because the foot of the characteristic is \\(x = 0\\). With a speed that depends on \\(u\\) it reports the breaking time and refuses past it.",
     },
     {
       topic: "Heat equation, fixed ends",
