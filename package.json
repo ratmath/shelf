@@ -55,7 +55,7 @@
     "url": "https://github.com/ratmath/shelf/issues"
   },
   "dependencies": {
-    "@ratmath/core": ">=0.10.0 <0.12.0"
+    "@ratmath/core": ">=0.12.0"
   },
   "devDependencies": {
     "katex": "0.19.1",
@@ -64,7 +64,8 @@
   },
   "author": "James Taylor",
   "engines": {
-    "node": ">=22"
+    "node": ">=22",
+    "bun": ">=1.4.2"
   },
   "publishConfig": {
     "access": "public"

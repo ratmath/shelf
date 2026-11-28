@@ -91,9 +91,9 @@ const [s, i] = [a.supremum(), a.infimum()];
       topic: "Mean value theorem",
       q: t`Find the \(c\) in \((0, 2)\) promised by the mean value theorem for \(f(x) = x^3\).`,
       a: t`\(\dfrac{f(2) - f(0)}{2} = 4 = 3c^2\), so \(c = \dfrac{2}{\sqrt3} = \dfrac{2\sqrt3}{3} \approx 1.1547\).`,
-      code: `symbolic.solve("3x^2 = 4", "x")`,
-      expect: "x = -2*sqrt(3)/3,  2*sqrt(3)/3",
-      note: "Both roots come back; the one in \\((0, 2)\\) is chosen by hand.",
+      code: `symbolic.solve("3x^2 = 4", "x", { assume: { x: "in (0, 2)" } })`,
+      expect: "x = 2*sqrt(3)/3",
+      note: "With the interval as an assumption only the root in \\((0, 2)\\) comes back; without it <code>solve</code> returns both \\(\\pm 2\\sqrt3/3\\).",
     },
     {
       topic: "Intermediate value theorem",
@@ -170,8 +170,15 @@ const [s, i] = [a.supremum(), a.infimum()];
       topic: "Contraction mapping",
       q: t`Show \(g(x) = \cos x\) is a contraction on \([0, 1]\) and find its fixed point.`,
       a: t`\(g\) maps \([0, 1]\) into \([\cos 1, 1] \subset [0, 1]\) and \(|g'(x)| = |\sin x| \le \sin 1 < 1\). The fixed point (the Dottie number) is \(0.7390851332\ldots\).`,
-      code: `analytic.fixedPoint("cos(x)", "1").root`,
-      check: near(0.7390851332151607, 1e-12),
+      code: `// the two hypotheses, each from a certified range over [0, 1], then the fixed point
+const slope = analytic.fn("sin(x)").range(["0", "1"]).exact();   // g′ = −sin x
+const image = analytic.fn("cos(x)").range(["0", "1"]).exact();
+const one = new Rational(1n);
+// |g′| < 1 on [0, 1]; g ≥ 0 there, and cos ≤ 1 everywhere, so g maps [0, 1] into itself
+[slope.high.lessThan(one) && slope.low.greaterThan(one.negate()), image.low.greaterThan(new Rational(0n)), analytic.fixedPoint("cos(x)", "1").root]`,
+      check: (v) => v[0] === true && v[1] === true && near(0.7390851332151607, 1e-12)(v[2]),
+      expectText: "[true, true, 0.7390851332…]: |g′| ≤ sin 1 < 1, g([0, 1]) ⊂ [0, 1], and the fixed point",
+      note: "Both hypotheses of the contraction mapping theorem are checked from certified ranges (\\(\\sup|\\sin x| = \\sin 1 \\approx 0.84\\) and \\(\\cos([0, 1]) = [\\cos 1, 1]\\)), then the certified fixed point.",
     },
     {
       topic: "Euler's number",
