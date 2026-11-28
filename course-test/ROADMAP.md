@@ -196,6 +196,24 @@ Not in this phase: knot invariants, persistent homology, covering spaces.
 
 ## Fable items, after Opus
 
+Done 2026-11-28: 735 agree, 0 partial, 4 gap, 1 disagree, 0 error. The pull
+requests are analytic#20 (B1 to B5, B7), symbolic#10 (B1, B6), stats#9 (B1),
+chaos#9 (B8) and discrete#8 (B9). The four gaps are the ones listed under
+"Staying gaps"; the disagreement is the rounding convention.
+
+What the review (B1) changed: `darboux` no longer calls a sum exact on a piece
+with a corner or cusp; `termsForError` from a negative index; `compose` domains
+for asin, acos, tan and non-rational powers; `sinusoid` and `fromDensity` say
+plainly what was not checked. Conics, Gauss–Wantzel, the chain complexes, the
+surface recogniser and the finite-space code were read against the list below
+and needed no change.
+
+Left undecided on purpose, and said so by the functions: uniform convergence
+of x/(1 + nx) and of (1 + x/n)^n on bounded intervals; the genus of graphs
+whose search does not reach the Euler lower bound (K8 comes back as "between 2
+and 3"); invariance of a measure the caller supplies to `lyapunovExponent` is
+tested at several levels, and proven only for the built-in maps.
+
 | # | Package | Work | Rows closed |
 | --- | --- | --- | --- |
 | B1 | all | Review the Opus PRs for mathematical edge cases | none directly |
