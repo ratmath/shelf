@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Findings · RatMath Course Test</title>
+<meta name="description" content="Where the RatMath libraries disagree with independent answers, fail, or cannot yet answer course exercises.">
+<meta property="og:title" content="Findings · RatMath Course Test">
+<meta property="og:description" content="Where the RatMath libraries disagree with independent answers, fail, or cannot yet answer course exercises.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://ratmath.com/assets/katex/0.19.1/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.ct-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 1.4rem; }
+.ct-tabs a { padding: .3rem .7rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-size: .88rem; color: var(--fg); background: var(--surface); }
+.ct-tabs a.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+ol.ex { padding-left: 0; list-style: none; counter-reset: ex; display: flex; flex-direction: column; gap: 1rem; }
+ol.ex > li { max-width: none; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: .8rem 1rem; }
+ol.ex > li > .head { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: baseline; margin-bottom: .3rem; }
+ol.ex > li > .head .n { font: 600 1rem/1 var(--font-display); }
+ol.ex > li > .head .topic { color: var(--muted); font-size: .82rem; }
+ol.ex > li > .head .v { margin-left: auto; }
+.ex .q { margin: .2rem 0; }
+.ex .lbl { font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: .8rem 0 .3rem; }
+.ex pre { margin: .2rem 0; }
+.ex pre.out { background: var(--exact-soft); border-color: transparent; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ex pre.out.bad { background: var(--sunk); border-color: var(--bad); }
+.ex .note { border-left: 3px solid var(--float); background: var(--float-soft); padding: .45rem .7rem; border-radius: 6px; margin-top: .6rem; font-size: .9rem; }
+.ex .fix, .ct .fix { border-left: 3px solid var(--accent, #4a7); padding: .3rem .7rem; margin-top: .4rem; font-size: .88rem; }
+.ex .work { color: var(--fg); }
+.v { display: inline-block; font: 600 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .06em; padding: .28rem .5rem; border-radius: 999px; white-space: nowrap; }
+.v-ok { background: var(--exact-soft); color: var(--exact); }
+.v-part { background: var(--float-soft); color: var(--float); }
+.v-gap { background: var(--sunk); color: var(--muted); border: 1px dashed var(--line); }
+.v-bad { background: var(--bad); color: var(--surface); }
+table.ct { border-collapse: collapse; width: 100%; font-size: .9rem; }
+table.ct th, table.ct td { text-align: left; vertical-align: top; padding: .45rem .5rem; border-bottom: 1px solid var(--line); }
+table.ct th { font: 600 .72rem/1.3 var(--font-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+table.ct td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.ct tr.grp th { padding-top: 1.4rem; font: 600 .95rem/1.3 var(--font-display); text-transform: none; letter-spacing: 0; color: var(--fg); }
+table.ct td .links { display: flex; gap: .6rem; flex-wrap: wrap; font-size: .85rem; }
+.bar { display: flex; height: .55rem; border-radius: 999px; overflow: hidden; background: var(--sunk); min-width: 6rem; margin-top: .35rem; }
+.bar span { display: block; }
+.bar .b-ok { background: var(--exact); } .bar .b-part { background: var(--float); } .bar .b-gap { background: var(--line); } .bar .b-bad { background: var(--bad); }
+.legend { display: flex; flex-wrap: wrap; gap: .5rem 1rem; font-size: .85rem; color: var(--muted); align-items: center; }
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+<header class="brand"><a href="../index.html"><div class="mark">RatMath <span>shelf</span></div></a><small>Course Test</small></header>
+<nav class="toc" aria-label="Courses"><a href="index.html">Course Test</a>
+<a href="findings.html" class="on">Findings</a>
+<div class="group">School: elementary and middle</div>
+<a href="grades-k-2.html">Grades K–2: number sense and early arithmetic</a>
+<a href="grades-3-5.html">Grades 3–5: multiplication, fractions and decimals</a>
+<a href="grade-6.html">Grade 6: ratios, negative numbers and expressions</a>
+<a href="grade-7.html">Grade 7: proportional reasoning and rational numbers</a>
+<a href="grade-8.html">Grade 8: linear equations, functions and the Pythagorean theorem</a>
+<div class="group">School: high school</div>
+<a href="algebra-1.html">Algebra I</a>
+<a href="geometry.html">Geometry (high school)</a>
+<a href="algebra-2.html">Algebra II</a>
+<a href="precalculus.html">Precalculus and trigonometry</a>
+<a href="statistics-high-school.html">High-school statistics (AP Statistics)</a>
+<div class="group">University: first two years</div>
+<a href="calculus-1.html">Calculus I</a>
+<a href="calculus-2.html">Calculus II</a>
+<a href="calculus-3.html">Calculus III: several variables and vector calculus</a>
+<a href="linear-algebra.html">Linear algebra</a>
+<a href="differential-equations.html">Ordinary differential equations</a>
+<a href="discrete-mathematics.html">Discrete mathematics</a>
+<a href="probability.html">Probability</a>
+<a href="statistics.html">Mathematical statistics</a>
+<div class="group">University: upper level</div>
+<a href="number-theory.html">Number theory</a>
+<a href="abstract-algebra-1.html">Abstract algebra I: groups</a>
+<a href="abstract-algebra-2.html">Abstract algebra II: rings, fields and Galois theory</a>
+<a href="complex-analysis.html">Complex analysis</a>
+<a href="real-analysis.html">Real analysis</a>
+<a href="numerical-analysis.html">Numerical analysis</a>
+<a href="graph-theory.html">Graph theory</a>
+<a href="combinatorics.html">Combinatorics</a>
+<a href="game-theory.html">Game theory</a>
+<a href="college-geometry.html">College geometry</a>
+<a href="dynamical-systems.html">Dynamical systems and chaos</a>
+<a href="fourier-analysis.html">Fourier analysis and transforms</a>
+<a href="logic.html">Mathematical logic</a>
+<a href="theory-of-computation.html">Theory of computation</a>
+<a href="topology.html">Topology</a>
+<a href="differential-geometry.html">Differential geometry</a>
+<a href="pde.html">Partial differential equations</a>
+<a href="financial-math.html">Financial mathematics</a>
+<a href="optimisation.html">Optimisation</a></nav>
+</aside>
+<main>
+<article class="wide">
+<div class="eyebrow">Course Test</div>
+<h1>Findings</h1>
+<p class="lede">Every exercise in the <a href="index.html">Course Test</a> where RatMath's answer is not simply the independent answer: disagreements and errors first, then partial answers, then the gaps.</p>
+<h2>Fixes</h2>
+<p>The bugs the test found, and the helpers it showed were missing, are fixed in these pull requests. The first eight are merged; the rest come from the follow-up roadmap and the pages are built against their branches until they merge. The exercises below show the fixed behaviour.</p>
+<div class="tablewrap"><table class="ct"><thead><tr><th>Pull request</th><th>What it fixes</th><th>Exercises</th></tr></thead><tbody>
+<tr><td><a href="https://github.com/ratmath/stats/pull/7">ratmath/stats#7</a></td><td>textbook quartiles (<code>method: "halves"</code>, <code>"tukey"</code>); finite distributions accept Core's <code>Integer</code></td><td><a href="grade-6-ratmath.html#q19">Grade 6: ratios, negative numbers and expressions 19</a>, <a href="probability-ratmath.html#q12">Probability 12</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/algebraic/pull/9">ratmath/algebraic#9</a></td><td>the arithmetic reads plain numbers, so <code>sqrt(48)</code> works</td><td><a href="grade-8-ratmath.html#q4">Grade 8: linear equations, functions and the Pythagorean theorem 4</a>, <a href="grade-8-ratmath.html#q15">Grade 8: linear equations, functions and the Pythagorean theorem 15</a>, <a href="number-theory-ratmath.html#q18">Number theory 18</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/geo/pull/10">ratmath/geo#10</a></td><td><code>dot</code> and <code>cross</code> exported</td><td><a href="precalculus-ratmath.html#q10">Precalculus and trigonometry 10</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/symbolic/pull/8">ratmath/symbolic#8</a></td><td>improper integrals: <code>"inf"</code> ends and integrands unbounded at an end</td><td><a href="calculus-2-ratmath.html#q7">Calculus II 7</a>, <a href="calculus-2-ratmath.html#q8">Calculus II 8</a>, <a href="real-analysis-ratmath.html#q14">Real analysis 14</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/analytic/pull/18">ratmath/analytic#18</a></td><td>exact starting values, <code>pointwise</code> limits, <code>sec</code>/<code>csc</code>/<code>cot</code>, integrating factors with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mi mathvariant="normal">∣</mi><mi>x</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">1/|x|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/∣</span><span class="mord mathnormal">x</span><span class="mord">∣</span></span></span></span>, <code>ODESolution</code> exported</td><td><a href="differential-equations-ratmath.html#q5">Ordinary differential equations 5</a>, <a href="differential-equations-ratmath.html#q11">Ordinary differential equations 11</a>, <a href="real-analysis-ratmath.html#q15">Real analysis 15</a>, <a href="topology-ratmath.html#q7">Topology 7</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/numtheory/pull/9">ratmath/numtheory#9</a></td><td><code>egcd</code>, <code>gcd</code>, <code>isqrt</code> and friends read any whole number</td><td><a href="number-theory-ratmath.html#q1">Number theory 1</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/chaos/pull/8">ratmath/chaos#8</a></td><td>the escape test compares sizes, so long bounded orbits are not refused</td><td><a href="dynamical-systems-ratmath.html#q6">Dynamical systems and chaos 6</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/finance/pull/6">ratmath/finance#6</a></td><td><code>parity</code> takes enclosed prices</td><td><a href="financial-math-ratmath.html#q16">Financial mathematics 16</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/numtheory/pull/10">ratmath/numtheory#10</a></td><td><code>factorialValuation</code> (Legendre's formula)</td><td><a href="number-theory-ratmath.html#q19">Number theory 19</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/structures/pull/6">ratmath/structures#6</a></td><td><code>sign</code>/<code>isEven</code> of a permutation; Gauss–Wantzel inside <code>constructible</code>; <code>chainComplex</code> and homology</td><td><a href="abstract-algebra-1-ratmath.html#q3">Abstract algebra I: groups 3</a>, <a href="abstract-algebra-2-ratmath.html#q18">Abstract algebra II: rings, fields and Galois theory 18</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/complex/pull/7">ratmath/complex#7</a></td><td><code>cauchyRiemann(u, v)</code></td><td><a href="complex-analysis-ratmath.html#q8">Complex analysis 8</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/stats/pull/8">ratmath/stats#8</a></td><td>summaries in <code>meanInterval</code>/<code>varianceInterval</code>; closed-form <code>power</code> and <code>sampleSize</code>; <code>fromDensity</code>, <code>transform</code> and <code>orderStatistic</code></td><td><a href="statistics-high-school-ratmath.html#q15">High-school statistics (AP Statistics) 15</a>, <a href="probability-ratmath.html#q7">Probability 7</a>, <a href="probability-ratmath.html#q17">Probability 17</a>, <a href="probability-ratmath.html#q18">Probability 18</a>, <a href="statistics-ratmath.html#q6">Mathematical statistics 6</a>, <a href="statistics-ratmath.html#q14">Mathematical statistics 14</a>, <a href="statistics-ratmath.html#q15">Mathematical statistics 15</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/geo/pull/11">ratmath/geo#11</a></td><td>measurement helpers, 3D <code>vector</code> and <code>plane</code>, <code>conicProperties</code>; topology: <code>surface</code>, <code>simplicialComplex</code>, finite spaces</td><td><a href="grade-7-ratmath.html#q16">Grade 7: proportional reasoning and rational numbers 16</a>, <a href="grade-8-ratmath.html#q9">Grade 8: linear equations, functions and the Pythagorean theorem 9</a>, <a href="geometry-ratmath.html#q4">Geometry (high school) 4</a>, <a href="geometry-ratmath.html#q11">Geometry (high school) 11</a>, <a href="geometry-ratmath.html#q14">Geometry (high school) 14</a>, <a href="precalculus-ratmath.html#q15">Precalculus and trigonometry 15</a>, <a href="precalculus-ratmath.html#q16">Precalculus and trigonometry 16</a>, <a href="calculus-3-ratmath.html#q1">Calculus III: several variables and vector calculus 1</a>, <a href="calculus-3-ratmath.html#q2">Calculus III: several variables and vector calculus 2</a>, <a href="topology-ratmath.html#q1">Topology 1</a>, <a href="topology-ratmath.html#q9">Topology 9</a>, <a href="topology-ratmath.html#q10">Topology 10</a>, <a href="topology-ratmath.html#q11">Topology 11</a>, <a href="topology-ratmath.html#q12">Topology 12</a>, <a href="topology-ratmath.html#q14">Topology 14</a>, <a href="topology-ratmath.html#q18">Topology 18</a>, <a href="topology-ratmath.html#q20">Topology 20</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/analytic/pull/19">ratmath/analytic#19</a></td><td><code>termsForError</code>, <code>newton(..., { exact: true })</code>, <code>darboux</code>, <code>pde.classify</code>, <code>gradientDescent</code></td><td><a href="calculus-1-ratmath.html#q15">Calculus I 15</a>, <a href="real-analysis-ratmath.html#q6">Real analysis 6</a>, <a href="real-analysis-ratmath.html#q13">Real analysis 13</a>, <a href="pde-ratmath.html#q1">Partial differential equations 1</a>, <a href="optimisation-ratmath.html#q18">Optimisation 18</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/algebraic/pull/10">ratmath/algebraic#10</a></td><td><code>toFixed(k, mode)</code> on algebraic numbers</td><td><a href="grade-8-ratmath.html#q4">Grade 8: linear equations, functions and the Pythagorean theorem 4</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/discrete/pull/7">ratmath/discrete#7</a></td><td><code>transportation</code>, <code>binary</code> option on <code>integerProgram</code>, <code>coreVertices</code></td><td><a href="game-theory-ratmath.html#q12">Game theory 12</a>, <a href="optimisation-ratmath.html#q7">Optimisation 7</a>, <a href="optimisation-ratmath.html#q9">Optimisation 9</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/symbolic/pull/9">ratmath/symbolic#9</a></td><td><code>completeSquare</code>, <code>compose</code>, <code>sinusoid</code>, inverse trig values, <code>within</code>, <code>RealSet</code> operations and chained inequalities, <code>implicitDiff</code>, <code>leibniz</code>, constant factors in <code>sum</code></td><td><a href="algebra-1-ratmath.html#q3">Algebra I 3</a>, <a href="algebra-1-ratmath.html#q15">Algebra I 15</a>, <a href="algebra-2-ratmath.html#q17">Algebra II 17</a>, <a href="precalculus-ratmath.html#q3">Precalculus and trigonometry 3</a>, <a href="precalculus-ratmath.html#q6">Precalculus and trigonometry 6</a>, <a href="precalculus-ratmath.html#q7">Precalculus and trigonometry 7</a>, <a href="calculus-1-ratmath.html#q7">Calculus I 7</a>, <a href="calculus-1-ratmath.html#q18">Calculus I 18</a>, <a href="fourier-analysis-ratmath.html#q6">Fourier analysis and transforms 6</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/analytic/pull/20">ratmath/analytic#20</a></td><td><code>nFor</code>, <code>deltaFor</code> and <code>verifyCertificate</code>; <code>supremum</code>, <code>limsup</code>, <code>liminf</code>; limits of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>n</mi><msup><mo stretchy="false">)</mo><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">f(n)^{g(n)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.138em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">g</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span>; uniform convergence decided both ways; <code>pde.transport</code>; exact finite-mode Laplace solutions</td><td><a href="real-analysis-ratmath.html#q2">Real analysis 2</a>, <a href="real-analysis-ratmath.html#q3">Real analysis 3</a>, <a href="real-analysis-ratmath.html#q5">Real analysis 5</a>, <a href="real-analysis-ratmath.html#q9">Real analysis 9</a>, <a href="real-analysis-ratmath.html#q16">Real analysis 16</a>, <a href="real-analysis-ratmath.html#q17">Real analysis 17</a>, <a href="real-analysis-ratmath.html#q20">Real analysis 20</a>, <a href="fourier-analysis-ratmath.html#q18">Fourier analysis and transforms 18</a>, <a href="pde-ratmath.html#q2">Partial differential equations 2</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/symbolic/pull/10">ratmath/symbolic#10</a></td><td><code>eliminate</code> (resultants over sin and cos) and <code>reverseOrder</code></td><td><a href="precalculus-ratmath.html#q17">Precalculus and trigonometry 17</a>, <a href="calculus-3-ratmath.html#q9">Calculus III: several variables and vector calculus 9</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/chaos/pull/9">ratmath/chaos#9</a></td><td><code>lyapunovExponent</code>: the exponent as a certified integral against the invariant density</td><td><a href="dynamical-systems-ratmath.html#q6">Dynamical systems and chaos 6</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/discrete/pull/8">ratmath/discrete#8</a></td><td><code>genus</code> of a graph by rotation systems</td><td><a href="topology-ratmath.html#q15">Topology 15</a></td></tr>
+<tr><td><a href="https://github.com/ratmath/stats/pull/9">ratmath/stats#9</a></td><td><code>fromDensity</code> says where its nonnegativity proof stops</td><td></td></tr>
+<tr><td><a href="https://github.com/ratmath/core/pull/15">ratmath/core#15</a></td><td><code>roundInteger</code> and friends, <code>digits</code>/<code>placeValue</code>, US coins, <code>toClock</code></td><td><a href="grades-k-2-ratmath.html#q6">Grades K–2: number sense and early arithmetic 6</a>, <a href="grades-k-2-ratmath.html#q11">Grades K–2: number sense and early arithmetic 11</a>, <a href="grades-k-2-ratmath.html#q12">Grades K–2: number sense and early arithmetic 12</a></td></tr>
+</tbody></table></div>
+<p>Packaging, not mathematics: <code>@ratmath/chaos</code> asks for <code>@ratmath/complex</code> <code>^0.2.0</code> while complex is at 0.3.0, and <code>@ratmath/symbolic</code> asks for <code>@ratmath/structures</code> <code>^0.1.0</code> while structures is at 0.5.0. Both ranges are being raised in <a href="https://github.com/ratmath/chaos/pull/7">ratmath/chaos#7</a> and <a href="https://github.com/ratmath/symbolic/pull/7">ratmath/symbolic#7</a>.</p>
+<h2>Disagreements (1)</h2>
+<div class="tablewrap"><table class="ct"><tbody>
+<tr><td><span class="v v-bad">Disagrees</span></td><td><a href="grades-k-2-ratmath.html#q8">Grades K–2: number sense and early arithmetic 8</a><div class="small muted">Rounding</div></td><td>Core rounds half to even unless told otherwise, so 65 goes to 60; school rounding is half up, <code>roundTo(-1, "half-up")</code>, which gives 70. Not a bug, but the default surprises anyone checking school work; the Rationals docs now say so first. <code>roundInteger("half-up")</code> returns a Core Integer, so <code>.multiply</code> can follow.</td></tr>
+</tbody></table></div>
+<h2>Errors (0)</h2>
+<div class="tablewrap"><table class="ct"><tbody>
+<tr><td colspan="3" class="muted">None.</td></tr>
+</tbody></table></div>
+<h2>Partial answers (0)</h2>
+<div class="tablewrap"><table class="ct"><tbody>
+<tr><td colspan="3" class="muted">None.</td></tr>
+</tbody></table></div>
+<h2>Gaps: what the libraries can't do yet (4)</h2>
+<div class="tablewrap"><table class="ct"><tbody>
+<tr><td><span class="v v-gap">Can't yet</span></td><td><a href="theory-of-computation-ratmath.html#q10">Theory of computation 10</a><div class="small muted">Pumping lemma</div></td><td>Proofs about all words are out of reach; the code only shows the minimal DFA for the finite pieces <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">n \le N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span> growing with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span>, which is evidence, not the pumping argument.</td></tr>
+<tr><td><span class="v v-gap">Can't yet</span></td><td><a href="theory-of-computation-ratmath.html#q15">Theory of computation 15</a><div class="small muted">The halting problem</div></td><td>No computation can stand in for the diagonal argument; <code>run</code> with a budget reports <code>running</code>, as the documentation says it must.</td></tr>
+<tr><td><span class="v v-gap">Can't yet</span></td><td><a href="topology-ratmath.html#q3">Topology 3</a><div class="small muted">A bounded metric</div></td><td>Proofs are out of reach; the code only spot-checks the triangle inequality on a few rationals (it holds).</td></tr>
+<tr><td><span class="v v-gap">Can't yet</span></td><td><a href="topology-ratmath.html#q4">Topology 4</a><div class="small muted">Connectedness and compactness</div></td><td>These are statements about all open covers and all separations; nothing in RatMath decides them.</td></tr>
+</tbody></table></div>
+<footer class="sitelinks"><a href="index.html">Course Test</a> · <a href="findings.html">Findings</a> · <a href="../index.html">The Shelf</a> · <a href="https://github.com/ratmath/shelf">GitHub</a> · <a href="https://ratmath.com/">ratmath.com</a></footer>
+</article>
+</main>
+</div>
+</body>
+</html>

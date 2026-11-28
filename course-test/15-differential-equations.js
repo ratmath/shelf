@@ -1,0 +1,162 @@
+const t = String.raw;
+import { near } from "./lib.js";
+
+export default {
+  title: "Ordinary differential equations",
+  level: "University: first two years",
+  short: "First-order methods, linear equations with constant coefficients, Laplace transforms, systems and phase planes, series solutions, Euler's method.",
+  blurb: "Separable, linear, exact, Bernoulli and homogeneous first-order equations; second-order linear equations with constant coefficients, undetermined coefficients and variation of parameters; Laplace transforms with step forcing; linear systems and the classification of equilibria; a nonlinear phase plane; series solutions; Euler's method; and a cooling model.",
+  exercises: [
+    {
+      topic: "Separable",
+      q: t`Solve \(y' = xy^2\), \(y(0) = 1\).`,
+      a: t`\(-1/y = x^2/2 + C\), \(C = -1\): \(y = \dfrac{2}{2 - x^2}\).`,
+      code: `analytic.firstOrder("x*y^2").through(0, 1).solution`,
+      expect: "-(2/(x^2 - 2))",
+    },
+    {
+      topic: "Linear, integrating factor",
+      q: t`Solve \(y' + 2y = e^{-x}\), \(y(0) = 0\).`,
+      a: t`\((ye^{2x})' = e^x\): \(y = e^{-x} - e^{-2x}\).`,
+      code: `analytic.firstOrder("exp(-x) - 2*y").through(0, 0).solution`,
+      expect: "exp(-x) - exp(-2*x)",
+    },
+    {
+      topic: "Exact equation",
+      q: t`Solve \((2xy + 3)\,dx + (x^2 - 1)\,dy = 0\).`,
+      a: t`\(M_y = 2x = N_x\). \(\psi = x^2y + 3x - y = C\).`,
+      code: `analytic.exactEquation("2*x*y + 3", "x^2 - 1").implicit`,
+      expect: "y*x^2 + 3*x - y = C",
+    },
+    {
+      topic: "Bernoulli",
+      q: t`Solve \(y' = y^2 - y\).`,
+      a: t`\(v = 1/y\): \(v' - v = -1\), \(v = 1 + Ce^x\): \(y = \dfrac{1}{1 + Ce^x}\) (and \(y = 0\)).`,
+      code: `analytic.firstOrder("y^2 - y").general`,
+      expect: "y = 1/(C*exp(x) + 1)",
+    },
+    {
+      topic: "Homogeneous",
+      fix: "analytic#18",
+      q: t`Solve \(y' = \dfrac{x + y}{x}\) for \(x > 0\).`,
+      a: t`\(y = vx\): \(v + xv' = 1 + v\), \(v = \ln x + C\): \(y = x\ln x + Cx\).`,
+      code: `analytic.firstOrder("(x + y)/x").general`,
+      expect: ["y = x*log(x) + C*x", "y = x*(log(x) + C)", "y = C*x + x*log(x)", "y = x*log(abs(x)) + C*x", "y = log(abs(x))*x + C*x"],
+      note: "<code>firstOrder</code> recognises the equation as linear (and it is also homogeneous) but returns no solution.",
+    },
+    {
+      topic: "Distinct real roots",
+      q: t`Solve \(y'' - 5y' + 6y = 0\).`,
+      a: t`\(r^2 - 5r + 6 = 0\), \(r = 2, 3\): \(y = C_1e^{2x} + C_2e^{3x}\).`,
+      code: `analytic.linearODE([1, -5, 6]).general`,
+      expect: "y = C1*exp(2*x) + C2*exp(3*x)",
+    },
+    {
+      topic: "Repeated root",
+      q: t`Solve \(y'' + 4y' + 4y = 0\), \(y(0) = 1\), \(y'(0) = 0\).`,
+      a: t`\(y = (C_1 + C_2x)e^{-2x}\); \(C_1 = 1\), \(C_2 - 2 = 0\): \(y = (1 + 2x)e^{-2x}\).`,
+      code: `analytic.linearODE([1, 4, 4]).initial([1, 0]).solution`,
+      expect: "y = 2*x*exp(-2*x) + exp(-2*x)",
+    },
+    {
+      topic: "Complex roots",
+      q: t`Solve \(y'' + 2y' + 5y = 0\).`,
+      a: t`\(r = -1 \pm 2i\): \(y = e^{-x}(C_1\cos 2x + C_2\sin 2x)\).`,
+      code: `analytic.linearODE([1, 2, 5]).general`,
+      expect: "y = C1*cos(2*x)*exp(-x) + C2*sin(2*x)*exp(-x)",
+    },
+    {
+      topic: "Undetermined coefficients",
+      q: t`Find a particular solution of \(y'' - 3y' + 2y = 4x\).`,
+      a: t`\(y_p = Ax + B\): \(2A = 4\), \(-3A + 2B = 0\): \(y_p = 2x + 3\).`,
+      code: `analytic.linearODE([1, -3, 2], "4*x").particular`,
+      expect: "2*x + 3",
+    },
+    {
+      topic: "Resonance",
+      q: t`Find a particular solution of \(y'' + y = \cos x\).`,
+      a: t`\(y_p = \tfrac{x}{2}\sin x\).`,
+      code: `analytic.linearODE([1, 0, 1], "cos(x)").particular`,
+      expect: "1/2*x*sin(x)",
+    },
+    {
+      topic: "Variation of parameters",
+      fix: "analytic#18",
+      q: t`Find a particular solution of \(y'' + y = \sec x\).`,
+      a: t`\(y_p = x\sin x + \cos x\ln|\cos x|\).`,
+      code: `analytic.linearODE([1, 0, 1], "sec(x)").particular`,
+      expect: "log(abs(cos(x)))*cos(x) + x*sin(x)",
+      note: "Bug: <code>sec(x)</code> was read as the product of a variable <em>sec</em> and \\(x\\), so the answer came back as <code>sec*x</code>. Written as <code>1/cos(x)</code> it was solved correctly.",
+    },
+    {
+      topic: "Laplace transform",
+      q: t`Find \(\mathcal L\{t^2e^{3t}\}\).`,
+      a: t`\(\dfrac{2}{(s - 3)^3}\).`,
+      code: `analytic.laplace("t^2*exp(3*t)")`,
+      expect: "2/(s - 3)^3",
+    },
+    {
+      topic: "Inverse Laplace transform",
+      q: t`Find \(\mathcal L^{-1}\left\{\dfrac{s + 1}{s^2 + 4s + 13}\right\}\).`,
+      a: t`\(\dfrac{(s + 2) - 1}{(s + 2)^2 + 9}\): \(e^{-2t}\left(\cos 3t - \tfrac13\sin 3t\right)\).`,
+      code: `analytic.inverseLaplace("(s + 1)/(s^2 + 4*s + 13)").result`,
+      expect: "cos(3*t)*exp(-2*t) + -1/3*sin(3*t)*exp(-2*t)",
+    },
+    {
+      topic: "Step forcing",
+      q: t`Solve \(y' + y = u(t - 1)\), \(y(0) = 0\), where \(u\) is the unit step.`,
+      a: t`\(Y = \dfrac{e^{-s}}{s(s + 1)}\): \(y = u(t - 1)\left(1 - e^{-(t - 1)}\right)\).`,
+      code: `analytic.laplaceSolve([1, 1], "heaviside(t - 1)", [0]).solution`,
+      expect: "heaviside(t - 1)*(1 - exp(-t + 1))",
+    },
+    {
+      topic: "Linear system",
+      q: t`Solve \(\mathbf x' = \begin{pmatrix} 1 & 2 \\ 2 & 1 \end{pmatrix}\mathbf x\) and classify the origin.`,
+      a: t`Eigenvalues 3 with \((1, 1)\), \(-1\) with \((1, -1)\): \(\mathbf x = c_1e^{3t}(1, 1) + c_2e^{-t}(1, -1)\). A saddle, unstable.`,
+      code: `const L = analytic.linearSystem([[1, 2], [2, 1]]);
+[L.eigenvalues, L.eigenvectors, L.kind, L.stability]`,
+      expect: '[["-1", "3"], [["2", "-2"], ["2", "2"]], "saddle", "unstable"]',
+    },
+    {
+      topic: "Classifying an equilibrium",
+      q: t`Classify the origin for \(x' = y\), \(y' = -x - y\).`,
+      a: t`Trace \(-1\), determinant 1, discriminant \(1 - 4 < 0\): a stable spiral.`,
+      code: `const L = analytic.linearSystem([[0, 1], [-1, -1]]);
+[L.kind, L.stability]`,
+      expect: '["stable spiral", "asymptotically stable"]',
+    },
+    {
+      topic: "Nonlinear phase plane",
+      q: t`Find and classify the equilibria of \(x' = x(3 - x - y)\), \(y' = y(x - 1)\) with \(x, y \ge 0\).`,
+      a: t`\((0, 0)\) saddle; \((3, 0)\) saddle; \((1, 2)\): Jacobian \(\begin{pmatrix} -1 & -1 \\ 2 & 0 \end{pmatrix}\), trace \(-1\), det 2: stable spiral.`,
+      code: `const mid = (iv) => Math.round(iv.low.add(iv.high).toNumber() / 2);
+analytic.planarSystem(["x*(3 - x - y)", "y*(x - 1)"]).equilibria({ x: ["-1", "4"], y: ["-1", "3"] }).map((e) => [e.point.map(mid), e.kind])`,
+      expect: '[[[0, 0], "saddle"], [[1, 2], "stable spiral"], [[3, 0], "saddle"]]',
+    },
+    {
+      topic: "Series solution",
+      q: t`Find the first terms of the power series solutions of Airy's equation \(y'' - xy = 0\) about 0.`,
+      a: t`\(a_{n+2} = \dfrac{a_{n-1}}{(n + 2)(n + 1)}\): \(1 + \tfrac{x^3}{6} + \tfrac{x^6}{180} + \cdots\) and \(x + \tfrac{x^4}{12} + \tfrac{x^7}{504} + \cdots\).`,
+      code: `analytic.seriesSolution({ p: 0, q: "-x", order: 7 }).solutions.map((s) => s.text)`,
+      expect: '["1 + 1/6*x^3 + 1/180*x^6 + …", "x + 1/12*x^4 + 1/504*x^7 + …"]',
+    },
+    {
+      topic: "Euler's method",
+      q: t`Use Euler's method with \(h = 0.25\) on \(y' = y\), \(y(0) = 1\) to estimate \(y(1)\).`,
+      a: t`\(y_{n+1} = 1.25\,y_n\): \(1.25^4 = 2.44140625\) (true value \(e \approx 2.71828\)).`,
+      code: `analytic.odeMethod("y", { method: "euler", y0: 1, until: 1, steps: 4 }).steps.at(-1).y`,
+      expect: "2.44140625",
+    },
+    {
+      topic: "Newton's law of cooling",
+      q: t`Coffee at 90° cools in a 20° room, \(T' = -k(T - 20)\). After 10 minutes it is 60°. What is it after 20 minutes?`,
+      a: t`\(T - 20 = 70e^{-kt}\), \(e^{-10k} = \tfrac47\). At 20 minutes: \(20 + 70\cdot\tfrac{16}{49} = \tfrac{300}{7} \approx 42.86°\).`,
+      code: `const k = symbolic.solve("70*exp(-10*k) = 40", "k");
+PRINT(k);
+analytic.firstOrder("-k*(T - 20)", { y: "T", x: "t" }).general`,
+      expect: /T = .*exp/,
+      expectText: "T = 20 + C e^(−kt); with k = ln(7/4)/10, T(20) = 300/7",
+      note: "Each step is available (the general solution, and \\(k\\) from the data), but the final value is assembled by hand.",
+    },
+  ],
+};

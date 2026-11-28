@@ -9,6 +9,7 @@ export { A };
 export const PAGES = [
   { href: "index.html", title: "The Shelf" },
   { href: "using.html", title: "Using it all", blurb: "One package, ratmath: install it, three ways to import, the browser file, and how versions fit together." },
+  { href: "course-test/index.html", title: "Course Test", blurb: "Twenty-question tests from school and university courses, answered by hand and with the libraries, side by side." },
 ];
 
 export const h = (tag, attrs = {}, ...kids) => {
